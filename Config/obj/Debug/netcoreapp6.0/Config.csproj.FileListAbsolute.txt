@@ -1,0 +1,15 @@
+/home/emil/Documents/paper/FPGA-implementation/Config/bin/Debug/netcoreapp6.0/Config.deps.json
+/home/emil/Documents/paper/FPGA-implementation/Config/bin/Debug/netcoreapp6.0/Config.dll
+/home/emil/Documents/paper/FPGA-implementation/Config/bin/Debug/netcoreapp6.0/ref/Config.dll
+/home/emil/Documents/paper/FPGA-implementation/Config/bin/Debug/netcoreapp6.0/Config.pdb
+/home/emil/Documents/paper/FPGA-implementation/Config/bin/Debug/netcoreapp6.0/CNN.dll
+/home/emil/Documents/paper/FPGA-implementation/Config/bin/Debug/netcoreapp6.0/CNN.pdb
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.csproj.AssemblyReference.cache
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.GeneratedMSBuildEditorConfig.editorconfig
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.AssemblyInfoInputs.cache
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.AssemblyInfo.cs
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.csproj.CoreCompileInputs.cache
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.csproj.CopyComplete
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.dll
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/ref/Config.dll
+/home/emil/Documents/paper/FPGA-implementation/Config/obj/Debug/netcoreapp6.0/Config.pdb
