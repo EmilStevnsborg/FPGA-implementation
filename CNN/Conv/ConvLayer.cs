@@ -14,8 +14,8 @@ namespace CNN
         }
         public ValueBus Output
         {
-            get => plusCtrl.Output;
-            set => plusCtrl.Output = value;
+            get => biases.Output;
+            set => biases.Output = value;
         }
         public ConvLayer(int numInChannels, int numOutChannels, 
                          float[][][] weights, float[] biasVals, 
@@ -37,6 +37,12 @@ namespace CNN
             var kh = kernelSize.Item1;
             var kw = kernelSize.Item2;
 
+            // output channel size
+            var outHeight = (ch + 2 * ph) - (kh - 1) - (stride.Item1 - 1);
+            var outWidth = (cw + 2 * pw) - (kw - 1) - (stride.Item2 - 1);
+            var outValues = outHeight * outWidth;
+            Console.WriteLine(outValues);
+
             // total number of weights in a filter
             var weightsKernelSize = kh * kw;
 
@@ -49,7 +55,7 @@ namespace CNN
             kernelOutputs = new ValueBus[numInChannels];
             valueArrayCtrl = new ValueArrayCtrl(numInChannels, channelSize);
             plusCtrl = new PlusCtrl();
-            biases = new Bias[numOutChannels];
+            biases = new Biases(biasVals, outValues, numOutChannels);
             for (int i = 0; i < numInChannels; i++)
             {
                 // contains a padded channel and the weights across all filters
@@ -88,13 +94,7 @@ namespace CNN
             }
             valueArrayCtrl.Input = kernelOutputs;
             plusCtrl.Input = valueArrayCtrl.Output;
-
-            // for (int j = 0; j < numOutChannels; j++)
-            // {
-            //     // make bias processes
-            //     Bias bias = new Bias(biasVals[j]);
-            //     biases[j] = bias;
-            // }
+            biases.Input = plusCtrl.Output;
         }
         public void PushInputs()
         {
@@ -108,7 +108,7 @@ namespace CNN
         private InputCtrl[] inputCtrls;
         private ConvKernel[] convKernels;
         private ValueBus[] kernelOutputs;
-        private Bias[] biases;
+        private Biases biases;
         private ValueArrayCtrl valueArrayCtrl;
         private PlusCtrl plusCtrl;
         private TrueDualPortMemory<float>[] rams;

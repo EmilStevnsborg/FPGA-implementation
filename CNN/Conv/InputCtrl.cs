@@ -99,18 +99,10 @@ namespace CNN
                 ram_ctrlWeight.IsWriting = false;
                 ram_ctrlWeight.Data = 0;
 
+                Console.WriteLine(inputAdress + " " + weightAdress + " " + wholeChannel);
+
                 // Has whole channel been traversed
                 wholeChannel = !wholeChannel ? (inputAdress + 1 == newWidth * newHeight) : true;
-                // Go to next kernelweights and traverse channel again
-                if (wholeChannel)
-                {
-                    c += 1;
-                    // If all channels have been iterated close process
-                    wholeChannel = (c == numOutChannels);
-                    i = j = startRow = startCol = kernelIdx = 0;
-                    Console.WriteLine("c: " + c);
-
-                }
 
                 // After two clock cycles, the results come back from memory.
                 ramValid = k >= 2;
@@ -142,7 +134,7 @@ namespace CNN
                         else
                         {
                             j = 0;
-                            i += 1;
+                            i = (i + 1);
                         }
                     }
                     else
@@ -153,7 +145,18 @@ namespace CNN
                 // Wait clock cycles for last value memory
                 else 
                 {
-                    ii += 1;
+                    if (c + 1 == numOutChannels)
+                    {
+                        ii += 1;
+                    }
+                    // Go to next kernelweights and traverse channel again
+                    else
+                    {
+                        // If all channels have been iterated close process
+                        wholeChannel = (c + 1 == numOutChannels);
+                        c += 1;
+                        i = j = startRow = startCol = 0;
+                    }
                 }
 
                 // Wait clock cycles for last weight memory
@@ -183,7 +186,7 @@ namespace CNN
 
                     // Check if all data has been processed.
                     // Missing info on last filter run (numOutChannels)
-                    if (ii == 3 && c == 3)
+                    if (ii == 3 && (c + 1 == numOutChannels))
                     {
                         bufferValid = ramValid = wholeChannel = false;
                         i = j = ii = k = startRow = startCol = kernelIdx = 0;
