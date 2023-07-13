@@ -19,18 +19,29 @@ namespace Config
         public float[][][] weights { get; set; }
         public float[] biases { get; set; }
         public ConvConfig() {} 
-        public ConvLayer convLayer { get; set; }
-        public void PushConfig()
+        public ConvLayer_type0 PushConfig_type0()
         {
-            this.convLayer = new ConvLayer(numInChannels,
-                                           numOutChannels,
-                                           weights,
-                                           biases,
-                                           (channelHeight,channelWidth),
-                                           (kernelHeight,kernelWidth),
-                                           (strideRow,strideCol),
-                                           (padHeight,padWidth),
-                                           padVal);
+            return new ConvLayer_type0(numInChannels,
+                                       numOutChannels,
+                                       weights,
+                                       biases,
+                                       (channelHeight,channelWidth),
+                                       (kernelHeight,kernelWidth),
+                                       (strideRow,strideCol),
+                                       (padHeight,padWidth),
+                                       padVal);
+        }
+        public ConvLayer_type1 PushConfig_type1()
+        {
+            return new ConvLayer_type1(numInChannels,
+                                       numOutChannels,
+                                       weights,
+                                       biases,
+                                       (channelHeight,channelWidth),
+                                       (kernelHeight,kernelWidth),
+                                       (strideRow,strideCol),
+                                       (padHeight,padWidth),
+                                       padVal);
         }
     }
 }

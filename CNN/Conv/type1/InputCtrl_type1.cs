@@ -5,7 +5,7 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class InputCtrl : SimpleProcess
+    public class InputCtrl_type1 : SimpleProcess
     {
         [InputBus]
         public ValueBus Input;
@@ -32,7 +32,7 @@ namespace CNN
         private int startRow = 0, startCol = 0;
         private bool bufferValid = false, ramValid = false;
         private bool loaded = false, wholeChannel = false, lastKernelValue = false;
-        public InputCtrl(int numOutChannels, (int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding)
+        public InputCtrl_type1(int numOutChannels, (int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding)
         {
             this.numOutChannels = numOutChannels;
 
@@ -99,7 +99,7 @@ namespace CNN
                 ram_ctrlWeight.IsWriting = false;
                 ram_ctrlWeight.Data = 0;
 
-                Console.WriteLine(inputAdress + " " + weightAdress + " " + wholeChannel);
+                // Console.WriteLine(inputAdress + " " + weightAdress + " " + wholeChannel);
 
                 // Has whole channel been traversed
                 wholeChannel = !wholeChannel ? (inputAdress + 1 == newWidth * newHeight) : true;
@@ -155,6 +155,7 @@ namespace CNN
                         // If all channels have been iterated close process
                         wholeChannel = (c + 1 == numOutChannels);
                         c += 1;
+                        // Console.WriteLine("c: " + c);
                         i = j = startRow = startCol = 0;
                     }
                 }
@@ -177,12 +178,13 @@ namespace CNN
                     OutputWeight.Value = ram_readWeight.Data;
                     OutputWeight.enable = OutputValue.enable = true;
                     // last kernel weight is back from memory
-                    if (jj == 3)
+                    if (jj == 2)
                     {
                         OutputValue.LastValue = true;
                         lastKernelValue = false;
                         jj = 0;
                     }
+                    // Console.WriteLine(OutputValue.Value + " " + OutputWeight.Value + " " + OutputValue.LastValue);
 
                     // Check if all data has been processed.
                     // Missing info on last filter run (numOutChannels)

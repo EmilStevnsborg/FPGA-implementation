@@ -7,40 +7,21 @@ using System.Collections.Generic;
 namespace CNN
 {
     [ClockedProcess]
-    public class Tester : SimulationProcess
+    public class Tester_type1 : Tester
     {
         [InputBus]
         public ValueBus Input;
         [OutputBus]
-        public ValueBus[] Outputs;
-
-        private int numInChannels { get; set; }
-        private int numOutChannels { get; set; }
-        private int channelHeight { get; set; }
-        private int channelWidth { get; set; }
-        private float[][] buffer { get; set; }
-        private float[][] computed { get; set; }
-        private int NumInputs = 0;
-        public List<(float, float)> Stats = new List<(float,float)>();
-
-        public Tester(int numInChannels,int numOutChannels,(int,int) channelSize)
+        public ValueBus[] Outputs;        
+        public Tester_type1(int numInChannels,int numOutChannels,(int,int) channelSize) 
+        : base(numInChannels, numOutChannels, channelSize)
         {            
             Outputs = new ValueBus[numInChannels];
             for (int i = 0; i < numInChannels; i++)
             {
                 Outputs[i] = Scope.CreateBus<ValueBus>();
             }
-
-            this.numInChannels = numInChannels;
-            this.numOutChannels = numOutChannels;
-            channelHeight = channelSize.Item1;
-            channelWidth = channelSize.Item2;
-        }
-        public void FillBuffer(float[][] buffer, float[][] computed)
-        {
-            this.buffer = buffer;
-            this.computed = computed;
-
+            Stats = new List<(float,float)>();
         }
         public override async Task Run()
         {

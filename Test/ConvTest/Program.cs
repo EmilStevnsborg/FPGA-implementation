@@ -15,30 +15,34 @@ class MainClass
 
         if (configTest)
         {
-            using(var sim = new Simulation())
+            for (int c = 1; c <= 3; c++)
             {
-                for (int c = 1; c <= 1; c++)
+                for (int t = 1; t <= 10; t++)
                 {
-                    for (int t = 1; t <= 1; t++)
-                    {    
+                    using(var sim = new Simulation())
+                    {
                         string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
-                        string inputString = File.ReadAllText(@"TestConfig"  + c + "/input" + t +".json");
 
                         ConvConfig convConfig = JsonSerializer.Deserialize<ConvConfig>(config);
-                        convConfig.PushConfig();
+                        var convLayer = convConfig.PushConfig_type0();
+
+                        var tester = new Tester_type0(convConfig.numInChannels, 
+                                                      convConfig.numOutChannels,
+                                                      (convConfig.channelHeight,convConfig.channelWidth));
+
+                        string inputString = File.ReadAllText(@"TestConfig"  + c + "/input" + t +".json");
 
                         InputCase input = JsonSerializer.Deserialize<InputCase>(inputString);
-                        Tester tester = new Tester(convConfig.numInChannels, 
-                                                   convConfig.numOutChannels,
-                                                   (convConfig.channelHeight,convConfig.channelWidth));
+
                         tester.FillBuffer(input.buffer, input.computed);
 
-                        convConfig.convLayer.Inputs = tester.Outputs;
-                        convConfig.convLayer.PushInputs();
-                        tester.Input = convConfig.convLayer.Output;
+                        convLayer.Inputs = tester.Outputs;
+                        convLayer.PushInputs();
+                        tester.Inputs = convLayer.Outputs;
+
+                        sim.Run();
                     }
                 }
-                sim.Run();
             }
         }
     }

@@ -5,7 +5,7 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class ConvLayer
+    public class ConvLayer_type1
     {
         public ValueBus[] Inputs
         {
@@ -17,10 +17,10 @@ namespace CNN
             get => biases.Output;
             set => biases.Output = value;
         }
-        public ConvLayer(int numInChannels, int numOutChannels, 
-                         float[][][] weights, float[] biasVals, 
-                         (int,int) channelSize, (int,int) kernelSize, 
-                         (int,int) stride, (int,int) padding, float padVal
+        public ConvLayer_type1(int numInChannels, int numOutChannels, 
+                               float[][][] weights, float[] biasVals, 
+                               (int,int) channelSize, (int,int) kernelSize, 
+                               (int,int) stride, (int,int) padding, float padVal
         )
         {
             var ch = channelSize.Item1;
@@ -38,10 +38,9 @@ namespace CNN
             var kw = kernelSize.Item2;
 
             // output channel size
-            var outHeight = (ch + 2 * ph) - (kh - 1) - (stride.Item1 - 1);
-            var outWidth = (cw + 2 * pw) - (kw - 1) - (stride.Item2 - 1);
+            var outHeight = (ch + 2 * ph - kh) / (stride.Item1) + 1;
+            var outWidth = (cw + 2 * pw - kw) / (stride.Item2) + 1;
             var outValues = outHeight * outWidth;
-            Console.WriteLine(outValues);
 
             // total number of weights in a filter
             var weightsKernelSize = kh * kw;
@@ -49,9 +48,9 @@ namespace CNN
             this.numInChannels = numInChannels;
             this.numOutChannels = numOutChannels;
 
-            inputCtrls = new InputCtrl[numInChannels];
+            inputCtrls = new InputCtrl_type1[numInChannels];
             rams = new TrueDualPortMemory<float>[numInChannels];
-            convKernels = new ConvKernel[numInChannels];
+            convKernels = new ConvKernel_type1[numInChannels];
             kernelOutputs = new ValueBus[numInChannels];
             valueArrayCtrl = new ValueArrayCtrl(numInChannels, channelSize);
             plusCtrl = new PlusCtrl();
@@ -73,8 +72,8 @@ namespace CNN
                 }
 
                 TrueDualPortMemory<float> ram = new TrueDualPortMemory<float>(paddedChannelSize + weightsKernelSize * numOutChannels, buffer);
-                InputCtrl inputCtrl = new InputCtrl(numOutChannels, channelSize, kernelSize, stride, padding);
-                ConvKernel convKernel = new ConvKernel();
+                InputCtrl_type1 inputCtrl = new InputCtrl_type1(numOutChannels, channelSize, kernelSize, stride, padding);
+                ConvKernel_type1 convKernel = new ConvKernel_type1();
 
                 inputCtrls[i] = inputCtrl;
                 rams[i] = ram;
@@ -105,8 +104,8 @@ namespace CNN
         }
         private int numInChannels;
         private int numOutChannels;
-        private InputCtrl[] inputCtrls;
-        private ConvKernel[] convKernels;
+        private InputCtrl_type1[] inputCtrls;
+        private ConvKernel_type1[] convKernels;
         private ValueBus[] kernelOutputs;
         private Biases biases;
         private ValueArrayCtrl valueArrayCtrl;

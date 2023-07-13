@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "RGgQanECGtKo+iL3J3gzctCoXpJ9L3VIhyFxWQuyKJgwXLzHAmgCe2lO+GfecHrGLRjrQt2JmwfiWspsDrmHtg==",
+  "dgSpecHash": "ueWZ5n4l415m6IIQSBRXYJaFt247EUb/zkgXpDAiI/gIruNnIGMkHzcuKImqbIn+EGNrwbIyuboVKfmc7rQnwA==",
   "success": true,
   "projectFilePath": "/home/emil/Documents/paper/FPGA-implementation/Test/ConvTest/ConvTest.csproj",
   "expectedPackageFiles": [

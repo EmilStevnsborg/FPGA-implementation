@@ -5,7 +5,7 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class ConvKernel
+    public class ConvKernel_type1
     {
         public ValueBus InputValue
         {
@@ -24,7 +24,7 @@ namespace CNN
             set => plusCtrl.Output = value;
         }
 
-        public ConvKernel()
+        public ConvKernel_type1()
         {            
             // Instantiate the processes
             weightValue = new WeightValue();
