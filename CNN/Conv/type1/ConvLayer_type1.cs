@@ -5,18 +5,8 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class ConvLayer_type1
+    public class ConvLayer_type1 : Layer<ValueBus[],ValueBus>
     {
-        public ValueBus[] Inputs
-        {
-            get => inputChannels;
-            set => inputChannels = value;
-        }
-        public ValueBus Output
-        {
-            get => biases.Output;
-            set => biases.Output = value;
-        }
         public ConvLayer_type1(int numInChannels, int numOutChannels, 
                                float[][][] weights, float[] biasVals, 
                                (int,int) channelSize, (int,int) kernelSize, 
@@ -94,12 +84,13 @@ namespace CNN
             valueArrayCtrl.Input = kernelOutputs;
             plusCtrl.Input = valueArrayCtrl.Output;
             biases.Input = plusCtrl.Output;
+            output = biases.Output;
         }
-        public void PushInputs()
+        public override void PushInputs()
         {
             for (int i = 0; i < numInChannels; i++)
             {
-                inputCtrls[i].Input = inputChannels[i];
+                inputCtrls[i].Input = input[i];
             }
         }
         private int numInChannels;
@@ -111,6 +102,5 @@ namespace CNN
         private ValueArrayCtrl valueArrayCtrl;
         private PlusCtrl plusCtrl;
         private TrueDualPortMemory<float>[] rams;
-        private ValueBus[] inputChannels;
     }
 }

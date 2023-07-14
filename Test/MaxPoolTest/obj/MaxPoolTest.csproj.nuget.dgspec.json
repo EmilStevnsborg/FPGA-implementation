@@ -1,0 +1,265 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/emil/Documents/paper/FPGA-implementation/Test/MaxPoolTest/MaxPoolTest.csproj": {}
+  },
+  "projects": {
+    "/home/emil/Documents/paper/FPGA-implementation/CNN/CNN.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/emil/Documents/paper/FPGA-implementation/CNN/CNN.csproj",
+        "projectName": "CNN",
+        "projectPath": "/home/emil/Documents/paper/FPGA-implementation/CNN/CNN.csproj",
+        "packagesPath": "/home/emil/.nuget/packages/",
+        "outputPath": "/home/emil/Documents/paper/FPGA-implementation/CNN/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/emil/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "netcoreapp6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "netcoreapp6.0",
+          "dependencies": {
+            "SME": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.GraphViz": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.Tracer": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.VHDL": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "runtime.linux-x64.CoreCompat.System.Drawing": {
+              "target": "Package",
+              "version": "[1.0.0-beta002, )"
+            },
+            "runtime.osx.10.10-x64.CoreCompat.System.Drawing": {
+              "target": "Package",
+              "version": "[5.6.20, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.120/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/emil/Documents/paper/FPGA-implementation/Config/Config.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/emil/Documents/paper/FPGA-implementation/Config/Config.csproj",
+        "projectName": "Config",
+        "projectPath": "/home/emil/Documents/paper/FPGA-implementation/Config/Config.csproj",
+        "packagesPath": "/home/emil/.nuget/packages/",
+        "outputPath": "/home/emil/Documents/paper/FPGA-implementation/Config/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/emil/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "netcoreapp6.0",
+            "projectReferences": {
+              "/home/emil/Documents/paper/FPGA-implementation/CNN/CNN.csproj": {
+                "projectPath": "/home/emil/Documents/paper/FPGA-implementation/CNN/CNN.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "netcoreapp6.0",
+          "dependencies": {
+            "SME": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.GraphViz": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.Tracer": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.VHDL": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "runtime.linux-x64.CoreCompat.System.Drawing": {
+              "target": "Package",
+              "version": "[1.0.0-beta002, )"
+            },
+            "runtime.osx.10.10-x64.CoreCompat.System.Drawing": {
+              "target": "Package",
+              "version": "[5.6.20, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.120/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/emil/Documents/paper/FPGA-implementation/Test/MaxPoolTest/MaxPoolTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/emil/Documents/paper/FPGA-implementation/Test/MaxPoolTest/MaxPoolTest.csproj",
+        "projectName": "MaxPoolTest",
+        "projectPath": "/home/emil/Documents/paper/FPGA-implementation/Test/MaxPoolTest/MaxPoolTest.csproj",
+        "packagesPath": "/home/emil/.nuget/packages/",
+        "outputPath": "/home/emil/Documents/paper/FPGA-implementation/Test/MaxPoolTest/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/emil/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "netcoreapp6.0",
+            "projectReferences": {
+              "/home/emil/Documents/paper/FPGA-implementation/CNN/CNN.csproj": {
+                "projectPath": "/home/emil/Documents/paper/FPGA-implementation/CNN/CNN.csproj"
+              },
+              "/home/emil/Documents/paper/FPGA-implementation/Config/Config.csproj": {
+                "projectPath": "/home/emil/Documents/paper/FPGA-implementation/Config/Config.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "netcoreapp6.0",
+          "dependencies": {
+            "SME": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.GraphViz": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.Tracer": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "SME.VHDL": {
+              "target": "Package",
+              "version": "[0.5.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "runtime.linux-x64.CoreCompat.System.Drawing": {
+              "target": "Package",
+              "version": "[1.0.0-beta002, )"
+            },
+            "runtime.osx.10.10-x64.CoreCompat.System.Drawing": {
+              "target": "Package",
+              "version": "[5.6.20, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.120/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

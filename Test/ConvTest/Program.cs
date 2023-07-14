@@ -36,9 +36,9 @@ class MainClass
 
                         tester.FillBuffer(input.buffer, input.computed);
 
-                        convLayer.Inputs = tester.Outputs;
+                        convLayer.Input = tester.Output;
                         convLayer.PushInputs();
-                        tester.Inputs = convLayer.Outputs;
+                        tester.Input = convLayer.Output;
 
                         sim.Run();
                     }

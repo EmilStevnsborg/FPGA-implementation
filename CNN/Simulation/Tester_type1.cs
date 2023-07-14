@@ -12,14 +12,14 @@ namespace CNN
         [InputBus]
         public ValueBus Input;
         [OutputBus]
-        public ValueBus[] Outputs;        
+        public ValueBus[] Output;        
         public Tester_type1(int numInChannels,int numOutChannels,(int,int) channelSize) 
         : base(numInChannels, numOutChannels, channelSize)
         {            
-            Outputs = new ValueBus[numInChannels];
+            Output = new ValueBus[numInChannels];
             for (int i = 0; i < numInChannels; i++)
             {
-                Outputs[i] = Scope.CreateBus<ValueBus>();
+                Output[i] = Scope.CreateBus<ValueBus>();
             }
             Stats = new List<(float,float)>();
         }
@@ -34,15 +34,15 @@ namespace CNN
                 {
                     for (int k = 0; k < numInChannels; k++)
                     {
-                        Outputs[k].Value = buffer[k][i * channelWidth + j];
-                        Outputs[k].enable = true;
+                        Output[k].Value = buffer[k][i * channelWidth + j];
+                        Output[k].enable = true;
                     }
                     await ClockAsync();      
                 }
             }
             for (int k = 0; k < numInChannels; k++)
             {
-                Outputs[k].enable = false;
+                Output[k].enable = false;
             }
             await ClockAsync();
             // wait for input to arrive

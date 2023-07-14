@@ -10,17 +10,17 @@ namespace CNN
     public class Tester_type0 : Tester
     {
         [InputBus]
-        public ValueBus[] Inputs;
+        public ValueBus[] Input;
         [OutputBus]
-        public ValueBus[] Outputs;
+        public ValueBus[] Output;
 
         public Tester_type0(int numInChannels,int numOutChannels,(int,int) channelSize)
         : base(numInChannels, numOutChannels, channelSize)
         {            
-            Outputs = new ValueBus[numInChannels];
+            Output = new ValueBus[numInChannels];
             for (int i = 0; i < numInChannels; i++)
             {
-                Outputs[i] = Scope.CreateBus<ValueBus>();
+                Output[i] = Scope.CreateBus<ValueBus>();
             }
             Stats = new List<(float,float)>();
         }
@@ -35,19 +35,19 @@ namespace CNN
                 {
                     for (int k = 0; k < numInChannels; k++)
                     {
-                        Outputs[k].Value = buffer[k][i * channelWidth + j];
-                        Outputs[k].enable = true;
+                        Output[k].Value = buffer[k][i * channelWidth + j];
+                        Output[k].enable = true;
                     }
                     await ClockAsync();
                     // check if input is back during sending
-                    if (Inputs[0].enable) 
+                    if (Input[0].enable) 
                     {
-                        // Console.WriteLine(NumInputs);
+                        // Console.WriteLine(NumInput);
                         for (int c = 0; c < numOutChannels; c++)
                         {
                             NumInputs += 1;
-                            var loss = Math.Abs(Inputs[c].Value - computed[c][index]);
-                            Stats.Add((computed[c][index], Inputs[c].Value));
+                            var loss = Math.Abs(Input[c].Value - computed[c][index]);
+                            Stats.Add((computed[c][index], Input[c].Value));
                             if (loss > 0.0000001)
                             {
                                 // Console.WriteLine("The loss was higher than 10^(-7): " + loss);
@@ -62,11 +62,11 @@ namespace CNN
             }
             for (int k = 0; k < numInChannels; k++)
             {
-                Outputs[k].enable = false;
+                Output[k].enable = false;
             }
             await ClockAsync();
             // wait for input to arrive
-            while(!Inputs[0].enable) await ClockAsync();
+            while(!Input[0].enable) await ClockAsync();
             // load streaming input, remember that individual send values at different times
             var expectedOutputs = computed.Length * computed[0].Length;
             for (int t = 0; t < 10000; t++)
@@ -78,13 +78,13 @@ namespace CNN
                     break;
                 }
                 // Console.WriteLine(t + " " + NumInputs);
-                if (Inputs[0].enable)
+                if (Input[0].enable)
                 {
                     for (int c = 0; c < numOutChannels; c++)
                     { 
                         NumInputs += 1;
-                        Stats.Add((computed[c][index], Inputs[c].Value));
-                        Console.WriteLine("pred: " + Inputs[c].Value + " " + computed[c][index] + " " + (Inputs[c].Value - computed[c][index]));
+                        Stats.Add((computed[c][index], Input[c].Value));
+                        Console.WriteLine("pred: " + Input[c].Value + " " + computed[c][index] + " " + (Input[c].Value - computed[c][index]));
                         if (c == numOutChannels-1) 
                         {
                             index += 1;

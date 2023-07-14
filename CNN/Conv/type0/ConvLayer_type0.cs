@@ -5,18 +5,8 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class ConvLayer_type0
+    public class ConvLayer_type0 : Layer<ValueBus[],ValueBus[]>
     {
-        public ValueBus[] Inputs
-        {
-            get => inputChannels;
-            set => inputChannels = value;
-        }
-        public ValueBus[] Outputs
-        {
-            get => outputValues;
-            set => outputValues = value;
-        }
         public ConvLayer_type0(int numInChannels, int numOutChannels, 
                                float[][][] weights, float[] biasVals, 
                                (int,int) channelSize, (int,int) kernelSize, 
@@ -36,7 +26,7 @@ namespace CNN
             inputCtrls = new InputCtrl_type0[numInChannels];
             rams = new TrueDualPortMemory<float>[numInChannels];
             filters = new Filter[numOutChannels];
-            outputValues = new ValueBus[numOutChannels];
+            output = new ValueBus[numOutChannels];
             for (int i = 0; i < numInChannels; i++)
             {
                 float[] buffer = new float[(ch + 2 * ph) * (cw + 2 * pw)];
@@ -68,14 +58,14 @@ namespace CNN
                     filters[i].convKernels[j].InputB = inputCtrls[j].OutputValueB;
                 }
 
-                outputValues[i] = filters[i].Output;
+                output[i] = filters[i].Output;
             }
         }
-        public void PushInputs()
+        public override void PushInputs()
         {
             for (int i = 0; i < numInChannels; i++)
             {
-                inputCtrls[i].Input = inputChannels[i];
+                inputCtrls[i].Input = input[i];
             }
         }
         private int numInChannels;
@@ -83,7 +73,5 @@ namespace CNN
         private InputCtrl_type0[] inputCtrls;
         private TrueDualPortMemory<float>[] rams;
         private Filter[] filters;
-        private ValueBus[] inputChannels;
-        private ValueBus[] outputValues;
     }
 }
