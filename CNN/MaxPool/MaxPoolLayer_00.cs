@@ -3,9 +3,12 @@ using SME;
 namespace CNN
 {
     [ClockedProcess]
-    public class MaxPoolLayer_type0 : Layer<ValueBus[], ValueBus[]>
+    public class MaxPoolLayer_00 : Layer<ValueBus[], ValueBus[]>
     {
-        public MaxPoolLayer_type0(int numInChannels, (int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding, float padVal)
+        public MaxPoolLayer_00(int numInChannels, (int,int) channelSize, 
+                                 (int,int) kernelSize, (int,int) stride, 
+                                 (int,int) padding, float padVal
+        )
         {
             this.numInChannels = numInChannels;
             input = new ValueBus[numInChannels];

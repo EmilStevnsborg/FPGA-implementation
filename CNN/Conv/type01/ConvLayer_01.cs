@@ -5,9 +5,9 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class ConvLayer_type1 : Layer<ValueBus[],ValueBus>
+    public class ConvLayer_01 : Layer<ValueBus[],ValueBus>
     {
-        public ConvLayer_type1(int numInChannels, int numOutChannels, 
+        public ConvLayer_01(int numInChannels, int numOutChannels, 
                                float[][][] weights, float[] biasVals, 
                                (int,int) channelSize, (int,int) kernelSize, 
                                (int,int) stride, (int,int) padding, float padVal
@@ -38,9 +38,9 @@ namespace CNN
             this.numInChannels = numInChannels;
             this.numOutChannels = numOutChannels;
 
-            inputCtrls = new InputCtrl_type1[numInChannels];
+            inputCtrls = new InputCtrl_SeqFilter[numInChannels];
             rams = new TrueDualPortMemory<float>[numInChannels];
-            convKernels = new ConvKernel_type1[numInChannels];
+            convKernels = new ConvKernel_type01[numInChannels];
             kernelOutputs = new ValueBus[numInChannels];
             valueArrayCtrl = new ValueArrayCtrl(numInChannels, channelSize);
             plusCtrl = new PlusCtrl();
@@ -62,8 +62,8 @@ namespace CNN
                 }
 
                 TrueDualPortMemory<float> ram = new TrueDualPortMemory<float>(paddedChannelSize + weightsKernelSize * numOutChannels, buffer);
-                InputCtrl_type1 inputCtrl = new InputCtrl_type1(numOutChannels, channelSize, kernelSize, stride, padding);
-                ConvKernel_type1 convKernel = new ConvKernel_type1();
+                InputCtrl_SeqFilter inputCtrl = new InputCtrl_SeqFilter(numOutChannels, channelSize, kernelSize, stride, padding);
+                ConvKernel_type01 convKernel = new ConvKernel_type01();
 
                 inputCtrls[i] = inputCtrl;
                 rams[i] = ram;
@@ -95,8 +95,8 @@ namespace CNN
         }
         private int numInChannels;
         private int numOutChannels;
-        private InputCtrl_type1[] inputCtrls;
-        private ConvKernel_type1[] convKernels;
+        private InputCtrl_SeqFilter[] inputCtrls;
+        private ConvKernel_type01[] convKernels;
         private ValueBus[] kernelOutputs;
         private Biases biases;
         private ValueArrayCtrl valueArrayCtrl;

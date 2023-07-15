@@ -24,9 +24,9 @@ class MainClass
                         string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
 
                         ConvConfig convConfig = JsonSerializer.Deserialize<ConvConfig>(config);
-                        var convLayer = convConfig.PushConfig_type0();
+                        var convLayer = convConfig.PushConfig_01();
 
-                        var tester = new Tester_type0(convConfig.numInChannels, 
+                        var tester = new Tester_10(convConfig.numInChannels, 
                                                       convConfig.numOutChannels,
                                                       (convConfig.channelHeight,convConfig.channelWidth));
 

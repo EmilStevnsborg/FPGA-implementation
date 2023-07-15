@@ -17,14 +17,14 @@ namespace CNN
         {
             this.numInChannels = numInChannels;
             kernelOutputs = new ValueBus[numInChannels];
-            convKernels = new ConvKernel_type0[numInChannels];
+            convKernels = new ConvKernel_type00[numInChannels];
             valueArrayCtrl = new ValueArrayCtrl(numInChannels, channelSize);
             plusCtrl = new PlusCtrl();
             bias = new Bias(biasVal);
             for (int i = 0; i < numInChannels; i++)
             {
                 var weightsKernel = weights[i];
-                ConvKernel_type0 convKernel = new ConvKernel_type0(kernelSize, weightsKernel);
+                ConvKernel_type00 convKernel = new ConvKernel_type00(kernelSize, weightsKernel);
                 convKernels[i] = convKernel;
                 kernelOutputs[i] = convKernel.Output;
             }
@@ -34,7 +34,7 @@ namespace CNN
             bias.Input = plusCtrl.Output;
         }
         private int numInChannels;
-        public ConvKernel_type0[] convKernels;
+        public ConvKernel_type00[] convKernels;
         private ValueBus[] kernelOutputs;
         private ValueArrayCtrl valueArrayCtrl;
         private PlusCtrl plusCtrl;

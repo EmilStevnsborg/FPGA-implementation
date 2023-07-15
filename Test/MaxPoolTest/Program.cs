@@ -24,9 +24,9 @@ class MainClass
                         string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
 
                         MaxPoolConfig maxPoolConfig = JsonSerializer.Deserialize<MaxPoolConfig>(config);
-                        var maxPoolLayer = maxPoolConfig.PushConfig_type0();
+                        var maxPoolLayer = maxPoolConfig.PushConfig_00();
 
-                        var tester = new Tester_type0(maxPoolConfig.numInChannels, 
+                        var tester = new Tester_00(maxPoolConfig.numInChannels, 
                                                       maxPoolConfig.numInChannels,
                                                       (maxPoolConfig.channelHeight,maxPoolConfig.channelWidth));
 

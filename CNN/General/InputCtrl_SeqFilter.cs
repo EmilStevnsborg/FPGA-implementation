@@ -4,8 +4,9 @@ using SME.Components;
 
 namespace CNN
 {
+    // Coordinates and delegates values and weights for all filters of one input channel sequentially
     [ClockedProcess]
-    public class InputCtrl_type1 : SimpleProcess
+    public class InputCtrl_SeqFilter : SimpleProcess
     {
         [InputBus]
         public ValueBus Input;
@@ -32,7 +33,7 @@ namespace CNN
         private int startRow = 0, startCol = 0;
         private bool bufferValid = false, ramValid = false;
         private bool loaded = false, wholeChannel = false, lastKernelValue = false;
-        public InputCtrl_type1(int numOutChannels, (int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding)
+        public InputCtrl_SeqFilter(int numOutChannels, (int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding)
         {
             this.numOutChannels = numOutChannels;
 

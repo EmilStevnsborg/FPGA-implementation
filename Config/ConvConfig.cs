@@ -19,29 +19,29 @@ namespace Config
         public float[][][] weights { get; set; }
         public float[] biases { get; set; }
         public ConvConfig() {} 
-        public ConvLayer_type0 PushConfig_type0()
+        public ConvLayer_00 PushConfig_00()
         {
-            return new ConvLayer_type0(numInChannels,
-                                       numOutChannels,
-                                       weights,
-                                       biases,
-                                       (channelHeight,channelWidth),
-                                       (kernelHeight,kernelWidth),
-                                       (strideRow,strideCol),
-                                       (padHeight,padWidth),
-                                       padVal);
+            return new ConvLayer_00(numInChannels,
+                                    numOutChannels,
+                                    weights,
+                                    biases,
+                                    (channelHeight,channelWidth),
+                                    (kernelHeight,kernelWidth),
+                                    (strideRow,strideCol),
+                                    (padHeight,padWidth),
+                                    padVal);
         }
-        public ConvLayer_type1 PushConfig_type1()
+        public ConvLayer_01 PushConfig_01()
         {
-            return new ConvLayer_type1(numInChannels,
-                                       numOutChannels,
-                                       weights,
-                                       biases,
-                                       (channelHeight,channelWidth),
-                                       (kernelHeight,kernelWidth),
-                                       (strideRow,strideCol),
-                                       (padHeight,padWidth),
-                                       padVal);
+            return new ConvLayer_01(numInChannels,
+                                    numOutChannels,
+                                    weights,
+                                    biases,
+                                    (channelHeight,channelWidth),
+                                    (kernelHeight,kernelWidth),
+                                    (strideRow,strideCol),
+                                    (padHeight,padWidth),
+                                    padVal);
         }
     }
 }

@@ -5,9 +5,9 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class ConvLayer_type0 : Layer<ValueBus[],ValueBus[]>
+    public class ConvLayer_00 : Layer<ValueBus[],ValueBus[]>
     {
-        public ConvLayer_type0(int numInChannels, int numOutChannels, 
+        public ConvLayer_00(int numInChannels, int numOutChannels, 
                                float[][][] weights, float[] biasVals, 
                                (int,int) channelSize, (int,int) kernelSize, 
                                (int,int) stride, (int,int) padding, float padVal
@@ -23,7 +23,7 @@ namespace CNN
             this.numInChannels = numInChannels;
             this.numOutChannels = numOutChannels;
 
-            inputCtrls = new InputCtrl_type0[numInChannels];
+            inputCtrls = new InputCtrl_ParFilter[numInChannels];
             rams = new TrueDualPortMemory<float>[numInChannels];
             filters = new Filter[numOutChannels];
             output = new ValueBus[numOutChannels];
@@ -34,7 +34,7 @@ namespace CNN
                 Helper.Padding(ref buffer, ch, cw, ph, pw, padVal);
 
                 TrueDualPortMemory<float> ram = new TrueDualPortMemory<float>((ch + 2 * ph) * (cw + 2 * pw), buffer);
-                InputCtrl_type0 inputCtrl = new InputCtrl_type0(channelSize, kernelSize, stride, padding);
+                InputCtrl_ParFilter inputCtrl = new InputCtrl_ParFilter(channelSize, kernelSize, stride, padding);
 
                 inputCtrls[i] = inputCtrl;
                 rams[i] = ram;
@@ -70,7 +70,7 @@ namespace CNN
         }
         private int numInChannels;
         private int numOutChannels;
-        private InputCtrl_type0[] inputCtrls;
+        private InputCtrl_ParFilter[] inputCtrls;
         private TrueDualPortMemory<float>[] rams;
         private Filter[] filters;
     }

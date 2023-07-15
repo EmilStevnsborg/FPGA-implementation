@@ -5,7 +5,7 @@ using SME.Components;
 namespace CNN
 {
     [ClockedProcess]
-    public class InputCtrl_type0 : SimpleProcess
+    public class InputCtrl_ParFilter : SimpleProcess
     {
         [InputBus]
         public ValueBus Input;
@@ -34,7 +34,7 @@ namespace CNN
         private bool loaded = false;
         private bool wholeChannel = false;
         private bool lastKernelVal = false;
-        public InputCtrl_type0((int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding)
+        public InputCtrl_ParFilter((int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding)
         {
             this.channelHeight = channelSize.Item1;
             this.channelWidth = channelSize.Item2;

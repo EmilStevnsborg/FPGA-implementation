@@ -35,7 +35,7 @@ namespace CNN
             
             // Instantiate the processes
             ram  = new TrueDualPortMemory<float>((ch + 2 * ph) * (cw + 2 * pw), buffer);
-            kernelCtrl = new InputCtrl_type0(channelSize, kernelSize, stride, padding);
+            kernelCtrl = new InputCtrl_ParFilter(channelSize, kernelSize, stride, padding);
             max = new Max();
 
             // Connect the buses
@@ -50,7 +50,7 @@ namespace CNN
 
         // Hold the internal processes as fields
         private TrueDualPortMemory<float> ram;
-        private InputCtrl_type0 kernelCtrl;
+        private InputCtrl_ParFilter kernelCtrl;
         private Max max;
 
     }
