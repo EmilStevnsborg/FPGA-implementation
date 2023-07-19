@@ -15,7 +15,7 @@ class MainClass
 
         if (configTest)
         {
-            for (int c = 1; c <= 3; c++)
+            for (int c = 3; c <= 3; c++)
             {
                 for (int t = 1; t <= 10; t++)
                 {
@@ -24,11 +24,11 @@ class MainClass
                         string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
 
                         MaxPoolConfig maxPoolConfig = JsonSerializer.Deserialize<MaxPoolConfig>(config);
-                        var maxPoolLayer = maxPoolConfig.PushConfig_00();
+                        var maxPoolLayer = maxPoolConfig.PushConfig_11();
 
-                        var tester = new Tester_00(maxPoolConfig.numInChannels, 
-                                                      maxPoolConfig.numInChannels,
-                                                      (maxPoolConfig.channelHeight,maxPoolConfig.channelWidth));
+                        var tester = new Tester_11(maxPoolConfig.numInChannels, 
+                                                   maxPoolConfig.numInChannels,
+                                                   (maxPoolConfig.channelHeight,maxPoolConfig.channelWidth));
 
                         string inputString = File.ReadAllText(@"TestConfig"  + c + "/input" + t +".json");
 

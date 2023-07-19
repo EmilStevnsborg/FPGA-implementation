@@ -18,11 +18,20 @@ namespace Config
         public MaxPoolLayer_00 PushConfig_00()
         {
             return new MaxPoolLayer_00(numInChannels,
-                                    (channelHeight,channelWidth),
-                                    (kernelHeight,kernelWidth),
-                                    (strideRow,strideCol),
-                                    (padHeight,padWidth),
-                                    padVal);
+                                       (channelHeight,channelWidth),
+                                       (kernelHeight,kernelWidth),
+                                       (strideRow,strideCol),
+                                       (padHeight,padWidth),
+                                       padVal);
+        }
+        public MaxPoolLayer_11 PushConfig_11()
+        {
+            return new MaxPoolLayer_11(numInChannels,
+                                       (channelHeight,channelWidth),
+                                       (kernelHeight,kernelWidth),
+                                       (strideRow,strideCol),
+                                       (padHeight,padWidth),
+                                       padVal);
         }
     }
 }

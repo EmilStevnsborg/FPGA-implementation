@@ -100,8 +100,6 @@ namespace CNN
                 ram_ctrlWeight.IsWriting = false;
                 ram_ctrlWeight.Data = 0;
 
-                // Console.WriteLine(inputAdress + " " + weightAdress + " " + wholeChannel);
-
                 // Has whole channel been traversed
                 wholeChannel = !wholeChannel ? (inputAdress + 1 == newWidth * newHeight) : true;
 

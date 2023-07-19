@@ -19,7 +19,9 @@ namespace CNN
             set => max.Output = value;
         }
 
-        public MaxPoolKernel((int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding, float padVal)
+        public MaxPoolKernel((int,int) channelSize, (int,int) kernelSize, 
+                             (int,int) stride, (int,int) padding, float padVal
+        )
         {
             // channel input
             var ch = channelSize.Item1;
