@@ -3,19 +3,9 @@ using SME;
 namespace CNN
 {
     [ClockedProcess]
-    public class ReluLayer
+    public class ReluLayer_00 : Layer<ValueBus[], ValueBus[]>
     {
-        public ValueBus[] Inputs
-        {
-            get => inputVals;
-            set => inputVals = value;
-        }
-        public ValueBus[] Outputs
-        {
-            get => reluOutputs;
-            set => reluOutputs = value;
-        }
-        public ReluLayer(int numInChannels)
+        public ReluLayer_00(int numInChannels)
         {
             this.numInChannels = numInChannels;
             reluCores = new ReluCore[numInChannels];
@@ -26,17 +16,17 @@ namespace CNN
                 reluCores[i] = reluCore;
                 reluOutputs[i] = reluCore.Output;
             }
+            output = reluOutputs;
         }
-        public void PushInputs()
+        public override void PushInputs()
         {
             for (int i = 0; i < numInChannels; i++)
             {
-                reluCores[i].Input = inputVals[i];
+                reluCores[i].Input = input[i];
             }
         }
         private int numInChannels;
         private ReluCore[] reluCores;
-        private ValueBus[] inputVals;
         private ValueBus[] reluOutputs;
     }
 }

@@ -22,5 +22,15 @@ namespace Config
                                          gammas,
                                          betas);
         }
+        public BatchNormLayer_11 PushConfig_11()
+        {
+            return new BatchNormLayer_11(numInChannels,
+                                         numOutChannels,
+                                         channelHeight*channelWidth,
+                                         means,
+                                         vars,
+                                         gammas,
+                                         betas);
+        }
     }
 }

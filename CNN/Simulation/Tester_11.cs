@@ -22,6 +22,7 @@ namespace CNN
         public override async Task Run()
         {
             int index = 0;
+            int c = 0;
 
             await ClockAsync();
 
@@ -33,7 +34,19 @@ namespace CNN
                     {
                         Output.Value = buffer[k][i * channelWidth + j];
                         Output.enable = true;
-                        await ClockAsync();    
+                        await ClockAsync(); 
+                        if (Input.enable)
+                        {
+                            NumInputs += 1;
+                            Stats.Add((computed[c][index], Input.Value));
+                            Console.WriteLine("pred: " + Input.Value + " " + computed[c][index] + " " + (Input.Value - computed[c][index]));
+                            index += 1;
+                            if (index == computed[0].Length)
+                            {
+                                c += 1;
+                                index = 0;
+                            }
+                        }
                     }  
                 }
             }
@@ -44,7 +57,6 @@ namespace CNN
             while(!Input.enable) await ClockAsync();
             // load streaming input, remember that individual send values at different times
             var expectedOutputs = computed.Length * computed[0].Length;
-            int c = 0;
             for (int t = 0; t < 10000; t++)
             {
                 // This is to make sure to not go through unecessary clock cycles
@@ -53,7 +65,6 @@ namespace CNN
                     NumInputs = 0;
                     break;
                 }
-                // Console.WriteLine(t + " " + NumInputs);
                 if (Input.enable)
                 {
                     NumInputs += 1;

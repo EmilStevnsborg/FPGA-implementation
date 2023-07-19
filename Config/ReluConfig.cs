@@ -9,10 +9,13 @@ namespace Config
         public int channelHeight { get; set; }
         public int  channelWidth { get; set; }
         public ReluConfig() {} 
-        public ReluLayer reluLayer { get; set; }
-        public void PushConfig()
+        public ReluLayer_00 PushConfig_00()
         {
-            this.reluLayer = new ReluLayer(numInChannels);
+            return new ReluLayer_00(numInChannels);
+        }
+        public ReluLayer_11 PushConfig_11()
+        {
+            return new ReluLayer_11();
         }
     }
 }

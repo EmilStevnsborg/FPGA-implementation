@@ -24,9 +24,9 @@ class MainClass
                         string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
 
                         BatchNormConfig batchNormConfig = JsonSerializer.Deserialize<BatchNormConfig>(config);
-                        var batchNormLayer = batchNormConfig.PushConfig_00();
+                        var batchNormLayer = batchNormConfig.PushConfig_11();
 
-                        var tester = new Tester_00(batchNormConfig.numInChannels, 
+                        var tester = new Tester_11(batchNormConfig.numInChannels, 
                                                    batchNormConfig.numOutChannels,
                                                    (batchNormConfig.channelHeight,batchNormConfig.channelWidth));
 

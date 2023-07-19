@@ -26,7 +26,6 @@ namespace CNN
             // Output should only be updated when the input is valid.
             if (Input.enable)
             {
-                // Console.WriteLine("Here is i: " + i + ", c: " + c + " and the bias: " + biases[c]);
                 Output.Value = Input.Value + biases[c];
                 Output.enable = Input.enable;
                 Output.LastValue = Input.LastValue;

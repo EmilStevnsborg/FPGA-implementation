@@ -23,21 +23,21 @@ namespace CNN
         {
             var denominator = (float) Math.Sqrt(var + 0.00001);
             // Instantiate the processes
-            minus = new Minus(mean);
-            divide = new Divide(denominator);
+            minus = new Bias(-mean);
+            divide = new Multiply(1/denominator);
             multiply = new Multiply(gamma);
-            plus = new Plus(beta);
+            plus = new Bias(beta);
 
             // Connect the buses
-            divide.Numerator = minus.Output;
+            divide.Input = minus.Output;
             multiply.Input = divide.Output;
             plus.Input = multiply.Output;
         }
 
         // Hold the internal processes as fields
-        private Minus minus;
-        private Divide divide;
+        private Bias minus;
+        private Multiply divide;
         private Multiply multiply;
-        private Plus plus;
+        private Bias plus;
     }
 }
