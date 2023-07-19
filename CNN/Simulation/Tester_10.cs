@@ -70,7 +70,6 @@ namespace CNN
                     NumInputs = 0;
                     break;
                 }
-                // Console.WriteLine(t + " " + NumInputs);
                 if (Input.enable)
                 {
                     NumInputs += 1;

@@ -51,7 +51,6 @@ namespace CNN
                     NumInputs = 0;
                     break;
                 }
-                // Console.WriteLine(t + " " + NumInputs);
                 if (Inputs[0].enable)
                 {
                     for (int c = 0; c < numOutChannels; c++)
@@ -62,7 +61,6 @@ namespace CNN
                 }
                 await ClockAsync();
             }
-            // Console.WriteLine(expectedOutputs + " " + numInChannels + " " + channelHeight + " " + channelWidth + " " + NumInputs);
         }
     }
 }

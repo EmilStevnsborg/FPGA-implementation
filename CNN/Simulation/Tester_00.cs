@@ -42,16 +42,11 @@ namespace CNN
                     // check if input is back during sending
                     if (Input[0].enable) 
                     {
-                        // Console.WriteLine(NumInput);
                         for (int c = 0; c < numOutChannels; c++)
                         {
                             NumInputs += 1;
-                            var loss = Math.Abs(Input[c].Value - computed[c][index]);
                             Stats.Add((computed[c][index], Input[c].Value));
-                            if (loss > 0.0000001)
-                            {
-                                // Console.WriteLine("The loss was higher than 10^(-7): " + loss);
-                            }
+                            Console.WriteLine("pred: " + Input[c].Value + " " + computed[c][index] + " " + (Input[c].Value - computed[c][index]));
                             if (c == numOutChannels-1) 
                             {
                                 index += 1;
@@ -77,7 +72,6 @@ namespace CNN
                     NumInputs = 0;
                     break;
                 }
-                // Console.WriteLine(t + " " + NumInputs);
                 if (Input[0].enable)
                 {
                     for (int c = 0; c < numOutChannels; c++)
@@ -93,7 +87,6 @@ namespace CNN
                 }
                 await ClockAsync();
             }
-            // Console.WriteLine(NumInputs);
         }
     }
 }
