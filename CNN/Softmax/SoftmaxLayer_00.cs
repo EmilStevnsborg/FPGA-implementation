@@ -23,8 +23,7 @@ namespace CNN
             {
                 Exp exp = new Exp();
                 exponentials[i] = exp;
-                input[i] = exp.Input;       
-                exponentialOutputs[i] = exp.Output;     
+                exponentialOutputs[i] = exp.Output;
             }
             valueArrayCtrl.Input = exponentialOutputs;
             plusCtrl.Input = valueArrayCtrl.Output;

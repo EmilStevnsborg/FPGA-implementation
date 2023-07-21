@@ -37,6 +37,7 @@ namespace CNN
         }
         protected override void OnTick()
         {
+            OutputValue.enable = OutputWeight.enable = OutputValue.LastValue = false;
             if (Input.enable)
             {
                 // Console.WriteLine((x % 3) + " " + Input.Value);

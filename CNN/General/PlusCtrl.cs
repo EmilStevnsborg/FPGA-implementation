@@ -16,15 +16,16 @@ namespace CNN
 
         protected override void OnTick()
         {
+            Output.enable = Output.LastValue = false;
             // Output should only be updated when the input is valid.
             if (Input.enable)
             {
                 buffer += Input.Value;
             }
-            Output.Value = buffer;
-            Output.enable = Output.LastValue = Input.LastValue;
             if (Input.LastValue)
             {
+                Output.enable = Output.LastValue = Input.LastValue;
+                Output.Value = buffer;
                 buffer = 0;
             }
         }
