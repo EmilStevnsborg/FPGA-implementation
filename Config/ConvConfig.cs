@@ -3,12 +3,8 @@ using CNN;
 
 namespace Config
 {
-    public class ConvConfig
+    public class ConvConfig : GeneralConfig
     {
-        public int numInChannels { get; set; }
-        public int numOutChannels { get; set; }
-        public int channelHeight { get; set; }
-        public int  channelWidth { get; set; }
         public int kernelHeight { get; set; }
         public int kernelWidth { get; set; }
         public int strideRow { get; set; }
@@ -19,7 +15,7 @@ namespace Config
         public float[][][] weights { get; set; }
         public float[] biases { get; set; }
         public ConvConfig() {} 
-        public ConvLayer_00 PushConfig_00()
+        public override ConvLayer_00 PushConfig_00()
         {
             return new ConvLayer_00(numInChannels,
                                     numOutChannels,
@@ -31,7 +27,7 @@ namespace Config
                                     (padHeight,padWidth),
                                     padVal);
         }
-        public ConvLayer_01 PushConfig_01()
+        public override ConvLayer_01 PushConfig_01()
         {
             return new ConvLayer_01(numInChannels,
                                     numOutChannels,
@@ -42,6 +38,16 @@ namespace Config
                                     (strideRow,strideCol),
                                     (padHeight,padWidth),
                                     padVal);
+        }
+
+        public override Layer<ValueBus, ValueBus[]> PushConfig_10()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Layer<ValueBus, ValueBus> PushConfig_11()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

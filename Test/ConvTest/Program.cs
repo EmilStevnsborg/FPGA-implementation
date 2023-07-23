@@ -10,39 +10,46 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        bool configTest = true;
+        bool configTest = false;
         bool CNNSmallTest = !configTest;
+        string layer = "conv2";
+        int tests = 10;
+        Stats stats = new Stats();
+        stats.TrueKeyAdd();
 
         if (configTest)
         {
             for (int c = 1; c <= 3; c++)
             {
+                string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
+                ConvConfig convConfig = JsonSerializer.Deserialize<ConvConfig>(config);
+
                 for (int t = 1; t <= 10; t++)
                 {
-                    using(var sim = new Simulation())
-                    {
-                        string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
+                    string inputString = File.ReadAllText(@"TestConfig"  + c + "/input" + t +".json");
 
-                        ConvConfig convConfig = JsonSerializer.Deserialize<ConvConfig>(config);
-                        var convLayer = convConfig.PushConfig_01();
+                    var data = LayerTest.LayerTest_00(convConfig, inputString);
 
-                        var tester = new Tester_10(convConfig.numInChannels, 
-                                                      convConfig.numOutChannels,
-                                                      (convConfig.channelHeight,convConfig.channelWidth));
+                    stats.AddStats(data.Item1);
 
-                        string inputString = File.ReadAllText(@"TestConfig"  + c + "/input" + t +".json");
-
-                        InputCase input = JsonSerializer.Deserialize<InputCase>(inputString);
-
-                        tester.FillBuffer(input.buffer, input.computed);
-
-                        convLayer.Input = tester.Output;
-                        convLayer.PushInputs();
-                        tester.Input = convLayer.Output;
-
-                        sim.Run();
-                    }
+                    Console.WriteLine("Clock ticks: " + data.Item2);
                 }
+            }
+        }
+        else if (CNNSmallTest)
+        {
+            string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
+            ConvConfig convConfig = JsonSerializer.Deserialize<ConvConfig>(config);
+
+            for (int t = 1; t <= tests; t++)
+            {
+                string inputString = File.ReadAllText(@"../../CNNSmall/Tests/" + layer + "/inputs/input" + t + ".json");
+
+                var data = LayerTest.LayerTest_00(convConfig, inputString);
+
+                stats.AddStats(data.Item1);
+
+                Console.WriteLine("Clock ticks: " + data.Item2);
             }
         }
     }

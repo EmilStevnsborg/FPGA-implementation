@@ -2,11 +2,8 @@ using CNN;
 
 namespace Config
 {
-    public class MaxPoolConfig
+    public class MaxPoolConfig : GeneralConfig
     {
-        public int numInChannels { get; set; }
-        public int channelHeight { get; set; }
-        public int  channelWidth { get; set; }
         public int kernelHeight { get; set; }
         public int kernelWidth { get; set; }
         public int strideRow { get; set; }
@@ -15,7 +12,7 @@ namespace Config
         public int padWidth { get; set; }
         public float padVal { get; set; }
         public MaxPoolConfig() {} 
-        public MaxPoolLayer_00 PushConfig_00()
+        public override MaxPoolLayer_00 PushConfig_00()
         {
             return new MaxPoolLayer_00(numInChannels,
                                        (channelHeight,channelWidth),
@@ -24,7 +21,7 @@ namespace Config
                                        (padHeight,padWidth),
                                        padVal);
         }
-        public MaxPoolLayer_11 PushConfig_11()
+        public override MaxPoolLayer_11 PushConfig_11()
         {
             return new MaxPoolLayer_11(numInChannels,
                                        (channelHeight,channelWidth),
@@ -32,6 +29,16 @@ namespace Config
                                        (strideRow,strideCol),
                                        (padHeight,padWidth),
                                        padVal);
+        }
+
+        public override Layer<ValueBus[], ValueBus> PushConfig_01()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Layer<ValueBus, ValueBus[]> PushConfig_10()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

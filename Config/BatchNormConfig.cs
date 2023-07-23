@@ -2,18 +2,14 @@ using CNN;
 
 namespace Config
 {
-    public class BatchNormConfig
+    public class BatchNormConfig : GeneralConfig
     {
-        public int numInChannels { get; set; }
-        public int numOutChannels { get; set; }
-        public int channelHeight { get; set; }
-        public int  channelWidth { get; set; }
         public float[] means { get; set; }
         public float[] vars { get; set; }
         public float[] gammas { get; set; }
         public float[] betas { get; set; }
         public BatchNormConfig() {} 
-        public BatchNormLayer_00 PushConfig_00()
+        public override BatchNormLayer_00 PushConfig_00()
         {
             return new BatchNormLayer_00(numInChannels,
                                          numOutChannels,
@@ -22,7 +18,7 @@ namespace Config
                                          gammas,
                                          betas);
         }
-        public BatchNormLayer_11 PushConfig_11()
+        public override BatchNormLayer_11 PushConfig_11()
         {
             return new BatchNormLayer_11(numInChannels,
                                          numOutChannels,
@@ -31,6 +27,16 @@ namespace Config
                                          vars,
                                          gammas,
                                          betas);
+        }
+
+        public override Layer<ValueBus[], ValueBus> PushConfig_01()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Layer<ValueBus, ValueBus[]> PushConfig_10()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

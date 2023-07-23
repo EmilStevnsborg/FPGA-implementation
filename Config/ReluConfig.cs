@@ -2,20 +2,26 @@ using CNN;
 
 namespace Config
 {
-    public class ReluConfig
+    public class ReluConfig : GeneralConfig
     {
-        public int numInChannels { get; set; }
-        public int numOutChannels { get; set; }
-        public int channelHeight { get; set; }
-        public int  channelWidth { get; set; }
         public ReluConfig() {} 
-        public ReluLayer_00 PushConfig_00()
+        public override ReluLayer_00 PushConfig_00()
         {
             return new ReluLayer_00(numInChannels);
         }
-        public ReluLayer_11 PushConfig_11()
+        public override ReluLayer_11 PushConfig_11()
         {
             return new ReluLayer_11();
+        }
+
+        public override Layer<ValueBus[], ValueBus> PushConfig_01()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Layer<ValueBus, ValueBus[]> PushConfig_10()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -58,7 +58,7 @@ namespace CNN
             while(!Input[0].enable) await ClockAsync();
             // load streaming input, remember that individual send values at different times
             var expectedOutputs = computed.Length * computed[0].Length;
-            for (int t = 0; t < 10000; t++)
+            for (int t = 0; t < 20000; t++)
             {
                 // This is to make sure to not go through unecessary clock cycles
                 if (NumInputs == expectedOutputs) 

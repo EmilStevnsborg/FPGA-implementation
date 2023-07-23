@@ -11,8 +11,8 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        int tests = 1;
-        bool save = false;
+        int tests = 10;
+        bool save = true;
         bool layerOutput = false;
         // main stats
         Stats stats = new Stats();
