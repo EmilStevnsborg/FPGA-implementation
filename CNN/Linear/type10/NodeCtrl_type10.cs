@@ -40,15 +40,14 @@ namespace CNN
             OutputValue.enable = OutputWeight.enable = OutputValue.LastValue = false;
             if (Input.enable)
             {
-                // Console.WriteLine((x % 3) + " " + Input.Value);
                 buffer[(x % 3)] = Input.Value;
                 x = (x + 1);
             }
             if (i < x && x > 0)
             {
                 // Issue ram read
-                ram_ctrl.Enabled = (k < numInputs);
-                ram_ctrl.Address = k;
+                ram_ctrl.Enabled = (i < numInputs);
+                ram_ctrl.Address = i;
                 ram_ctrl.IsWriting = false;
                 ram_ctrl.Data = 0;
 
@@ -64,9 +63,13 @@ namespace CNN
                 {
                     OutputValue.Value = buffer[(i % 3)];
                     OutputWeight.Value = ram_read.Data;
-                    // Console.WriteLine(OutputValue.Value + " " + OutputWeight.Value);
 
                     i = i + 1;
+                    // if all data going in has been sent out, we have to restart process of reading from memory
+                    if (i == x)
+                    {
+                        k = 0;
+                    }
 
                     // buffer is done
                     if (i == numInputs)

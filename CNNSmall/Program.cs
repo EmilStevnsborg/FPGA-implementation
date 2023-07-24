@@ -80,15 +80,15 @@ class MainClass
                 LinearConfig linearConfig = JsonSerializer.Deserialize<LinearConfig>(linear);
                 var linearLayer = linearConfig.PushConfig_10();
 
-                // SoftmaxConfig softmaxConfig = JsonSerializer.Deserialize<SoftmaxConfig>(softmax);
-                // var softmaxLayer = softmaxConfig.PushConfig_00();
+                SoftmaxConfig softmaxConfig = JsonSerializer.Deserialize<SoftmaxConfig>(softmax);
+                var softmaxLayer = softmaxConfig.PushConfig_00();
 
                 Tester_00 tester = new Tester_00(conv1Config.numInChannels, 
                                                  linearConfig.numOutChannels,
                                                  (conv1Config.channelHeight,conv1Config.channelWidth));
 
                 string inputString  = File.ReadAllText(@"Tests/conv1/inputs/input" + t + ".json");
-                string outputString = File.ReadAllText(@"Tests/linear/inputs/input" + t + ".json");
+                string outputString = File.ReadAllText(@"Tests/softmax/inputs/input" + t + ".json");
                 // input and output
                 InputCase input = JsonSerializer.Deserialize<InputCase>(inputString);
                 InputCase output = JsonSerializer.Deserialize<InputCase>(outputString);
@@ -117,12 +117,10 @@ class MainClass
 
                     linearLayer.Input = maxPoolLayer2.Output;
                     linearLayer.PushInputs();
-                    // softmaxLayer.Input = linearLayer.Output;
-                    // softmaxLayer.PushInputs();
+                    softmaxLayer.Input = linearLayer.Output;
+                    softmaxLayer.PushInputs();
 
-                    // tester.Input = softmaxLayer.Output;
-
-                    tester.Input = linearLayer.Output;
+                    tester.Input = softmaxLayer.Output;
 
                     sim
                     .AddTicker(s => ticks = Scope.Current.Clock.Ticks)

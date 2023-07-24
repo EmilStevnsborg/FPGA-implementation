@@ -8,12 +8,12 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        bool configTest = false;
+        bool configTest = true;
         bool CNNSmallTest = !configTest;
 
         if (configTest)
         {
-            for (int c = 1; c <= 3; c++)
+            for (int c = 3; c <= 3; c++)
             {
                 string config = File.ReadAllText(@"TestConfig" + c + "/config.json");
                 LinearConfig linearConfig = JsonSerializer.Deserialize<LinearConfig>(config);
@@ -22,7 +22,7 @@ class MainClass
                 {
                     string inputString = File.ReadAllText(@"TestConfig"  + c + "/input" + t +".json");
 
-                    var data = LayerTest.LayerTest_00(linearConfig, inputString);
+                    var data = LayerTest.LayerTest_10(linearConfig, inputString);
 
                     Console.WriteLine("Clock ticks: " + data.Item2);
                 }

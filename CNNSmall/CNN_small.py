@@ -84,7 +84,7 @@ d["biases"] = conv1.bias.tolist()
 
 conv1_output = conv1(conv1_input)
 
-if True:
+if False:
     conv1_json = json.dumps(d, indent=4)
     with open("Configs/conv1.json", "w") as outfile:
         outfile.write(conv1_json)
@@ -108,7 +108,7 @@ d["betas"] = batchNorm1.bias.tolist()
 
 batchNorm1_output = batchNorm1(conv1_output)
 
-if True:
+if False:
     batchNorm1_json = json.dumps(d, indent=4)
     with open("Configs/batchNorm1.json", "w") as outfile:
         outfile.write(batchNorm1_json)
@@ -128,7 +128,7 @@ d["channelWidth"] = width
 
 relu1_output = relu1(batchNorm1_output)
 
-if True:
+if False:
     relu1_json = json.dumps(d, indent=4)
     with open("Configs/relu1.json", "w") as outfile:
         outfile.write(relu1_json)
@@ -155,7 +155,7 @@ d["padVal"] = 0
 
 maxPool1_output = maxPool1(relu1_output)
 
-if True:
+if False:
     maxPool1_json = json.dumps(d, indent=4)
     with open("Configs/maxPool1.json", "w") as outfile:
         outfile.write(maxPool1_json)
@@ -185,7 +185,7 @@ d["biases"] = conv2.bias.tolist()
 
 conv2_output = conv2(maxPool1_output)
 
-if True:
+if False:
     conv2_json = json.dumps(d, indent=4)
     with open("Configs/conv2.json", "w") as outfile:
         outfile.write(conv2_json)
@@ -209,7 +209,7 @@ d["betas"] = batchNorm2.bias.tolist()
 
 batchNorm2_output = batchNorm2(conv2_output)
 
-if True:
+if False:
     batchNorm2_json = json.dumps(d, indent=4)
     with open("Configs/batchNorm2.json", "w") as outfile:
         outfile.write(batchNorm2_json)
@@ -229,7 +229,7 @@ d["channelWidth"] = width
 
 relu2_output = relu1(batchNorm2_output)
 
-if True:
+if False:
     relu2_json = json.dumps(d, indent=4)
     with open("Configs/relu2.json", "w") as outfile:
         outfile.write(relu2_json)
@@ -257,7 +257,7 @@ d["padVal"] = 0
 
 maxPool2_output = maxPool2(relu2_output)
 
-if True:
+if False:
     maxPool2_json = json.dumps(d, indent=4)
     with open("Configs/maxPool2.json", "w") as outfile:
         outfile.write(maxPool2_json)
@@ -281,7 +281,7 @@ d["biases"] = lin.bias.tolist()
 
 lin_output = lin(nn.Flatten()(maxPool2_output)).reshape(batch_size,2,1,1)
 
-if True:
+if False:
     lin_json = json.dumps(d, indent=4)
     with open("Configs/linear.json", "w") as outfile:
         outfile.write(lin_json)
@@ -304,7 +304,7 @@ d["channelWidth"] = width
 
 softmax_output = softmax(lin_output)
 
-if True:
+if False:
     lin_json = json.dumps(d, indent=4)
     with open("Configs/softmax.json", "w") as outfile:
         outfile.write(lin_json)
