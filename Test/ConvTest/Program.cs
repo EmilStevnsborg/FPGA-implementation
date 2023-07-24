@@ -1,10 +1,8 @@
-using SME;
-using CNN;
 using System.IO;
 using System.Text.Json;
 using Config;
-using Statistics;
 using System;
+using System.Collections.Generic;
 
 class MainClass
 {
@@ -12,10 +10,6 @@ class MainClass
     {
         bool configTest = false;
         bool CNNSmallTest = !configTest;
-        string layer = "conv2";
-        int tests = 10;
-        Stats stats = new Stats();
-        stats.TrueKeyAdd();
 
         if (configTest)
         {
@@ -30,24 +24,42 @@ class MainClass
 
                     var data = LayerTest.LayerTest_00(convConfig, inputString);
 
-                    stats.AddStats(data.Item1);
-
                     Console.WriteLine("Clock ticks: " + data.Item2);
                 }
             }
         }
         else if (CNNSmallTest)
         {
+            int tests = 25;
+            // Which layer should be tested
+            string layer = "conv2";
+            // What type of implementation
+            string layerType = "01";
+            string path = @"../../CNNSmall/Tests/" + layer;
+            
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             ConvConfig convConfig = JsonSerializer.Deserialize<ConvConfig>(config);
 
             for (int t = 1; t <= tests; t++)
             {
-                string inputString = File.ReadAllText(@"../../CNNSmall/Tests/" + layer + "/inputs/input" + t + ".json");
+                (List<(float, float)>, long) data;
 
-                var data = LayerTest.LayerTest_00(convConfig, inputString);
+                string inputString = File.ReadAllText(path + "/inputs/input" + t + ".json");
 
-                stats.AddStats(data.Item1);
+                switch (layerType)
+                {
+                    case "01":
+                        data = LayerTest.LayerTest_01(convConfig, inputString);
+                        // Save the results
+                        LayerTest.LayerStats(data.Item1, path + "/outputs01/output" + t + ".json");
+                        break;
+                    // layerType = "00"
+                    default:
+                        data = LayerTest.LayerTest_00(convConfig, inputString);
+                        // Save the results
+                        LayerTest.LayerStats(data.Item1, path + "/outputs00/output" + t + ".json");
+                        break;
+                }
 
                 Console.WriteLine("Clock ticks: " + data.Item2);
             }

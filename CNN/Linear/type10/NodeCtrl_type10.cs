@@ -64,6 +64,7 @@ namespace CNN
                 {
                     OutputValue.Value = buffer[(i % 3)];
                     OutputWeight.Value = ram_read.Data;
+                    // Console.WriteLine(OutputValue.Value + " " + OutputWeight.Value);
 
                     i = i + 1;
 

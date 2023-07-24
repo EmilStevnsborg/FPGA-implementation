@@ -15,57 +15,32 @@ def relative_root_mean_squared_error(true, pred):
     return rrmse_loss
 
 
-def analysis(layers:str):
+def analysis(layers, types):
     dataframe = pd.DataFrame({"" : ["mean", "var", "max", "rrmse"]})
-    for layer in layers:
-        with open("Tests/" + layer + "/output.json", "r") as file:
-            data = json.load(file)
+    for layer, type in zip(layers, types):
+        trues = np.array([])
+        preds = np.array([])
+        for t in range(1,11):
+            with open("Tests/" + layer + "/outputs" + type + "/output" + str(t) + ".json", "r") as file:
+                data = json.load(file)
+            trues = np.append(trues, np.array(data["True"]))
+            preds = np.append(preds, np.array(data["Pred"]))
 
-        true = np.array(data["True"])
-        pred = np.array(data["Pred"])
-
-        loss = np.absolute(true-pred)
+        loss = np.absolute(trues-preds)
+        print(all (x < 0.000009 for x in loss.tolist()))
 
         mean = np.mean(loss)
         var = np.var(loss)
         max = np.max(loss)
-        rrmse = relative_root_mean_squared_error(true,pred)
-
-        dataframe[layer] = [mean,var,max,rrmse]
-    
-    return dataframe
-
-def analysis_accum(layers:str):
-    dataframe = pd.DataFrame({"" : ["mean", "var", "max", "rrmse"]})
-    for layer in layers:
-        trues = np.array([])
-        preds = np.array([])
-        losses = np.array([])
-        for i in range(1000):
-            with open("Tests/Network/outputs/test" + str(i) + "/" + layer + ".json", "r") as file:
-                pred_data = json.load(file)
-            with open("Tests/" + layer + "/inputs/input" + str(i+1) + ".json", "r") as file:
-                true_data = json.load(file)
-
-            true = np.array(true_data["computed"])
-            true = true.T.reshape(-1)
-            pred = np.array(pred_data["Pred"])
-            loss = np.absolute(true-pred)
-            trues = np.append(trues, true)
-            preds = np.append(preds, pred)
-            losses = np.append(losses, loss)
-
-        mean = np.mean(losses)
-        var = np.var(losses)
-        max = np.max(losses)
         rrmse = relative_root_mean_squared_error(trues,preds)
 
         dataframe[layer] = [mean,var,max,rrmse]
     
     return dataframe
 
-
+# Each new file contains only one output
 def analysis_network():
+    # for t in range(1,11):
     with open("Tests/Network/output.json", "r") as file:
         data = json.load(file)
     
@@ -96,22 +71,16 @@ def analysis_network():
 
 
 layers = ["conv1","batchNorm1","relu1","maxPool1","conv2","batchNorm2","relu2","maxPool2","linear","softmax"]
+types = ["00", "00", "00", "00", "01", "11", "11", "11", "10", "00"]
 
-layers_df = analysis(layers)
+layers_df = analysis(layers, types)
 print("Stats for the layers isolated")
-print(layers_df.to_latex(index=False))
+# print(layers_df.to_latex(index=False))
 print(layers_df.to_string())
 print("\n")
 
-layers_accum_df = analysis_accum(layers)
-print("Stats for the layers accumulated")
-print(layers_accum_df.to_latex(index=False))
-print(layers_accum_df.to_string())
-print("\n")
-
 print("Accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
-print(analysis_network())
-print(analysis(["Network"]))
+print(analysis(["Network"],[""]))
 
 
 

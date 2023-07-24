@@ -43,7 +43,7 @@ namespace CNN
                     {
                         NumInputs += 1;
                         Stats.Add((computed[c][index], Input.Value));
-                        Console.WriteLine("pred: " + Input.Value + " " + computed[c][index] + " " + (Input.Value - computed[c][index]));
+                        // Console.WriteLine("pred: " + Input.Value + " " + computed[c][index] + " " + (Input.Value - computed[c][index]));
                         index += 1;
                         if (index == computed[0].Length)
                         {
@@ -74,7 +74,7 @@ namespace CNN
                 {
                     NumInputs += 1;
                     Stats.Add((computed[c][index], Input.Value));
-                    Console.WriteLine("pred: " + Input.Value + " " + computed[c][index] + " " + (Input.Value - computed[c][index]));
+                    // Console.WriteLine("pred: " + Input.Value + " " + computed[c][index] + " " + (Input.Value - computed[c][index]));
                     index += 1;
                     if (index == computed[0].Length)
                     {

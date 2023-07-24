@@ -12,11 +12,7 @@ class MainClass
     public static void Main(string[] args)
     {
         int tests = 10;
-        bool save = true;
         bool layerOutput = false;
-        // main stats
-        Stats stats = new Stats();
-        stats.TrueKeyAdd();
 
         List<string> layers = new List<string>() 
         {
@@ -25,7 +21,7 @@ class MainClass
             "relu2", "maxPool2", "linear", "softmax"
         };
         
-        for (int t = 0; t < tests; t++) 
+        for (int t = 1; t <= tests; t++) 
         {
             // layer stats
             Stats conv1Stats      = new Stats();
@@ -84,15 +80,15 @@ class MainClass
                 LinearConfig linearConfig = JsonSerializer.Deserialize<LinearConfig>(linear);
                 var linearLayer = linearConfig.PushConfig_10();
 
-                SoftmaxConfig softmaxConfig = JsonSerializer.Deserialize<SoftmaxConfig>(softmax);
-                var softmaxLayer = softmaxConfig.PushConfig_00();
+                // SoftmaxConfig softmaxConfig = JsonSerializer.Deserialize<SoftmaxConfig>(softmax);
+                // var softmaxLayer = softmaxConfig.PushConfig_00();
 
                 Tester_00 tester = new Tester_00(conv1Config.numInChannels, 
-                                                 softmaxConfig.numOutChannels,
+                                                 linearConfig.numOutChannels,
                                                  (conv1Config.channelHeight,conv1Config.channelWidth));
 
-                string inputString  = File.ReadAllText(@"Tests/conv1/inputs/input" + (t+1) + ".json");
-                string outputString = File.ReadAllText(@"Tests/softmax/inputs/input" + (t+1) + ".json");
+                string inputString  = File.ReadAllText(@"Tests/conv1/inputs/input" + t + ".json");
+                string outputString = File.ReadAllText(@"Tests/linear/inputs/input" + t + ".json");
                 // input and output
                 InputCase input = JsonSerializer.Deserialize<InputCase>(inputString);
                 InputCase output = JsonSerializer.Deserialize<InputCase>(outputString);
@@ -118,28 +114,26 @@ class MainClass
                     reluLayer2.PushInputs();
                     maxPoolLayer2.Input = reluLayer2.Output;
                     maxPoolLayer2.PushInputs();
+
                     linearLayer.Input = maxPoolLayer2.Output;
                     linearLayer.PushInputs();
+                    // softmaxLayer.Input = linearLayer.Output;
+                    // softmaxLayer.PushInputs();
 
-                    softmaxLayer.Input = linearLayer.Output;
-                    softmaxLayer.PushInputs();
-                    tester.Input = softmaxLayer.Output;
+                    // tester.Input = softmaxLayer.Output;
+
+                    tester.Input = linearLayer.Output;
 
                     sim
                     .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
                     .Run();
-                    stats.AddStats(tester.Stats);
+
+                    Console.WriteLine(t + " " + ticks);
+
+                    // Save the results
+                    LayerTest.LayerStats(tester.Stats, @"Tests/Network/outputs/output" + t + ".json");
                 }
             }
-        }
-        if (save)
-        {
-            // writing results out
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-            File.WriteAllText(@"Tests/Network/output.json", JsonSerializer.Serialize(stats.Results, options));         
         }
     }
 }

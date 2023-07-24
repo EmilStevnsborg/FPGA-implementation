@@ -123,5 +123,20 @@ namespace Config
                 return (tester.Stats, ticks);
             }   
         }
+        public static void LayerStats(List<(float, float)> stats, string path)
+        {
+            
+            Stats statsObj = new Stats();
+            statsObj.TrueKeyAdd();
+
+            statsObj.AddStats(stats);
+
+            // writing results out
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            File.WriteAllText(path, JsonSerializer.Serialize(statsObj.Results, options));
+        }
     }
 }
