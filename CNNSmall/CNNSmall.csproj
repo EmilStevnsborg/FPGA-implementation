@@ -12,7 +12,6 @@
     <PackageReference Include="runtime.linux-x64.CoreCompat.System.Drawing" Version="1.0.0-beta002" />
     
     <ProjectReference Include="../CNN/CNN.csproj"/>
-    <ProjectReference Include="../Config/Config.csproj"/>
 
   </ItemGroup>
 
