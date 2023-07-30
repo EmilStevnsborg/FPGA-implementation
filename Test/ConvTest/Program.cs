@@ -3,6 +3,8 @@ using System.Text.Json;
 using Config;
 using System;
 using System.Collections.Generic;
+using SME;
+using CNN;
 
 class MainClass
 {
@@ -30,11 +32,11 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 25;
+            int tests = 1000;
             // Which layer should be tested
-            string layer = "conv2";
+            string layer = "conv1";
             // What type of implementation
-            string layerType = "01";
+            string layerType = "00";
             string path = @"../../CNNSmall/Tests/" + layer;
             
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
@@ -42,26 +44,36 @@ class MainClass
 
             for (int t = 1; t <= tests; t++)
             {
-                (List<(float, float)>, long) data;
-
                 string inputString = File.ReadAllText(path + "/inputs/input" + t + ".json");
 
-                switch (layerType)
+                using(var sim = new Simulation())
                 {
-                    case "01":
-                        data = LayerTest.LayerTest_01(convConfig, inputString);
-                        // Save the results
-                        LayerTest.LayerStats(data.Item1, path + "/outputs01/output" + t + ".json");
-                        break;
-                    // layerType = "00"
-                    default:
-                        data = LayerTest.LayerTest_00(convConfig, inputString);
-                        // Save the results
-                        LayerTest.LayerStats(data.Item1, path + "/outputs00/output" + t + ".json");
-                        break;
-                }
+                    // depending on layerType
+                    var convLayer = convConfig.PushConfig_01();
 
-                Console.WriteLine("Clock ticks: " + data.Item2);
+                    var tester = new Tester_10(convConfig.numInChannels, 
+                                                convConfig.numOutChannels,
+                                                (convConfig.channelHeight,convConfig.channelWidth));
+
+                    InputCase input = JsonSerializer.Deserialize<InputCase>(inputString);
+
+                    tester.FillBuffer(input.buffer, input.computed);
+
+                    convLayer.Input = tester.Output;
+                    convLayer.PushInputs();
+                    tester.Input = convLayer.Output;
+
+                    
+                    long ticks = 0;
+
+                    sim
+                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                    .Run();
+
+                    LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
+
+                    Console.WriteLine(t + " " + ticks);
+                }  
             }
         }
     }

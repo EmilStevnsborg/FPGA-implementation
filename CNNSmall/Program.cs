@@ -182,7 +182,7 @@ class MainClass
             {
                 string layer = layers[i];
                 List<float> ls = layerStats[i];
-                LayerTest.LayerStatsSingle(ls, @"Tests/Network/test" + t + "/" + layer + ".json");
+                LayerTest.LayerStats(ls, @"Tests/Network/test" + t + "/" + layer + ".json");
             }
         }
     }

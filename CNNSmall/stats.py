@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
-np.set_printoptions(precision=2, suppress=True, formatter={'float': '{:e}'.format})
-pd.set_option('display.float_format', '{:.1e}'.format)
+np.set_printoptions(precision=1, suppress=True, formatter={'float': '{:.0e}'.format})
+pd.set_option('display.float_format', '{:.0e}'.format)
 
 def relative_root_mean_squared_error(true, pred):
     num = np.sum(np.square(true - pred))
@@ -27,7 +27,7 @@ def analysis(layers, types):
             preds = np.append(preds, np.array(data["Pred"]))
 
         loss = np.absolute(trues-preds)
-        print(all (x < 0.000009 for x in loss.tolist()))
+        # print(all (x < 0.000009 for x in loss.tolist()))
 
         mean = np.mean(loss)
         var = np.var(loss)
@@ -39,33 +39,45 @@ def analysis(layers, types):
     return dataframe
 
 # Each new file contains only one output
-def analysis_network():
-    # for t in range(1,11):
-    with open("Tests/Network/output.json", "r") as file:
-        data = json.load(file)
-    
-    true = np.array(data["True"])
-    pred = np.array(data["Pred"])
-
+def analysis_network(layers, types):
+    dataframe = pd.DataFrame({"" : ["mean", "var", "max", "rrmse"]})
     true_class = []
     pred_class = []
-    
-    for i in range(0, 10, 2):
-        true_val = true[i: i + 2]
-        pred_val = pred[i: i + 2]
-        loss = true_val - pred_val
+    for (layer, type) in zip(layers, types):
+        trues = np.array([])
+        preds = np.array([])
+        losses = np.array([])  
+        for t in range(1,2):
+            with open("Tests/Network/test" + str(t) + "/" + layer + ".json", "r") as file:
+                pred_f = json.load(file)
+            with open("Tests/" + layer + "/inputs/input" + str(t) + ".json", "r") as file:
+                true_f = json.load(file)
 
-        true_class.append(np.argmax(true_val))
-        pred_class.append(np.argmax(pred_val))
+            true = np.array(true_f["computed"])
+            # Depends on whether the output comes in parallel or sequentially
+            if type == "00" or type == "10":
+                true = true.T.reshape(-1)
+            else:
+                true = true.reshape(-1)
+            pred = np.array(pred_f["Pred"])
+            loss = np.absolute(true-pred)
+            trues = np.append(trues, true)
+            preds = np.append(preds, pred)
+            losses = np.append(losses, loss)
 
-        if (np.argmax(true_val) != np.argmax(pred_val)):
+            if layer == "softmax":
+                true_class.append(np.argmax(true))
+                pred_class.append(np.argmax(pred))
 
-            print("Index: {}, True value: {}, Pred value: {}, loss: {}".format(i,true_val, pred_val, loss))
-    
+        mean = np.mean(losses)
+        var = np.var(losses)
+        max = np.max(losses)
+        rrmse = relative_root_mean_squared_error(trues,preds)
+
+        dataframe[layer] = [mean,var,max,rrmse]
+
     acc = accuracy_score(true_class, pred_class)
-
-    dataframe = pd.DataFrame({"" : ["accuracy"]})
-    dataframe.loc[len(dataframe)] = acc
+    print(acc)
 
     return dataframe
 
@@ -75,12 +87,14 @@ types = ["00", "00", "00", "00", "01", "11", "11", "11", "10", "00"]
 
 layers_df = analysis(layers, types)
 print("Stats for the layers isolated")
-# print(layers_df.to_latex(index=False))
-print(layers_df.to_string())
+# print(layers_df.to_string())
+print(layers_df.T.to_latex(header=False))
 print("\n")
 
-print("Accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
-print(analysis(["Network"],[""]))
+print("Accumulated layer loss, and accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
+layers_accum_df = analysis_network(layers, types)
+# print(layers_accum_df.to_string())
+print(layers_accum_df.T.to_latex(header=False))
 
 
 

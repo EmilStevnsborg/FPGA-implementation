@@ -17,7 +17,7 @@ namespace CNN
         public float[][] buffer { get; set; }
         public float[][] computed { get; set; }
         public int NumInputs = 0;
-        public List<(float, float)> Stats = new List<(float,float)>();
+        public List<float> Stats = new List<float>();
 
         public Tester(int numInChannels,int numOutChannels,(int,int) channelSize)
         {

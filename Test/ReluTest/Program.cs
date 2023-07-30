@@ -3,6 +3,8 @@ using System.Text.Json;
 using Config;
 using System;
 using System.Collections.Generic;
+using SME;
+using CNN;
 
 class MainClass
 {
@@ -42,26 +44,36 @@ class MainClass
 
             for (int t = 1; t <= tests; t++)
             {
-                (List<(float, float)>, long) data;
-
                 string inputString = File.ReadAllText(path + "/inputs/input" + t + ".json");
 
-                switch (layerType)
+                using(var sim = new Simulation())
                 {
-                    case "11":
-                        data = LayerTest.LayerTest_11(reluConfig, inputString);
-                        // Save the results
-                        LayerTest.LayerStats(data.Item1, path + "/outputs11/output" + t + ".json");
-                        break;
-                    // layerType = "00"
-                    default:
-                        data = LayerTest.LayerTest_00(reluConfig, inputString);
-                        // Save the results
-                        LayerTest.LayerStats(data.Item1, path + "/outputs00/output" + t + ".json");
-                        break;
-                }
+                    // depending on layerType
+                    var reluLayer = reluConfig.PushConfig_00();
 
-                Console.WriteLine("Clock ticks: " + data.Item2);
+                    var tester = new Tester_00(reluConfig.numInChannels, 
+                                                reluConfig.numOutChannels,
+                                                (reluConfig.channelHeight,reluConfig.channelWidth));
+
+                    InputCase input = JsonSerializer.Deserialize<InputCase>(inputString);
+
+                    tester.FillBuffer(input.buffer, input.computed);
+
+                    reluLayer.Input = tester.Output;
+                    reluLayer.PushInputs();
+                    tester.Input = reluLayer.Output;
+
+                    
+                    long ticks = 0;
+
+                    sim
+                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                    .Run();
+
+                    LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
+
+                    Console.WriteLine(t + " " + ticks);
+                }  
             }
         }
     }

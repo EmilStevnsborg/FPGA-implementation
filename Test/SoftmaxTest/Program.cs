@@ -3,6 +3,8 @@ using System.Text.Json;
 using Config;
 using System;
 using System.Collections.Generic;
+using SME;
+using CNN;
 
 class MainClass
 {
@@ -41,15 +43,36 @@ class MainClass
 
             for (int t = 1; t <= tests; t++)
             {
-                (List<(float, float)>, long) data;
-
                 string inputString = File.ReadAllText(path + "/inputs/input" + t + ".json");
 
-                data = LayerTest.LayerTest_00(softmaxConfig, inputString);
-                // Save the results
-                LayerTest.LayerStats(data.Item1, path + "/outputs00/output" + t + ".json");
+                using(var sim = new Simulation())
+                {
+                    // depending on layerType
+                    var softmaxLayer = softmaxConfig.PushConfig_00();
 
-                Console.WriteLine("Clock ticks: " + data.Item2);
+                    var tester = new Tester_00(softmaxConfig.numInChannels, 
+                                                softmaxConfig.numOutChannels,
+                                                (softmaxConfig.channelHeight,softmaxConfig.channelWidth));
+
+                    InputCase input = JsonSerializer.Deserialize<InputCase>(inputString);
+
+                    tester.FillBuffer(input.buffer, input.computed);
+
+                    softmaxLayer.Input = tester.Output;
+                    softmaxLayer.PushInputs();
+                    tester.Input = softmaxLayer.Output;
+
+                    
+                    long ticks = 0;
+
+                    sim
+                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                    .Run();
+
+                    LayerTest.LayerStats(tester.Stats, path + "/outputs/softmax/output" + t + ".json");
+
+                    Console.WriteLine(t + " " + ticks);
+                }  
             }
         }
     }
