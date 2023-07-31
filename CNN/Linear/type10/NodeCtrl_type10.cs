@@ -23,7 +23,7 @@ namespace CNN
         private int channelHeight;
         private int channelWidth;
         private int numInputs;
-        private int x = 0, i = 0, k = 0;
+        private int x = 0, i = 0, k = 0, adress = 0;
         private float[] buffer;
         private bool ramValid = false;
 
@@ -46,14 +46,16 @@ namespace CNN
             if (i < x && x > 0)
             {
                 // Issue ram read
-                ram_ctrl.Enabled = (i < numInputs);
-                ram_ctrl.Address = i;
+                ram_ctrl.Enabled = (adress < numInputs);
+                ram_ctrl.Address = adress;
                 ram_ctrl.IsWriting = false;
                 ram_ctrl.Data = 0;
 
                 // After two clock cycles, the results comes back from memory.
                 ramValid = k >= 2;
                 k = (k + 1);
+
+                adress = adress + 1;
 
                 // If the results are back from memory, they can be forwarded along
                 // side the Value data.
@@ -69,6 +71,7 @@ namespace CNN
                     if (i == x)
                     {
                         k = 0;
+                        adress = adress - 2;
                     }
 
                     // buffer is done
