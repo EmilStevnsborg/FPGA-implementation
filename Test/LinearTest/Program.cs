@@ -32,7 +32,7 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 1;
+            int tests = 1000;
             // Which layer should be tested
             string layer = "linear";
             // What type of implementation

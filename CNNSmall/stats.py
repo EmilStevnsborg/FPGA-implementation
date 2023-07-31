@@ -24,7 +24,7 @@ def analysis_network(layers, types, iso_accum):
         trues = np.array([])
         preds = np.array([])
         losses = np.array([])  
-        for t in range(1,2):
+        for t in range(1,1000):
             
             # isolation or accumulation
             if iso_accum == "iso":
