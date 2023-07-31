@@ -2,6 +2,7 @@ using CNN;
 
 namespace Config
 {
+    // Specified softmax configuration class that can initialize a softmax layer
     public class SoftmaxConfig : GeneralConfig
     {
         public SoftmaxConfig() {} 

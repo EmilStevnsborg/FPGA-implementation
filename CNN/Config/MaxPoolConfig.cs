@@ -2,6 +2,7 @@ using CNN;
 
 namespace Config
 {
+    // Specified maxpooling configuration class that can initialize a maxpooling layer
     public class MaxPoolConfig : GeneralConfig
     {
         public int kernelHeight { get; set; }

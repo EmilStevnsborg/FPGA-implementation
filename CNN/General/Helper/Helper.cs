@@ -5,7 +5,10 @@ namespace CNN
 {
     public static class Helper 
     {
-        public static void Padding(ref float[] buffer, int channelHeight, int channelWidth,int padHeight, int padWidth, float padVal)
+        // applies padding to a channel in a reference buffer
+        public static void Padding(ref float[] buffer, int channelHeight, 
+                                   int channelWidth, int padHeight, int padWidth, float padVal
+        )
         {
             int newWidth = channelWidth + 2 * padWidth;
             int newHeight = channelHeight + 2 * padHeight;
@@ -17,8 +20,6 @@ namespace CNN
                     buffer[ii * newWidth + jj] = padVal;
 
                     buffer[(newHeight - ii - 1) * newWidth + jj] = padVal;
-
-                    // Console.WriteLine((ii * newWidth + jj) + " " + ((newHeight - ii - 1) * newWidth + jj));
                 }
             }
             // sides
@@ -29,11 +30,10 @@ namespace CNN
                     buffer[ii * newWidth + jj] = padVal;
 
                     buffer[ii * newWidth + newWidth - jj - 1] = padVal;
-
-                    // Console.WriteLine((ii * newWidth + jj) + " " + (ii * newWidth + (newWidth - 1 - jj)));
                 }
             }
         }
+        // fills in weights to a buffer, where one or multiple channels are already stored
         public static void FillInWeights(ref float[] buffer, float[] weights, int startIndex)
         {
             for (int i = 0; i < weights.Length; i++)

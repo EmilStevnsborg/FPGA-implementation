@@ -32,11 +32,11 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 25;
+            int tests = 1000;
             // Which layer should be tested
-            string layer = "batchNorm1";
+            string layer = "batchNorm2";
             // What type of implementation
-            string layerType = "00";
+            string layerType = "11";
             string path = @"../../CNNSmall/Tests/" + layer;
             
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
@@ -49,9 +49,9 @@ class MainClass
                 using(var sim = new Simulation())
                 {
                     // depending on layerType
-                    var batchNormLayer = batchNormConfig.PushConfig_00();
+                    var batchNormLayer = batchNormConfig.PushConfig_11();
 
-                    var tester = new Tester_00(batchNormConfig.numInChannels, 
+                    var tester = new Tester_11(batchNormConfig.numInChannels, 
                                                 batchNormConfig.numOutChannels,
                                                 (batchNormConfig.channelHeight,batchNormConfig.channelWidth));
 

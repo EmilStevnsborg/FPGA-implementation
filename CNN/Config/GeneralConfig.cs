@@ -3,6 +3,7 @@ using CNN;
 
 namespace Config
 {
+    // General configuration class. It contains the basic fields needed to initalize a layer.
     public abstract class GeneralConfig
     {
         public int numInChannels { get; set; }

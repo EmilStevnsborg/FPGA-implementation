@@ -3,7 +3,8 @@ using SME;
 
 namespace CNN
 {
-    // Works
+    // Process used in SoftmaxLayer for example. The denominator needs to be computed, which
+    // requires more processing. Thus the input value must wait for it to arrive.
     [ClockedProcess]
     public class DivideValue : SimpleProcess
     {
@@ -38,7 +39,7 @@ namespace CNN
                 Output.enable = true;
                 divideValid = false;
             }
-            // If Input is last value in slice make plus ctrl know
+            // If Input is last value in 2D region let plus ctrl know
             Output.LastValue = InputValue.LastValue;
         }
     }

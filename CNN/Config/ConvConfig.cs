@@ -3,6 +3,7 @@ using CNN;
 
 namespace Config
 {
+    // Specified convolutional configuration class that can initialize a convolutional layer
     public class ConvConfig : GeneralConfig
     {
         public int kernelHeight { get; set; }

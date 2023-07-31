@@ -3,6 +3,7 @@ using SME;
 
 namespace CNN
 {
+    // Simple process that adds a value to another incoming value.
     [ClockedProcess]
     public class Bias : SimpleProcess
     {

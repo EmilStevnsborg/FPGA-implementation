@@ -2,6 +2,7 @@ using CNN;
 
 namespace Config
 {
+    // Specified linear configuration class that can initialize a linear layer
     public class LinearConfig : GeneralConfig
     {
         public float[][] weights { get; set; }

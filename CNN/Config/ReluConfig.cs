@@ -2,6 +2,7 @@ using CNN;
 
 namespace Config
 {
+    // Specified ReLU configuration class that can initialize a ReLU layer
     public class ReluConfig : GeneralConfig
     {
         public ReluConfig() {} 

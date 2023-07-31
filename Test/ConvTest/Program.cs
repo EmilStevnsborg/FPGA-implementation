@@ -49,9 +49,9 @@ class MainClass
                 using(var sim = new Simulation())
                 {
                     // depending on layerType
-                    var convLayer = convConfig.PushConfig_01();
+                    var convLayer = convConfig.PushConfig_00();
 
-                    var tester = new Tester_10(convConfig.numInChannels, 
+                    var tester = new Tester_00(convConfig.numInChannels, 
                                                 convConfig.numOutChannels,
                                                 (convConfig.channelHeight,convConfig.channelWidth));
 

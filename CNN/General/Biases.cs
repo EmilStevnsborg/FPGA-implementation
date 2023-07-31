@@ -3,6 +3,9 @@ using SME;
 
 namespace CNN
 {
+    // Process that stores multiple values and adds to them accordingly. It is used, when
+    // it is not an option to create multiple Bias processes like when channels are streamed
+    // sequentially.
     [ClockedProcess]
     public class Biases : SimpleProcess
     {
@@ -30,6 +33,7 @@ namespace CNN
                 Output.enable = Input.enable;
                 Output.LastValue = Input.LastValue;
                 i = (i + 1);
+                // next channel incoming means next bias value must be used
                 if (i % outValues == 0) 
                 {
                     c = (c + 1);

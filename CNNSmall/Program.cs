@@ -11,7 +11,7 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        int tests = 460;
+        int tests = 1000;
         bool layerOutputs = false;
 
         string conv1        = File.ReadAllText(@"Configs/conv1.json");
@@ -32,7 +32,7 @@ class MainClass
             "relu2", "maxPool2", "linear", "softmax"
         };
         
-        for (int t = 40; t <= tests; t++) 
+        for (int t = 501; t <= tests; t++) 
         {
             // layer stats
             List<float> conv1Stats = new List<float>();

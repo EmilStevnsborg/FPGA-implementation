@@ -4,6 +4,9 @@ using SME.Components;
 
 namespace CNN
 {
+    // Used in ConvLayer_00 and the MaxPoolKernel in MaxPoolLayer_00. It buffers a channel that
+    // is being streamed value by value. Afterwards, it sends out a stream of value from 2D-regions
+    // of the input channel in pairs of two.
     [ClockedProcess]
     public class InputCtrl_ParFilter : SimpleProcess
     {

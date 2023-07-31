@@ -32,10 +32,11 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 25;
+            int tests = 1000;
             // Which layer should be tested
             string layer = "softmax";
             // What type of implementation
+            string layerType = "00";
             string path = @"../../CNNSmall/Tests/" + layer;
             
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
@@ -69,7 +70,7 @@ class MainClass
                     .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
                     .Run();
 
-                    LayerTest.LayerStats(tester.Stats, path + "/outputs/softmax/output" + t + ".json");
+                    LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
 
                     Console.WriteLine(t + " " + ticks);
                 }  

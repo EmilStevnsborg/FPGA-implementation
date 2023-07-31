@@ -4,6 +4,7 @@ using System;
 
 namespace CNN
 {
+    // Performs batchnormalization on a single input value.
     [ClockedProcess]
     public class BatchNorm_type00
     {

@@ -2,6 +2,10 @@ using SME;
 
 namespace CNN
 {
+    // Wrapper class that encapsulates processes, which perform batchnormalization on the input
+    // The input arrives as an array, where each index contains a ValueBus that stems from a 
+    // designated channel. Thus, all input channels are streamed value by value at the same time.
+    // The output is streamed the same way input is
     [ClockedProcess]
     public class BatchNormLayer_00 : Layer<ValueBus[], ValueBus[]>
     {

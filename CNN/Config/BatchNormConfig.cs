@@ -2,6 +2,8 @@ using CNN;
 
 namespace Config
 {
+    // Specified batchnormalization configuration class that can initialize a batchnormalization 
+    // layer
     public class BatchNormConfig : GeneralConfig
     {
         public float[] means { get; set; }

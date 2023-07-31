@@ -10,7 +10,7 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        bool configTest = true;
+        bool configTest = false;
         bool CNNSmallTest = !configTest;
 
         if (configTest)
@@ -32,7 +32,7 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 25;
+            int tests = 1000;
             // Which layer should be tested
             string layer = "linear";
             // What type of implementation

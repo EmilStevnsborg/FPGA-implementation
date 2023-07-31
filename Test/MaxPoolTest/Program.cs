@@ -32,26 +32,26 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 25;
+            int tests = 1000;
             // Which layer should be tested
             string layer = "maxPool2";
             // What type of implementation
-            string layerType = "00";
+            string layerType = "11";
             string path = @"../../CNNSmall/Tests/" + layer;
             
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             MaxPoolConfig maxPoolConfig = JsonSerializer.Deserialize<MaxPoolConfig>(config);
 
-            for (int t = 1; t <= tests; t++)
+            for (int t = 928; t <= tests; t++)
             {
                 string inputString = File.ReadAllText(path + "/inputs/input" + t + ".json");
 
                 using(var sim = new Simulation())
                 {
                     // depending on layerType
-                    var maxPoolLayer = maxPoolConfig.PushConfig_00();
+                    var maxPoolLayer = maxPoolConfig.PushConfig_11();
 
-                    var tester = new Tester_00(maxPoolConfig.numInChannels, 
+                    var tester = new Tester_11(maxPoolConfig.numInChannels, 
                                                 maxPoolConfig.numOutChannels,
                                                 (maxPoolConfig.channelHeight,maxPoolConfig.channelWidth));
 

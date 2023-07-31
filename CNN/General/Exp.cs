@@ -3,6 +3,7 @@ using SME;
 
 namespace CNN
 {
+    // Applies the natural exponential to a single, incoming value.
     [ClockedProcess]
     public class Exp : SimpleProcess
     {
@@ -13,8 +14,7 @@ namespace CNN
         protected override void OnTick()
         {
             Output.Value = 0;
-            Output.enable = false;
-            Output.LastValue = false;
+            Output.enable = Output.LastValue = false;
             // Output should only be updated when the input is valid.
             if (Input.enable)
             {
