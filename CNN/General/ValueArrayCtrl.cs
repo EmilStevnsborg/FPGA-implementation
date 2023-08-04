@@ -11,14 +11,19 @@ namespace CNN
         public ValueBus[] Input;
         [OutputBus]
         public ValueBus Output = Scope.CreateBus<ValueBus>();
-        private int numInChannels, channelHeight, channelWidth;
-        private int i = 0, k = 0;
+
+        private SME.VHDL.UInt3 numInChannels; // (5 dec)
+        private SME.VHDL.UInt5 channelHeight; // (26 dec)
+        private SME.VHDL.UInt5 channelWidth;  // (26 dec)
+        private SME.VHDL.UInt3 i = 0;         // (5 dec)
+        private SME.VHDL.UInt3 k = 0;         // (5 dec)
+
         private float[] buffer;
         public ValueArrayCtrl(int numInChannels, (int, int) channelSize)
         {
-            this.numInChannels = numInChannels;
-            this.channelHeight = channelSize.Item1;
-            this.channelWidth = channelSize.Item2;
+            this.numInChannels = (SME.VHDL.UInt3) numInChannels;
+            this.channelHeight = (SME.VHDL.UInt5) channelSize.Item1;
+            this.channelWidth = (SME.VHDL.UInt5) channelSize.Item2;
             buffer = new float[numInChannels];
         }
         protected override void OnTick()
@@ -31,19 +36,18 @@ namespace CNN
                 {
                     if (Input[ii].enable)
                     {
-                        // Console.WriteLine(Input[ii].Value);
                         buffer[ii] = Input[ii].Value;
-                        i = i + 1;
+                        i++;
+                        // Console.WriteLine(i);
                     }
                 }
             }
             // If Inputs have loaded go through them
             if (i > 0 && k < i)
             {
-                // Console.WriteLine(numInChannels + " " + i + " " + k);
                 Output.Value = buffer[k];
                 Output.enable = true;
-                k = k + 1;
+                k++;
                 if (k % numInChannels == 0)
                 {
                     Output.LastValue = true;

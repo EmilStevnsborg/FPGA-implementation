@@ -56,6 +56,7 @@ namespace CNN
                     { 
                         NumInputs += 1;
                         Stats.Add(Input[c].Value);
+                        // Console.WriteLine("Input number " + NumInputs);
                     }
                 }
                 await ClockAsync();

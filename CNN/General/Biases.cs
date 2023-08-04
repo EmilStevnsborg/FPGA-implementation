@@ -9,18 +9,24 @@ namespace CNN
     [ClockedProcess]
     public class Biases : SimpleProcess
     {
+        // used in conv2 and batchNorm2
         [InputBus]
         public ValueBus Input;
         [OutputBus]
         public ValueBus Output = Scope.CreateBus<ValueBus>();
         private float[] biases;
-        private int outValues, i, c, numOutChannels;
+
+        private SME.VHDL.UInt7 outValues;       // (out conv2 = 9x9 = 81 dec)
+        private SME.VHDL.UInt9 i;               // (81x5 = 405 dec)
+        private SME.VHDL.UInt3 c;               // (5 dec)
+        private SME.VHDL.UInt3 numOutChannels;  // (5 dec)
         public Biases(float[] biases, int outValues, int numOutChannels)
         {
             this.biases = biases;
-            this.outValues = outValues;
-            i = c = 0;
-            this.numOutChannels = numOutChannels;
+            this.outValues = (SME.VHDL.UInt7) outValues;
+            this.numOutChannels = (SME.VHDL.UInt3) numOutChannels;
+            i = 0;
+            c = 0;
         } 
 
         protected override void OnTick()
@@ -32,15 +38,16 @@ namespace CNN
                 Output.Value = Input.Value + biases[c];
                 Output.enable = Input.enable;
                 Output.LastValue = Input.LastValue;
-                i = (i + 1);
+                i++;
                 // next channel incoming means next bias value must be used
                 if (i % outValues == 0) 
                 {
-                    c = (c + 1);
+                    c++;
                 }
                 if (c == numOutChannels)
                 {
-                    i = c = 0;
+                    i = 0;
+                    c = 0;
                 }
             }
         }

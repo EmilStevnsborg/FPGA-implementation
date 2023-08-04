@@ -31,6 +31,7 @@ namespace CNN
         private int kernelHeight, kernelWidth;
         private int strideRow, strideCol;
         private int startRow = 0, startCol = 0;
+        
         private bool bufferValid = false, ramValid = false;
         private bool loaded = false, wholeChannel = false, lastKernelValue = false;
         public InputCtrl_SeqFilter(int numOutChannels, (int,int) channelSize, (int,int) kernelSize, (int,int) stride, (int,int) padding)
