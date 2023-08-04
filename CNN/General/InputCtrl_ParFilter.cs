@@ -110,6 +110,8 @@ namespace CNN
                 ram_ctrlB.IsWriting = false;
                 ram_ctrlB.Data = 0;
 
+                Console.WriteLine(bufferA + " " + bufferB);
+
                 // if whole channel has been processed else check if bufferB read is the last index
                 wholeChannel = !wholeChannel ? (bufferB + 1 == newWidth * newHeight) : true;
 
