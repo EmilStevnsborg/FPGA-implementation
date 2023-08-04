@@ -118,10 +118,8 @@ namespace CNN
                 wholeChannel = !wholeChannel ? (bufferA + 1 == newWidth * newHeight) : true;
 
                 SME.VHDL.UInt3 w = (SME.VHDL.UInt3) ((j + (SME.VHDL.UInt3) 1) % kernelWidth); // (3 dec)
-                SME.VHDL.UInt3 h = w == 0 ? i++ : i; // (3 dec)
+                SME.VHDL.UInt3 h = w == 0 ? (SME.VHDL.UInt3) (i + (SME.VHDL.UInt3) 1) : (SME.VHDL.UInt3) i; // (3 dec)
                 SME.VHDL.UInt10 bufferB = (SME.VHDL.UInt10) ((startRow + h) * newWidth + (startCol + w)); // (28x28+1 = 785 dec)
-
-                Console.WriteLine(bufferA + " " + bufferB);
 
                 // Issue ram read of buffer from second adress
                 ram_ctrlB.Enabled = !wholeChannel;
@@ -183,7 +181,6 @@ namespace CNN
                     
                     // Is this the last kernel value
                     lastKernelVal = (kernelA + 1 == kernelHeight*kernelWidth) || (kernelB + 1 == kernelHeight*kernelWidth);
-                    // Console.WriteLine(bufferA + " " + bufferB + " " + lastKernelVal + " " + ii + " " + kernelA + " " + kernelB);
                     OutputValueA.LastValue = lastKernelVal;
 
                     // Check if all data has been processed.
