@@ -22,14 +22,21 @@ namespace CNN
         [OutputBus]
         public TrueDualPortMemory<float>.IControl ram_ctrlB;
 
-        private int ii = 0, jj = 0, c, i, j, k, kernelA, kernelB;
-        private int numInChannels;
-        private int channelHeight, channelWidth;
-        private int padHeight, padWidth;
-        private int newHeight, newWidth;
-        private int kernelHeight, kernelWidth;
-        private int strideRow, strideCol;
-        private int startRow = 0, startCol = 0;
+        private SME.VHDL.UInt4 ii = 0;                          // (9 dec)
+        private SME.VHDL.UInt4 jj = 0;                          // (9 dec)
+        private SME.VHDL.UInt3 c;                               // (5 dec)
+        private SME.VHDL.UInt2 i;                               // (3 dec)
+        private SME.VHDL.UInt2 j;                               // (3 dec)
+        private SME.VHDL.UInt2 k;                               // (2 dec)
+        private SME.VHDL.UInt4 kernelA;                         // (9 dec)
+        private SME.VHDL.UInt4 kernelB;                         // (9 dec)
+        private SME.VHDL.UInt3 numInChannels;                   // (5 dec)
+        private SME.VHDL.UInt4 channelHeight, channelWidth;     // (9 dec)
+        private SME.VHDL.UInt1 padHeight, padWidth;             // (1 dec)
+        private SME.VHDL.UInt4 newHeight, newWidth;             // (9 dec)
+        private SME.VHDL.UInt2 kernelHeight, kernelWidth;       // (3 dec)
+        private SME.VHDL.UInt2 strideRow, strideCol;            // (3 dec)
+        private SME.VHDL.UInt4 startRow = 0, startCol = 0;      // (9 dec)
         bool bufferValid = false;
         private bool ramValid = false;
         private bool loaded = false;
@@ -40,22 +47,22 @@ namespace CNN
                                     (int,int) padding
         )
         {
-            this.numInChannels = numInChannels;
+            this.numInChannels = (SME.VHDL.UInt3) numInChannels;
 
-            this.channelHeight = channelSize.Item1;
-            this.channelWidth = channelSize.Item2;
+            this.channelHeight = (SME.VHDL.UInt4) channelSize.Item1;
+            this.channelWidth = (SME.VHDL.UInt4) channelSize.Item2;
 
-            this.padHeight = padding.Item1;
-            this.padWidth = padding.Item2;
+            this.padHeight = (SME.VHDL.UInt1) padding.Item1;
+            this.padWidth = (SME.VHDL.UInt1) padding.Item2;
 
-            this.newHeight = channelHeight + 2 * padHeight;
-            this.newWidth = channelWidth + 2 * padWidth;
+            this.newHeight = (SME.VHDL.UInt4) (channelHeight + 2 * padHeight);
+            this.newWidth = (SME.VHDL.UInt4) (channelWidth + 2 * padWidth);
 
-            this.kernelHeight = kernelSize.Item1;
-            this.kernelWidth = kernelSize.Item2;
+            this.kernelHeight = (SME.VHDL.UInt2) kernelSize.Item1;
+            this.kernelWidth = (SME.VHDL.UInt2) kernelSize.Item2;
 
-            this.strideRow = stride.Item1;
-            this.strideCol = stride.Item2;
+            this.strideRow = (SME.VHDL.UInt2) stride.Item1;
+            this.strideCol = (SME.VHDL.UInt2) stride.Item2;
         }
         protected override void OnTick()
         {
@@ -67,7 +74,11 @@ namespace CNN
                 {
                     bufferValid = true;
                     loaded = false;
-                    c = i = j = k = kernelA = 0;
+                    c = 0;
+                    i = 0;
+                    j = 0;
+                    k = 0;
+                    kernelA = 0;
                     kernelB = 1;
                 }
                 // Load Input into buffer
@@ -79,9 +90,9 @@ namespace CNN
                     ram_ctrlA.IsWriting = true;
                     ram_ctrlA.Data = Input.Value;
                     // Always increment column index.
-                    jj = (jj + 1) % channelWidth;
+                    jj = (SME.VHDL.UInt4) ((jj + 1) % channelWidth);
                     // Only increment row index when column have wrapped.
-                    ii = jj == 0 ? (ii + 1) % channelHeight: ii;
+                    ii = jj == 0 ? (SME.VHDL.UInt4) ((ii + 1) % channelHeight): ii;
                     // !!! ADJUST FOR NEXT CHANNEL !!!
                     if (ii == 0 && jj == 0)
                     {
@@ -91,7 +102,7 @@ namespace CNN
                         }
                         else
                         {
-                            c = c + 1;
+                            c++;
                         }
                     }
                 }
@@ -102,10 +113,10 @@ namespace CNN
             // each clock cycle.
             if (bufferValid)
             {
-                int startIdx = c * newHeight * newWidth;
+                SME.VHDL.UInt9 startIdx = (SME.VHDL.UInt9) (c * newHeight * newWidth);                      // (4x9x9 = 324 dec)
 
-                int bufferA = (startRow + i) * newWidth + (startCol + j);
-                int addrA = startIdx + bufferA;
+                SME.VHDL.UInt7 bufferA = (SME.VHDL.UInt7) ((startRow + i) * newWidth + (startCol + j));     // (9x9+1 = 82 dec)
+                SME.VHDL.UInt9 addrA = (SME.VHDL.UInt9) (startIdx + bufferA);
                 
                 // Issue ram read of buffer from first adress
                 ram_ctrlA.Enabled = !wholeChannel;
@@ -116,9 +127,9 @@ namespace CNN
                 // check if bufferA read is the index in whole channel
                 wholeChannel = !wholeChannel ? (bufferA + 1 == newWidth * newHeight) : true;
 
-                var w = (j + 1) % kernelWidth;
-                var h = w == 0 ? i + 1 : i;
-                int bufferB = (startRow + h) * newWidth + (startCol + w);
+                SME.VHDL.UInt2 w = (SME.VHDL.UInt2) ((j + (SME.VHDL.UInt2) 1) % kernelWidth);               // (3 dec)
+                SME.VHDL.UInt2 h = w == 0 ? (SME.VHDL.UInt2) (i + (SME.VHDL.UInt2) 1) : i;                  // (3 dec)
+                SME.VHDL.UInt7 bufferB = (SME.VHDL.UInt7) ((startRow + h) * newWidth + (startCol + w));     // (9x9+1 = 82 dec)
 
                 // Issue ram read of buffer from second adress
                 ram_ctrlB.Enabled = !wholeChannel;
@@ -131,7 +142,9 @@ namespace CNN
 
                 // After two clock cycles, the results come back from memory.
                 ramValid = k >= 2;
-                k = (k + 1);
+                if (!ramValid) {
+                    k++;
+                }
 
                 // Channel hasn't been processed
                 if (!wholeChannel)
@@ -147,24 +160,24 @@ namespace CNN
                             if (startCol + kernelWidth == newWidth)
                             {
                                 startCol = 0;
-                                startRow = startRow + strideRow;
+                                startRow = (SME.VHDL.UInt4) (startRow + strideRow);
                             }
                             // shift kernel by stride on columns
                             else
                             {
-                                startCol = startCol + strideCol;
+                                startCol = (SME.VHDL.UInt4) (startCol + strideCol);
                             }
                         }
                         // go to next row in kernel
                         else
                         {
-                            j = (j + 2) % kernelWidth;
-                            i += 1;
+                            j = (SME.VHDL.UInt2) ((j + (SME.VHDL.UInt2) 2) % kernelWidth);
+                            i++;
                         }
                     }
                     else
                     {
-                        j = (j + 2);
+                        j = (SME.VHDL.UInt2) (j + (SME.VHDL.UInt2) 2);
                     }
                 }
                 // Wait clock cycles for last memory
@@ -172,15 +185,18 @@ namespace CNN
                 {
                     if (c + 1 == numInChannels)
                     {
-                        ii += 1;
+                        ii++;
                     }
                     // Go to next kernelweights and traverse channel again
                     else
                     {
                         // If all channels have been iterated close process
                         wholeChannel = (c + 1 == numInChannels);
-                        c += 1;
-                        i = j = startRow = startCol = 0;
+                        c++;
+                        i = 0;
+                        j = 0;
+                        startRow = 0;
+                        startCol = 0;
                     }
                 }
                 if (ramValid)
@@ -191,24 +207,29 @@ namespace CNN
                     
                     // Is this the last kernel value
                     lastKernelVal = (kernelA + 1 == kernelHeight*kernelWidth) || (kernelB + 1 == kernelHeight*kernelWidth);
-                    // Console.WriteLine(bufferA + " " + bufferB + " " + lastKernelVal + " " + ii + " " + kernelA + " " + kernelB);
                     OutputValueA.LastValue = lastKernelVal;
 
                     // Check if all data has been processed.
                     if (lastKernelVal && ii == 3)
                     {
                         bufferValid = ramValid = wholeChannel = lastKernelVal = false;
-                        i = j = ii = k = startRow = startCol = kernelA = 0;
+                        i = 0;
+                        j = 0;
+                        ii = 0;
+                        k = 0;
+                        startRow = 0;
+                        startCol = 0;
+                        kernelA = 0;
                         kernelB = 1;
                     }
                     else
                     {
-                        kernelA = (kernelA + 2) % (kernelHeight * kernelWidth);
+                        kernelA = (SME.VHDL.UInt4) ((kernelA + (SME.VHDL.UInt4) 2) % (kernelHeight * kernelWidth));
                         if (kernelB == 0)
                         {
                             kernelA = 0;
                         }
-                        kernelB = (kernelA + 1) % (kernelHeight * kernelWidth);
+                        kernelB = (SME.VHDL.UInt4) ((kernelA + (SME.VHDL.UInt4) 1) % (kernelHeight * kernelWidth));
                     }
                 }
             }

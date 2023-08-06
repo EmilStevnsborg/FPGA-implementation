@@ -27,21 +27,21 @@ namespace CNN
 
         private SME.VHDL.UInt5 ii = 0;          // (28 dec)
         private SME.VHDL.UInt5 jj = 0;          // (28 dec)
-        private SME.VHDL.UInt3 i;               // (3 dec)
-        private SME.VHDL.UInt3 j;               // (3 dec)
-        private SME.VHDL.UInt21 k;              // (26x26x3 = 2028 dec) !can be converted to 2 bit!
+        private SME.VHDL.UInt2 i;               // (3 dec)
+        private SME.VHDL.UInt2 j;               // (3 dec)
+        private SME.VHDL.UInt2 k;               // (2 dec)
         private SME.VHDL.UInt4 kernelA;         // (3x3+1 = 10 dec)
         private SME.VHDL.UInt4 kernelB;         // (3x3+1 = 10 dec)
         private SME.VHDL.UInt5 channelHeight;   // (28 dec)
         private SME.VHDL.UInt5 channelWidth;    // (28 dec)
-        private SME.VHDL.UInt2 padHeight;       // (1 dec)
-        private SME.VHDL.UInt2 padWidth;        // (1 dec)
+        private SME.VHDL.UInt1 padHeight;       // (1 dec)
+        private SME.VHDL.UInt1 padWidth;        // (1 dec)
         private SME.VHDL.UInt5 newHeight;       // (28 dec)
         private SME.VHDL.UInt5 newWidth;        // (28 dec)
-        private SME.VHDL.UInt3 kernelHeight;    // (3 dec)
-        private SME.VHDL.UInt3 kernelWidth;     // (3 dec)
-        private SME.VHDL.UInt2 strideRow;       // (1 dec)
-        private SME.VHDL.UInt2 strideCol;       // (1 dec)
+        private SME.VHDL.UInt2 kernelHeight;    // (3 dec)
+        private SME.VHDL.UInt2 kernelWidth;     // (3 dec)
+        private SME.VHDL.UInt2 strideRow;       // (2 dec)
+        private SME.VHDL.UInt2 strideCol;       // (2 dec)
         private SME.VHDL.UInt5 startRow = 0;    // (26 dec)
         private SME.VHDL.UInt5 startCol = 0;    // (26 dec)
 
@@ -55,14 +55,14 @@ namespace CNN
             this.channelHeight = (SME.VHDL.UInt5) channelSize.Item1;
             this.channelWidth = (SME.VHDL.UInt5) channelSize.Item2;
 
-            this.padHeight = (SME.VHDL.UInt2) padding.Item1;
-            this.padWidth = (SME.VHDL.UInt2) padding.Item2;
+            this.padHeight = (SME.VHDL.UInt1) padding.Item1;
+            this.padWidth = (SME.VHDL.UInt1) padding.Item2;
 
             this.newHeight = (SME.VHDL.UInt5) (channelHeight + 2 * padding.Item1);
             this.newWidth = (SME.VHDL.UInt5) (channelWidth + 2 * padding.Item2);
 
-            this.kernelHeight = (SME.VHDL.UInt3) kernelSize.Item1;
-            this.kernelWidth = (SME.VHDL.UInt3) kernelSize.Item2;
+            this.kernelHeight = (SME.VHDL.UInt2) kernelSize.Item1;
+            this.kernelWidth = (SME.VHDL.UInt2) kernelSize.Item2;
 
             this.strideRow = (SME.VHDL.UInt2) stride.Item1;
             this.strideCol = (SME.VHDL.UInt2) stride.Item2;
@@ -117,8 +117,8 @@ namespace CNN
                 // check if bufferA read is the index in whole channel
                 wholeChannel = !wholeChannel ? (bufferA + 1 == newWidth * newHeight) : true;
 
-                SME.VHDL.UInt3 w = (SME.VHDL.UInt3) ((j + (SME.VHDL.UInt3) 1) % kernelWidth); // (3 dec)
-                SME.VHDL.UInt3 h = w == 0 ? (SME.VHDL.UInt3) (i + (SME.VHDL.UInt3) 1) : (SME.VHDL.UInt3) i; // (3 dec)
+                SME.VHDL.UInt2 w = (SME.VHDL.UInt2) ((j + (SME.VHDL.UInt2) 1) % kernelWidth); // (3 dec)
+                SME.VHDL.UInt2 h = w == 0 ? (SME.VHDL.UInt2) (i + (SME.VHDL.UInt2) 1) : (SME.VHDL.UInt2) i; // (3 dec)
                 SME.VHDL.UInt10 bufferB = (SME.VHDL.UInt10) ((startRow + h) * newWidth + (startCol + w)); // (28x28+1 = 785 dec)
 
                 // Issue ram read of buffer from second adress
@@ -132,8 +132,9 @@ namespace CNN
 
                 // After two clock cycles, the results come back from memory.
                 ramValid = k >= 2;
-                k++;
-
+                if (!ramValid) {
+                    k++;
+                }
                 // Channel hasn't been processed
                 if (!wholeChannel)
                 {
@@ -159,13 +160,13 @@ namespace CNN
                         // go to next row in kernel
                         else
                         {
-                            j = (SME.VHDL.UInt3) ((j + (SME.VHDL.UInt3) 2) % kernelWidth);
+                            j = (SME.VHDL.UInt2) ((j + (SME.VHDL.UInt2) 2) % kernelWidth);
                             i++;
                         }
                     }
                     else
                     {
-                        j = (SME.VHDL.UInt3) (j + (SME.VHDL.UInt3) 2);
+                        j = (SME.VHDL.UInt2) (j + (SME.VHDL.UInt2) 2);
                     }
                 }
                 // Wait clock cycles for last memory
