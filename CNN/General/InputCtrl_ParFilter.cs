@@ -117,7 +117,10 @@ namespace CNN
 
                 // After two clock cycles, the results come back from memory.
                 ramValid = k >= 2;
-                k = (k + 1);
+                if (!ramValid) 
+                {
+                    k++;
+                }
 
                 // Channel hasn't been processed
                 if (!wholeChannel)
@@ -145,7 +148,7 @@ namespace CNN
                         else
                         {
                             j = (j + 2) % kernelWidth;
-                            i += 1;
+                            i++;
                         }
                     }
                     else
@@ -156,7 +159,7 @@ namespace CNN
                 // Wait clock cycles for last memory
                 else 
                 {
-                    ii += 1;
+                    ii++;
                 }
                 if (ramValid)
                 {

@@ -105,7 +105,10 @@ namespace CNN
 
                 // After two clock cycles, the results come back from memory.
                 ramValid = k >= 2;
-                k = (k + 1);
+                if (!ramValid) 
+                {
+                    k++;
+                }
 
                 // Channel hasn't been processed
                 if (!wholeChannel)
@@ -133,12 +136,12 @@ namespace CNN
                         else
                         {
                             j = 0;
-                            i = (i + 1);
+                            i++;
                         }
                     }
                     else
                     {
-                        j = (j + 1);
+                        j++;
                     }
                 }
                 // Wait clock cycles for last value memory
@@ -146,14 +149,14 @@ namespace CNN
                 {
                     if (c + 1 == numOutChannels)
                     {
-                        ii += 1;
+                        ii++;
                     }
                     // Go to next kernelweights and traverse channel again
                     else
                     {
                         // If all channels have been iterated close process
                         wholeChannel = (c + 1 == numOutChannels);
-                        c += 1;
+                        c++;
                         // Console.WriteLine("c: " + c);
                         i = j = startRow = startCol = 0;
                     }
@@ -162,7 +165,7 @@ namespace CNN
                 // Wait clock cycles for last weight memory
                 if (lastKernelValue)
                 {
-                    jj += 1;
+                    jj++;
                 }
                 else
                 {

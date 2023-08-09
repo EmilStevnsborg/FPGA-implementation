@@ -91,7 +91,7 @@ namespace CNN
                         }
                         else
                         {
-                            c = c + 1;
+                            c++;
                         }
                     }
                 }
@@ -131,7 +131,10 @@ namespace CNN
 
                 // After two clock cycles, the results come back from memory.
                 ramValid = k >= 2;
-                k = (k + 1);
+                if (!ramValid) 
+                {
+                    k++;
+                }
 
                 // Channel hasn't been processed
                 if (!wholeChannel)
@@ -159,7 +162,7 @@ namespace CNN
                         else
                         {
                             j = (j + 2) % kernelWidth;
-                            i += 1;
+                            i++;
                         }
                     }
                     else
@@ -172,14 +175,14 @@ namespace CNN
                 {
                     if (c + 1 == numInChannels)
                     {
-                        ii += 1;
+                        ii++;
                     }
                     // Go to next kernelweights and traverse channel again
                     else
                     {
                         // If all channels have been iterated close process
                         wholeChannel = (c + 1 == numInChannels);
-                        c += 1;
+                        c++;
                         i = j = startRow = startCol = 0;
                     }
                 }

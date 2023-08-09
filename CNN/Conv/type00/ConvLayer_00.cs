@@ -4,6 +4,9 @@ using SME.Components;
 
 namespace CNN
 {
+    // This is the convolutional layer that reads the input channels in parallel and outputs the
+    // output channels in parallel. The Filters operate in parallel as well as the Kernels.
+    // It uses the InputCtrl_ParFilter input-controls that each outputs two values from a 2D region
     [ClockedProcess]
     public class ConvLayer_00 : Layer<ValueBus[],ValueBus[]>
     {

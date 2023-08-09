@@ -4,6 +4,7 @@ using SME.Components;
 
 namespace CNN
 {
+    // 
     [ClockedProcess]
     public class KernelCtrl : SimpleProcess
     {
