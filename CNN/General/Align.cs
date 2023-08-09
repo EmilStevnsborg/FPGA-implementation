@@ -7,22 +7,24 @@ namespace CNN
     // it is not an option to create multiple Bias processes like when channels are streamed
     // sequentially.
     [ClockedProcess]
-    public class Biases : SimpleProcess
+    public class Align : SimpleProcess
     {
         // used in conv2 and batchNorm2
         [InputBus]
         public ValueBus Input;
         [OutputBus]
-        public ValueBus Output = Scope.CreateBus<ValueBus>();
-        private float[] biases;
+        public ValueBus OutputValue = Scope.CreateBus<ValueBus>();
+        [OutputBus]
+        public ValueBus OutputWeight = Scope.CreateBus<ValueBus>();
+        private float[] weights;
 
         private SME.VHDL.UInt7 outValues;       // (out conv2 = 9x9 = 81 dec)
         private SME.VHDL.UInt9 i;               // (81x5 = 405 dec)
         private SME.VHDL.UInt3 c;               // (5 dec)
         private SME.VHDL.UInt3 numOutChannels;  // (5 dec)
-        public Biases(float[] biases, int outValues, int numOutChannels)
+        public Align(float[] weights, int outValues, int numOutChannels)
         {
-            this.biases = biases;
+            this.weights = weights;
             this.outValues = (SME.VHDL.UInt7) outValues;
             this.numOutChannels = (SME.VHDL.UInt3) numOutChannels;
             i = 0;
@@ -31,13 +33,17 @@ namespace CNN
 
         protected override void OnTick()
         {
-            Output.enable = Output.LastValue = false;
+            OutputValue.enable = OutputValue.LastValue = false;
+            OutputWeight.enable = OutputWeight.LastValue = false;
             // Output should only be updated when the input is valid.
             if (Input.enable)
             {
-                Output.Value = Input.Value + biases[c];
-                Output.enable = Input.enable;
-                Output.LastValue = Input.LastValue;
+                OutputValue.Value = Input.Value;
+                OutputWeight.Value = weights[c];
+
+                OutputValue.enable = OutputWeight.enable = Input.enable;
+                OutputValue.LastValue = Input.LastValue;
+                
                 i++;
                 // next channel incoming means next bias value must be used
                 if (i % outValues == 0) 

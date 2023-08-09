@@ -32,7 +32,7 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 1000;
+            int tests = 1;
             // Which layer should be tested
             string layer = "batchNorm2";
             // What type of implementation

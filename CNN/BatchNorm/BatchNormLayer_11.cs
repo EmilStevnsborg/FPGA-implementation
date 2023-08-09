@@ -24,27 +24,56 @@ namespace CNN
                 denominators[i] = 1/denominator;
             }
             // Instantiate the processes
-            minuses = new Biases(negatives, outValues, numOutChannels);
-            divides = new Multiplies(denominators, outValues, numOutChannels);
-            multiplies = new Multiplies(gammas, outValues, numOutChannels);
-            pluses = new Biases(betas, outValues, numOutChannels);
+            minusesAlign = new Align(negatives, outValues, numOutChannels);
+            dividesAlign = new Align(denominators, outValues, numOutChannels);
+            multipliesAlign = new Align(gammas, outValues, numOutChannels);
+            plusesAlign = new Align(betas, outValues, numOutChannels);
+
+            minus = new PlusTwo();
+            divide = new MultiplyTwo();
+            multiply = new MultiplyTwo();
+            plus = new PlusTwo();
+
 
             // Connect the buses
-            divides.Input = minuses.Output;
-            multiplies.Input = divides.Output;
-            pluses.Input = multiplies.Output;
-            output = pluses.Output;
+            minus.InputA = minusesAlign.OutputWeight;
+            minus.InputB = minusesAlign.OutputValue;
+
+            dividesAlign.Input = minus.Output;
+
+            divide.InputA = dividesAlign.OutputWeight;
+            divide.InputB = dividesAlign.OutputValue;
+
+            multipliesAlign.Input = divide.Output;
+
+            multiply.InputA = multipliesAlign.OutputWeight;
+            multiply.InputB = multipliesAlign.OutputValue;
+
+            plusesAlign.Input = multiply.Output;
+
+            plus.InputA = plusesAlign.OutputWeight;
+            plus.InputB = plusesAlign.OutputValue;
+
+            output = plus.Output;
         }
         public override void PushInputs()
         {
-            minuses.Input = input;
+            minusesAlign.Input = input;
         }
         private int numInChannels;
         private int numOutChannels;
-        private Biases minuses;
-        private Multiplies divides;
-        private Multiplies multiplies;
-        private Biases pluses;
+
+        private Align minusesAlign;
+        private PlusTwo minus;
+
+        private Align dividesAlign;
+        private MultiplyTwo divide;
+        
+        private Align multipliesAlign;
+        private MultiplyTwo multiply;
+
+        private Align plusesAlign;
+        private PlusTwo plus;
     }
 }
    
