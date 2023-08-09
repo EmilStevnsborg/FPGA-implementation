@@ -38,7 +38,7 @@ class MainClass
             // What type of implementation
             string layerType = "11";
             string path = @"../../CNNSmall/Tests/" + layer;
-            
+
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             BatchNormConfig batchNormConfig = JsonSerializer.Deserialize<BatchNormConfig>(config);
 
@@ -51,7 +51,7 @@ class MainClass
                     // depending on layerType
                     var batchNormLayer = batchNormConfig.PushConfig_11();
 
-                    var tester = new Tester_11(batchNormConfig.numInChannels, 
+                    var tester = new Tester_11(batchNormConfig.numInChannels,
                                                 batchNormConfig.numOutChannels,
                                                 (batchNormConfig.channelHeight,batchNormConfig.channelWidth));
 
@@ -63,17 +63,21 @@ class MainClass
                     batchNormLayer.PushInputs();
                     tester.Input = batchNormLayer.Output;
 
-                    
+
                     long ticks = 0;
 
                     sim
-                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
-                    .Run();
+                        .AddTopLevelInputs(tester.Output)
+                        .AddTopLevelOutputs(batchNormLayer.Output)
+                        .BuildCSVFile()
+                        .BuildVHDL()
+                        .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                        .Run();
 
                     LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
 
                     Console.WriteLine(t + " " + ticks);
-                }  
+                }
             }
         }
     }
