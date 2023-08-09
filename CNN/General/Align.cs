@@ -29,7 +29,7 @@ namespace CNN
             this.numOutChannels = (SME.VHDL.UInt3) numOutChannels;
             i = 0;
             c = 0;
-        } 
+        }
 
         protected override void OnTick()
         {
@@ -39,14 +39,14 @@ namespace CNN
             if (Input.enable)
             {
                 OutputValue.Value = Input.Value;
-                OutputWeight.Value = weights[c];
+                OutputWeight.Value = weights[(int)c];
 
                 OutputValue.enable = OutputWeight.enable = Input.enable;
                 OutputValue.LastValue = Input.LastValue;
-                
+
                 i++;
                 // next channel incoming means next bias value must be used
-                if (i % outValues == 0) 
+                if (i % outValues == 0)
                 {
                     c++;
                 }
