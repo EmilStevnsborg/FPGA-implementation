@@ -11,7 +11,7 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        int tests = 1;
+        int tests = 10;
         bool layerOutputs = false;
 
         string conv1        = File.ReadAllText(@"Configs/conv1.json");
