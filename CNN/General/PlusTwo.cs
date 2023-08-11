@@ -4,7 +4,7 @@ using SME.VHDL;
 
 namespace CNN
 {
-
+    // Adds the values of the two Input Buses together.
     [ClockedProcess]
     public class PlusTwo : SimpleProcess
     {

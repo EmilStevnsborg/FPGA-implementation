@@ -3,6 +3,7 @@ using SME.Components;
 
 namespace CNN
 {
+    // Wrapper class that applies maxpooling on all input channels in the input in sequence.
     [ClockedProcess]
     public class MaxPoolLayer_11 : Layer<ValueBus, ValueBus>
     {

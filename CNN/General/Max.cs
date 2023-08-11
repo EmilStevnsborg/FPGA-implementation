@@ -4,7 +4,7 @@ using SME.VHDL;
 
 namespace CNN
 {
-    // Works
+    // Computes the max value between the two input buses and the current max value.
     [ClockedProcess]
     public class Max : SimpleProcess
     {

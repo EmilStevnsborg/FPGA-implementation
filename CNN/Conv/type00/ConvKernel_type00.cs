@@ -4,6 +4,8 @@ using SME.Components;
 
 namespace CNN
 {
+    // This class performs the kernel operation on streaming input. It is used for the convolutional
+    // layer that reads the input channels in parallel and outputs the output channels in parallel.
     [ClockedProcess]
     public class ConvKernel_type00
     {

@@ -4,6 +4,7 @@ using System;
 
 namespace CNN
 {
+    // Wrapper class that computes one output feature of a Linear layer.
     [ClockedProcess]
     public class LinearNode_type00
     {

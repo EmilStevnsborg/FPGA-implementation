@@ -4,6 +4,9 @@ using SME.Components;
 
 namespace CNN
 {
+    // This is the convolutional layer that reads the input channels in parallel and outputs the
+    // output channels in sequence. The input values are read one by one from a BRAM along with a
+    // weight. These are multiplied and the sum is added to a buffer in Convkernel_type01.
     [ClockedProcess]
     public class ConvLayer_01 : Layer<ValueBus[],ValueBus>
     {

@@ -4,6 +4,7 @@ using SME.Components;
 
 namespace CNN
 {
+    // Stores and outputs all input channels in a BRAM and outputs them in sequence.
     [ClockedProcess]
     public class InputCtrl_SeqChannel : SimpleProcess
     {

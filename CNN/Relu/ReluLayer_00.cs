@@ -2,6 +2,7 @@ using SME;
 
 namespace CNN
 {
+    // Applies the ReLU function on all the channels in the input as they are streamed in parallel.
     [ClockedProcess]
     public class ReluLayer_00 : Layer<ValueBus[], ValueBus[]>
     {

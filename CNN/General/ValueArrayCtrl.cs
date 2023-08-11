@@ -3,7 +3,7 @@ using SME;
 
 namespace CNN
 {
-
+    // Controls the flow of values on an ValueBus array Input Bus.
     [ClockedProcess]
     public class ValueArrayCtrl : SimpleProcess
     {
@@ -38,7 +38,6 @@ namespace CNN
                     {
                         buffer[ii] = Input[ii].Value;
                         i++;
-                        // Console.WriteLine(i);
                     }
                 }
             }

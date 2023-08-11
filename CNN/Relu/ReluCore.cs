@@ -4,7 +4,7 @@ using SME.VHDL;
 
 namespace CNN
 {
-    // Works
+    // Applies the ReLU function on the value of the Input Bus.
     [ClockedProcess]
     public class ReluCore : SimpleProcess
     {

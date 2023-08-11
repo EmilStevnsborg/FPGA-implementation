@@ -4,7 +4,7 @@ using SME.VHDL;
 
 namespace CNN
 {
-
+    // Multiplies the values of the two Input Buses together.
     [ClockedProcess]
     public class MultiplyTwo : SimpleProcess
     {

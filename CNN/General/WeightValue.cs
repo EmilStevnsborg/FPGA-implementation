@@ -4,6 +4,7 @@ using SME.VHDL;
 
 namespace CNN
 {
+    // Almost quivalent to MultiplyTwo but has different name due to semantics.
     [ClockedProcess]
     public class WeightValue : SimpleProcess
     {

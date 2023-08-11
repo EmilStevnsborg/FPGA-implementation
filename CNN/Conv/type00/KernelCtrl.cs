@@ -4,6 +4,8 @@ using SME.Components;
 
 namespace CNN
 {
+    // Matches the incomming input values with a weight. Incoming values come from 2D regions of
+    // a channel
     [ClockedProcess]
     public class KernelCtrl : SimpleProcess
     {

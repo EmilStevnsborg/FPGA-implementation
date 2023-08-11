@@ -2,6 +2,7 @@ using SME;
 
 namespace CNN
 {
+    // Wrapper class that computes the linear sumproduct.
     [ClockedProcess]
     public class LinearLayer_00 : Layer<ValueBus[], ValueBus[]>
     {

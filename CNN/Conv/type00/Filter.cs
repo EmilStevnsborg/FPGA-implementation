@@ -2,6 +2,7 @@ using SME;
 
 namespace CNN
 {
+    // Filter is a wrapper class that contains convkernels who operate in parallel.
     [ClockedProcess]
     public class Filter
     {

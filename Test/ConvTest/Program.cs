@@ -34,9 +34,9 @@ class MainClass
         {
             int tests = 1;
             // Which layer should be tested
-            string layer = "conv1";
+            string layer = "conv2";
             // What type of implementation
-            string layerType = "00";
+            string layerType = "01";
             string path = @"../../CNNSmall/Tests/" + layer;
 
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");

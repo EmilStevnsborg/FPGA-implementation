@@ -4,7 +4,7 @@ using SME.VHDL;
 
 namespace CNN
 {
-    // Works
+    // Multiplies the value on the Input Bus with a fixed weight value
     [ClockedProcess]
     public class Multiply : SimpleProcess
     {
