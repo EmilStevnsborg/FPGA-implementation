@@ -32,13 +32,13 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 1000;
+            int tests = 1;
             // Which layer should be tested
             string layer = "relu2";
             // What type of implementation
             string layerType = "11";
             string path = @"../../CNNSmall/Tests/" + layer;
-            
+
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             ReluConfig reluConfig = JsonSerializer.Deserialize<ReluConfig>(config);
 
@@ -51,7 +51,7 @@ class MainClass
                     // depending on layerType
                     var reluLayer = reluConfig.PushConfig_11();
 
-                    var tester = new Tester_11(reluConfig.numInChannels, 
+                    var tester = new Tester_11(reluConfig.numInChannels,
                                                 reluConfig.numOutChannels,
                                                 (reluConfig.channelHeight,reluConfig.channelWidth));
 
@@ -63,17 +63,21 @@ class MainClass
                     reluLayer.PushInputs();
                     tester.Input = reluLayer.Output;
 
-                    
+
                     long ticks = 0;
 
                     sim
-                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
-                    .Run();
+                        .AddTopLevelInputs(reluLayer.Input)
+                        .AddTopLevelOutputs(reluLayer.Output)
+                        .BuildCSVFile()
+                        .BuildVHDL()
+                        .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                        .Run();
 
                     LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
 
                     Console.WriteLine(t + " " + ticks);
-                }  
+                }
             }
         }
     }
