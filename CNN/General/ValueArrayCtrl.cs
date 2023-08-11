@@ -45,7 +45,7 @@ namespace CNN
             // If Inputs have loaded go through them
             if (i > 0 && k < i)
             {
-                Output.Value = buffer[k];
+                Output.Value = buffer[(int)k];
                 Output.enable = true;
                 k++;
                 if (k % numInChannels == 0)
@@ -58,7 +58,7 @@ namespace CNN
                     k = 0;
                 }
             }
-            
+
         }
     }
 }
