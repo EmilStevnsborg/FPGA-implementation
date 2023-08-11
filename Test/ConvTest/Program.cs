@@ -32,13 +32,13 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 1000;
+            int tests = 1;
             // Which layer should be tested
             string layer = "conv1";
             // What type of implementation
             string layerType = "00";
             string path = @"../../CNNSmall/Tests/" + layer;
-            
+
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             ConvConfig convConfig = JsonSerializer.Deserialize<ConvConfig>(config);
 
@@ -51,7 +51,7 @@ class MainClass
                     // depending on layerType
                     var convLayer = convConfig.PushConfig_00();
 
-                    var tester = new Tester_00(convConfig.numInChannels, 
+                    var tester = new Tester_00(convConfig.numInChannels,
                                                 convConfig.numOutChannels,
                                                 (convConfig.channelHeight,convConfig.channelWidth));
 
@@ -63,17 +63,21 @@ class MainClass
                     convLayer.PushInputs();
                     tester.Input = convLayer.Output;
 
-                    
+
                     long ticks = 0;
 
                     sim
-                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
-                    .Run();
+                        .AddTopLevelInputs(convLayer.Input)
+                        .AddTopLevelOutputs(convLayer.Output)
+                        .BuildCSVFile()
+                        .BuildVHDL()
+                        .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                        .Run();
 
                     LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
 
                     Console.WriteLine(t + " " + ticks);
-                }  
+                }
             }
         }
     }
