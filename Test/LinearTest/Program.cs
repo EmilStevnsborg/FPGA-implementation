@@ -32,13 +32,13 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 1000;
+            int tests = 1;
             // Which layer should be tested
             string layer = "linear";
             // What type of implementation
             string layerType = "10";
             string path = @"../../CNNSmall/Tests/" + layer;
-            
+
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             LinearConfig linearConfig = JsonSerializer.Deserialize<LinearConfig>(config);
 
@@ -51,7 +51,7 @@ class MainClass
                     // depending on layerType
                     var linearLayer = linearConfig.PushConfig_10();
 
-                    var tester = new Tester_01(linearConfig.numInChannels, 
+                    var tester = new Tester_01(linearConfig.numInChannels,
                                                 linearConfig.numOutChannels,
                                                 (linearConfig.channelHeight,linearConfig.channelWidth));
 
@@ -63,17 +63,21 @@ class MainClass
                     linearLayer.PushInputs();
                     tester.Input = linearLayer.Output;
 
-                    
+
                     long ticks = 0;
 
                     sim
-                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
-                    .Run();
+                        .AddTopLevelInputs(linearLayer.Input)
+                        .AddTopLevelOutputs(linearLayer.Output)
+                        .BuildCSVFile()
+                        .BuildVHDL()
+                        .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                        .Run();
 
                     LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
 
                     Console.WriteLine(t + " " + ticks);
-                }  
+                }
             }
         }
     }
