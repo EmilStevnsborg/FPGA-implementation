@@ -1,9 +1,10 @@
 using SME;
 using SME.Components;
-using static System.Math;
 
 namespace CNN
 {
+    // Wrapper class that applies maxpooling on all 2D reigons determined by the kernel in one
+    // input channel.
     [ClockedProcess]
     public class MaxPoolKernel
     {

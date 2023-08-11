@@ -5,7 +5,7 @@ using SME.Components;
 namespace CNN
 {
     // Used in ConvLayer_00 and the MaxPoolKernel in MaxPoolLayer_00. It buffers a channel that
-    // is being streamed value by value. Afterwards, it sends out a stream of value from 2D-regions
+    // is being streamed value by value. Afterwards, it sends out a stream of values from 2D-regions
     // of the input channel in pairs of two.
     [ClockedProcess]
     public class InputCtrl_ParFilter : SimpleProcess
@@ -110,8 +110,6 @@ namespace CNN
                 ram_ctrlB.IsWriting = false;
                 ram_ctrlB.Data = 0;
 
-                Console.WriteLine(bufferA + " " + bufferB);
-
                 // if whole channel has been processed else check if bufferB read is the last index
                 wholeChannel = !wholeChannel ? (bufferB + 1 == newWidth * newHeight) : true;
 
@@ -169,7 +167,6 @@ namespace CNN
                     
                     // Is this the last kernel value
                     lastKernelVal = (kernelA + 1 == kernelHeight*kernelWidth) || (kernelB + 1 == kernelHeight*kernelWidth);
-                    // Console.WriteLine(bufferA + " " + bufferB + " " + lastKernelVal + " " + ii + " " + kernelA + " " + kernelB);
                     OutputValueA.LastValue = lastKernelVal;
 
                     // Check if all data has been processed.

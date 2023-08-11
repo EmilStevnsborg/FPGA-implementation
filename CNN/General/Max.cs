@@ -3,7 +3,7 @@ using SME;
 
 namespace CNN
 {
-    // Works
+    // Computes the max value between the two input buses and the current max value.
     [ClockedProcess]
     public class Max : SimpleProcess
     {
@@ -14,12 +14,11 @@ namespace CNN
 
         [OutputBus]
         public ValueBus Output = Scope.CreateBus<ValueBus>();
-
+        // Default max needs to always be smaller than the input value
         private float max = -1000;
 
         protected override void OnTick()
         {
-            // Console.WriteLine(InputA.Value + "," + InputB.Value);
             // Output should only be updated when the input is valid.
             if (InputA.enable && InputB.enable)
             {
@@ -27,12 +26,10 @@ namespace CNN
                 {
                     if (InputB.Value > InputA.Value)
                     {
-                        // Console.WriteLine(InputB.Value);
                         max = InputB.Value;
                     }
                     else
                     {
-                        // Console.WriteLine(InputA.Value);
                         max = InputA.Value;
                     }
                 }
@@ -41,7 +38,6 @@ namespace CNN
             Output.enable = InputA.LastValue;
             if (InputA.LastValue)
             {
-                // Console.WriteLine("her: " + InputB.Value);
                 max = -1000;
             }
         }

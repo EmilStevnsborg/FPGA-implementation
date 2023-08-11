@@ -5,7 +5,8 @@ using SME.Components;
 
 namespace CNN
 {
-
+    // Controls the flow of products to be computed between an input value and a weight in the
+    // Linear layer. It is related to one LinearNode_type01.
     [ClockedProcess]
     public class NodeCtrl_type10 : SimpleProcess
     {

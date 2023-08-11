@@ -4,7 +4,10 @@ using SME.Components;
 
 namespace CNN
 {
-    [ClockedProcess]
+    // This is the convolutional layer that reads the input channels in parallel and outputs the
+    // output channels in sequence. The input values are read one by one from a BRAM along with a
+    // weight. These are multiplied and the sum is added to a buffer in Convkernel_type01
+     [ClockedProcess]
     public class ConvLayer_01 : Layer<ValueBus[],ValueBus>
     {
         public ConvLayer_01(int numInChannels, int numOutChannels, 
@@ -44,7 +47,8 @@ namespace CNN
             kernelOutputs = new ValueBus[numInChannels];
             valueArrayCtrl = new ValueArrayCtrl(numInChannels, channelSize);
             plusCtrl = new PlusCtrl();
-            biases = new Biases(biasVals, outValues, numOutChannels);
+            biasesAlign = new Align(biasVals, outValues, numOutChannels);
+            plus = new PlusTwo();
             for (int i = 0; i < numInChannels; i++)
             {
                 // contains a padded channel and the weights across all filters
@@ -83,8 +87,10 @@ namespace CNN
             }
             valueArrayCtrl.Input = kernelOutputs;
             plusCtrl.Input = valueArrayCtrl.Output;
-            biases.Input = plusCtrl.Output;
-            output = biases.Output;
+            biasesAlign.Input = plusCtrl.Output;
+            plus.InputA = biasesAlign.OutputValue;
+            plus.InputB = biasesAlign.OutputWeight;
+            output = plus.Output;
         }
         public override void PushInputs()
         {
@@ -98,7 +104,8 @@ namespace CNN
         private InputCtrl_SeqFilter[] inputCtrls;
         private ConvKernel_type01[] convKernels;
         private ValueBus[] kernelOutputs;
-        private Biases biases;
+        private Align biasesAlign;
+        private PlusTwo plus;
         private ValueArrayCtrl valueArrayCtrl;
         private PlusCtrl plusCtrl;
         private TrueDualPortMemory<float>[] rams;

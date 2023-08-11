@@ -3,6 +3,7 @@ using SME;
 
 namespace CNN
 {
+    // Almost quivalent to MultiplyTwo but has different name due to semantics.
     [ClockedProcess]
     public class WeightValue : SimpleProcess
     {
@@ -22,7 +23,6 @@ namespace CNN
             // Output should only be updated when the input is valid.
             if (InputValue.enable && InputWeight.enable)
             {
-                // Console.WriteLine(InputValue.Value + " * " + InputWeight.Value + " = " + InputValue.Value * InputWeight.Value);
                 Output.Value = InputValue.Value * InputWeight.Value;
                 Output.enable = true;
             }

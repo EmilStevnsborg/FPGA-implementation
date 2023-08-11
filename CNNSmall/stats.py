@@ -24,7 +24,7 @@ def analysis_network(layers, types, iso_accum):
         trues = np.array([])
         preds = np.array([])
         losses = np.array([])  
-        for t in range(1,1000):
+        for t in range(1,11):
             
             # isolation or accumulation
             if iso_accum == "iso":
@@ -40,7 +40,7 @@ def analysis_network(layers, types, iso_accum):
 
             true = np.array(true_f["computed"])
             # Depends on whether the output comes in parallel or sequentially
-            if type == "00":
+            if type == "00" or type == "01":
                 true = true.T.reshape(-1)
             else:
                 true = true.reshape(-1)

@@ -4,6 +4,8 @@ using SME.Components;
 
 namespace CNN
 {
+    // Applies the softmax function on all the channels in the input as they are streamed in 
+    // parallel.
     [ClockedProcess]
     public class SoftmaxLayer_00 : Layer<ValueBus[], ValueBus[]>
     {
