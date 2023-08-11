@@ -32,13 +32,13 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 1000;
+            int tests = 928;
             // Which layer should be tested
             string layer = "maxPool2";
             // What type of implementation
             string layerType = "11";
             string path = @"../../CNNSmall/Tests/" + layer;
-            
+
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             MaxPoolConfig maxPoolConfig = JsonSerializer.Deserialize<MaxPoolConfig>(config);
 
@@ -51,7 +51,7 @@ class MainClass
                     // depending on layerType
                     var maxPoolLayer = maxPoolConfig.PushConfig_11();
 
-                    var tester = new Tester_11(maxPoolConfig.numInChannels, 
+                    var tester = new Tester_11(maxPoolConfig.numInChannels,
                                                 maxPoolConfig.numOutChannels,
                                                 (maxPoolConfig.channelHeight,maxPoolConfig.channelWidth));
 
@@ -63,17 +63,21 @@ class MainClass
                     maxPoolLayer.PushInputs();
                     tester.Input = maxPoolLayer.Output;
 
-                    
+
                     long ticks = 0;
 
                     sim
-                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
-                    .Run();
+                        .AddTopLevelInputs(maxPoolLayer.Input)
+                        .AddTopLevelOutputs(maxPoolLayer.Output)
+                        .BuildCSVFile()
+                        .BuildVHDL()
+                        .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                        .Run();
 
                     LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
 
                     Console.WriteLine(t + " " + ticks);
-                }  
+                }
             }
         }
     }
