@@ -1,3 +1,4 @@
 [submodule "sme"]
 	path = sme
 	url = git@github.com:kenkendk/sme.git
+	branch = float_changes
