@@ -3,7 +3,7 @@ using SME;
 
 namespace CNN
 {
-    // Controls the flow of values on an ValueBus array Input Bus.
+
     [ClockedProcess]
     public class ValueArrayCtrl : SimpleProcess
     {
