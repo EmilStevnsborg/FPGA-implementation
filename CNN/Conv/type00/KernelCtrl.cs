@@ -19,15 +19,15 @@ namespace CNN
         public ValueBus OutputValueB = Scope.CreateBus<ValueBus>();
         [OutputBus]
         public ValueBus OutputWeightB = Scope.CreateBus<ValueBus>();
-        private int kernelA = 0, kernelB = 1;
-        private int kernelHeight, kernelWidth;
+        private SME.VHDL.UInt4 kernelA = 0, kernelB = 1; // (9 dec)
+        private SME.VHDL.UInt2 kernelHeight, kernelWidth; // (3 dec)
         private float [] weights;
         private bool lastKernelVal = false;
 
         public KernelCtrl((int,int) kernelSize, float[] weights)
         {
-            this.kernelHeight = kernelSize.Item1;
-            this.kernelWidth = kernelSize.Item2;
+            this.kernelHeight = (SME.VHDL.UInt2) kernelSize.Item1;
+            this.kernelWidth = (SME.VHDL.UInt2) kernelSize.Item2;
 
             this.weights = weights;
         }
@@ -51,12 +51,12 @@ namespace CNN
                 OutputValueB.enable = OutputWeightB.enable = true;
                 
                 // weight adress
-                kernelA = (kernelA + 2) % (kernelHeight * kernelWidth);
+                kernelA = (SME.VHDL.UInt4) ((kernelA + (SME.VHDL.UInt4) 2) % (kernelHeight * kernelWidth));
                 if (kernelB == 0)
                 {
                     kernelA = 0;
                 }
-                kernelB = (kernelA + 1) % (kernelHeight * kernelWidth);
+                kernelB = (SME.VHDL.UInt4) ((kernelA + (SME.VHDL.UInt4) 1) % (kernelHeight * kernelWidth));
             }
             else
             {
