@@ -38,10 +38,10 @@ namespace CNN
             if (InputValueA.enable && InputValueB.enable)
             {
                 OutputValueA.Value = InputValueA.Value;
-                OutputWeightA.Value = weights[kernelA];
+                OutputWeightA.Value = weights[(int)kernelA];
 
                 OutputValueB.Value = InputValueB.Value;
-                OutputWeightB.Value = weights[kernelB];
+                OutputWeightB.Value = weights[(int)kernelB];
 
                 //Is this the last kernel value
                 lastKernelVal = (kernelA + 1 == kernelHeight*kernelWidth) || (kernelB + 1 == kernelHeight*kernelWidth);
@@ -49,7 +49,7 @@ namespace CNN
 
                 OutputValueA.enable = OutputWeightA.enable = true;
                 OutputValueB.enable = OutputWeightB.enable = true;
-                
+
                 // weight adress
                 kernelA = (SME.VHDL.UInt4) ((kernelA + (SME.VHDL.UInt4) 2) % (kernelHeight * kernelWidth));
                 if (kernelB == 0)
