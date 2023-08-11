@@ -11,7 +11,7 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        int tests = 10;
+        int tests = 1;
         bool layerOutputs = false;
 
         string conv1        = File.ReadAllText(@"Configs/conv1.json");
@@ -25,14 +25,14 @@ class MainClass
         string linear       = File.ReadAllText(@"Configs/linear.json");
         string softmax      = File.ReadAllText(@"Configs/softmax.json");
 
-        List<string> layers = new List<string>() 
+        List<string> layers = new List<string>()
         {
             "conv1", "batchNorm1", "relu1",
             "maxPool1", "conv2", "batchNorm2",
             "relu2", "maxPool2", "linear", "softmax"
         };
-        
-        for (int t = 1; t <= tests; t++) 
+
+        for (int t = 1; t <= tests; t++)
         {
             // layer stats
             List<float> conv1Stats = new List<float>();
@@ -82,7 +82,7 @@ class MainClass
                 SoftmaxConfig softmaxConfig = JsonSerializer.Deserialize<SoftmaxConfig>(softmax);
                 var softmaxLayer = softmaxConfig.PushConfig_00();
 
-                Tester_00 tester = new Tester_00(conv1Config.numInChannels, 
+                Tester_00 tester = new Tester_00(conv1Config.numInChannels,
                                                  linearConfig.numOutChannels,
                                                  (conv1Config.channelHeight,conv1Config.channelWidth));
 
@@ -93,7 +93,7 @@ class MainClass
                 InputCase output = JsonSerializer.Deserialize<InputCase>(outputString);
                 tester.FillBuffer(input.buffer, output.computed);
 
-                if (!layerOutputs) 
+                if (!layerOutputs)
                 {
                     // combining layer busses for network
                     convLayer1.Input = tester.Output;
@@ -160,8 +160,12 @@ class MainClass
                     tester.Input = softmaxLayer.Output;
 
                     sim
-                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
-                    .Run();
+                        .AddTopLevelInputs(tester.Output)
+                        .AddTopLevelOutputs(tester.Input)
+                        .BuildCSVFile()
+                        .BuildVHDL()
+                        .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                        .Run();
 
                     conv1Stats.AddRange(tester1.Stats);
                     batchNorm1Stats.AddRange(tester2.Stats);
