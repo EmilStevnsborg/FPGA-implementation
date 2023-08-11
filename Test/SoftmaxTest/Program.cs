@@ -32,13 +32,13 @@ class MainClass
         }
         else if (CNNSmallTest)
         {
-            int tests = 1000;
+            int tests = 1;
             // Which layer should be tested
             string layer = "softmax";
             // What type of implementation
             string layerType = "00";
             string path = @"../../CNNSmall/Tests/" + layer;
-            
+
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
             SoftmaxConfig softmaxConfig = JsonSerializer.Deserialize<SoftmaxConfig>(config);
 
@@ -51,7 +51,7 @@ class MainClass
                     // depending on layerType
                     var softmaxLayer = softmaxConfig.PushConfig_00();
 
-                    var tester = new Tester_00(softmaxConfig.numInChannels, 
+                    var tester = new Tester_00(softmaxConfig.numInChannels,
                                                 softmaxConfig.numOutChannels,
                                                 (softmaxConfig.channelHeight,softmaxConfig.channelWidth));
 
@@ -63,17 +63,21 @@ class MainClass
                     softmaxLayer.PushInputs();
                     tester.Input = softmaxLayer.Output;
 
-                    
+
                     long ticks = 0;
 
                     sim
-                    .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
-                    .Run();
+                        .AddTopLevelInputs(softmaxLayer.Input)
+                        .AddTopLevelOutputs(softmaxLayer.Output)
+                        .BuildCSVFile()
+                        .BuildVHDL()
+                        .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
+                        .Run();
 
                     LayerTest.LayerStats(tester.Stats, path + "/outputs" + layerType + "/output" + t + ".json");
 
                     Console.WriteLine(t + " " + ticks);
-                }  
+                }
             }
         }
     }
