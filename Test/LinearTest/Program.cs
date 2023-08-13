@@ -36,7 +36,7 @@ class MainClass
             // Which layer should be tested
             string layer = "linear";
             // What type of implementation
-            string layerType = "10";
+            string layerType = "00";
             string path = @"../../CNNSmall/Tests/" + layer;
 
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
@@ -49,9 +49,9 @@ class MainClass
                 using(var sim = new Simulation())
                 {
                     // depending on layerType
-                    var linearLayer = linearConfig.PushConfig_10();
+                    var linearLayer = linearConfig.PushConfig_00();
 
-                    var tester = new Tester_01(linearConfig.numInChannels,
+                    var tester = new Tester_00(linearConfig.numInChannels,
                                                 linearConfig.numOutChannels,
                                                 (linearConfig.channelHeight,linearConfig.channelWidth));
 
@@ -67,7 +67,7 @@ class MainClass
                     long ticks = 0;
 
                     sim
-                        .AddTopLevelInputs(linearLayer.Input)
+                        .AddTopLevelInputs(tester.Output)
                         .AddTopLevelOutputs(linearLayer.Output)
                         .BuildCSVFile()
                         .BuildVHDL()

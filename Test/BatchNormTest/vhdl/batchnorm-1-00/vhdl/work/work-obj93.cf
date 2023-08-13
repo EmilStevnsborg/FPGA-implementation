@@ -1,0 +1,25 @@
+v 4
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "Export_BatchNormTest.vhdl" "9659dc77bbe1c0465067f40f3fc2343e3b402454" "20230812120551.112":
+  entity batchnormtest_export at 1( 0) + 0 on 25;
+  architecture rtl of batchnormtest_export at 65( 1830) + 0 on 26;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "BatchNormTest.vhdl" "97025fc2ef2f491677eff5ccbd81812369eaa137" "20230812120550.141":
+  entity batchnormtest at 1( 0) + 0 on 21;
+  architecture rtl of batchnormtest at 110( 3547) + 0 on 22;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "CNN_Multiply.vhdl" "8ea6aff3323247de96753a8a6344e3806facf942" "20230812120550.044":
+  entity cnn_multiply at 1( 0) + 0 on 17;
+  architecture rtl of cnn_multiply at 48( 1018) + 0 on 18;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "Types_BatchNormTest.vhdl" "ca7818df6e95c051ef564fce5f5f37d8b3778cd0" "20230812120549.892":
+  package custom_types at 1( 0) + 0 on 13;
+  package body custom_types at 24( 474) + 0 on 14;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "system_types.vhdl" "767dc4c173b588d0856f1148dc082d95c6a1ba64" "20230812120549.822":
+  package system_types at 1( 0) + 0 on 11 body;
+  package body system_types at 1053( 40171) + 0 on 12;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "CNN_Bias.vhdl" "97fd4fd751fec228167ad88be00a8f56ccf6f8c1" "20230812120549.964":
+  entity cnn_bias at 1( 0) + 0 on 15;
+  architecture rtl of cnn_bias at 48( 1011) + 0 on 16;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "csv_util.vhdl" "99c6968a8e5fc9ac20dd9fb8f8f75b32c291c484" "20230812120550.059":
+  package csv_util at 1( 0) + 0 on 19 body;
+  package body csv_util at 61( 1823) + 0 on 20;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/BatchNormTest/vhdl/batchnorm-1-00/vhdl/" "TestBench_BatchNormTest.vhdl" "0ba957994a42bdb6b1e0145f98804e886a825ea8" "20230812120550.290":
+  entity batchnormtest_tb at 1( 0) + 0 on 23;
+  architecture testbench of batchnormtest_tb at 22( 375) + 0 on 24;

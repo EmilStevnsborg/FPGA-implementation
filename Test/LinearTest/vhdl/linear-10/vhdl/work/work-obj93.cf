@@ -1,0 +1,34 @@
+v 4
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "Export_Linear.vhdl" "2fd4b3766549a5d75fbd75ad51cdf816dc08dafe" "20230812120953.286":
+  entity linear_export at 1( 0) + 0 on 31;
+  architecture rtl of linear_export at 50( 1258) + 0 on 32;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "Linear.vhdl" "2c011ce046c21f90c65e5904a8d4e265f47d5312" "20230812120952.150":
+  entity linear at 1( 0) + 0 on 27;
+  architecture rtl of linear at 126( 4999) + 0 on 28;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "CNN_Bias.vhdl" "c88b795ac181d61e76235e1f2b9c4f1677a3979b" "20230812120952.027":
+  entity cnn_bias at 1( 0) + 0 on 23;
+  architecture rtl of cnn_bias at 48( 1011) + 0 on 24;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "CNN_WeightValue.vhdl" "2d91e235068359a083c4b79a1266e54c76f0ad3d" "20230812120951.867":
+  entity cnn_weightvalue at 1( 0) + 0 on 19;
+  architecture rtl of cnn_weightvalue at 49( 1169) + 0 on 20;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "SME_Components_TrueDualPortMemory_1_Single.vhdl" "165cd8c92cf5df7ca11ec5af163388f29f8b7b38" "20230812120951.753":
+  entity sme_components_truedualportmemory_1_single at 1( 0) + 0 on 15;
+  architecture rtl of sme_components_truedualportmemory_1_single at 54( 1392) + 0 on 16;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "system_types.vhdl" "767dc4c173b588d0856f1148dc082d95c6a1ba64" "20230812120951.604":
+  package system_types at 1( 0) + 0 on 11 body;
+  package body system_types at 1053( 40171) + 0 on 12;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "Types_Linear.vhdl" "66e784ba411689c5132008673777ae63ab0d8bee" "20230812120951.666":
+  package custom_types at 1( 0) + 0 on 13;
+  package body custom_types at 28( 652) + 0 on 14;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "CNN_NodeCtrl_type10.vhdl" "061fee7f3b685a8a407c75aaf0769fca7bde44df" "20230812120951.809":
+  entity cnn_nodectrl_type10 at 1( 0) + 0 on 17;
+  architecture rtl of cnn_nodectrl_type10 at 66( 1854) + 0 on 18;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "CNN_PlusCtrl.vhdl" "af2b782ce2ca221607b27463bbb5bd99b589586d" "20230812120951.948":
+  entity cnn_plusctrl at 1( 0) + 0 on 21;
+  architecture rtl of cnn_plusctrl at 48( 1026) + 0 on 22;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "csv_util.vhdl" "99c6968a8e5fc9ac20dd9fb8f8f75b32c291c484" "20230812120952.042":
+  package csv_util at 1( 0) + 0 on 25 body;
+  package body csv_util at 61( 1823) + 0 on 26;
+file "/home/emil/Documents/paper/FPGA-implementation/Test/LinearTest/output/vhdl/" "TestBench_Linear.vhdl" "dc01d5606cdf248a567c66d1dfe8e99e923244e8" "20230812120952.291":
+  entity linear_tb at 1( 0) + 0 on 29;
+  architecture testbench of linear_tb at 22( 368) + 0 on 30;
