@@ -36,22 +36,8 @@ namespace CNN
 
             public string BodyRegion(RenderStateProcess rsp, int indentation)
             {
-                // TODO adjust the parameters
                 return $@"
---create_ip -name floating_point -vendor xilinx.com -library ip -version 7.1 -module_name bias_fl_add
---set_property -dict [list \
---  CONFIG.Add_Sub_Value {{Add}} \
---  CONFIG.C_Latency {{11}} \
---  CONFIG.Component_Name {{bias_fl_add}} \
---  CONFIG.Flow_Control {{NonBlocking}} \
---  CONFIG.Has_ARESETn {{true}} \
---  CONFIG.Has_A_TLAST {{true}} \
---  CONFIG.Has_B_TLAST {{true}} \
---  CONFIG.Has_RESULT_TREADY {{false}} \
---  CONFIG.RESULT_TLAST_Behv {{Pass_A_TLAST}} \
---] [get_ips bias_fl_add]
-
-component bias_fl_add
+component fl_add
 port (
     aclk : in std_logic;
     aresetn : in std_logic;
@@ -84,7 +70,7 @@ begin
 
     RSTn <= not RST;
 
-    fl_add_inst : bias_fl_add
+    fl_add_inst : fl_add
     port map (
         aclk => CLK,
         aresetn => RSTn,

@@ -28,28 +28,6 @@ namespace CNN
             public string BodyRegion(RenderStateProcess rsp, int indentation)
             {
                 return $@"
--- create_ip -name floating_point -vendor xilinx.com -library ip -version 7.1 -module_name fl_gt
--- set_property -dict [list \
---   CONFIG.A_Precision_Type {{Single}} \
---   CONFIG.C_A_Exponent_Width {{8}} \
---   CONFIG.C_A_Fraction_Width {{24}} \
---   CONFIG.C_Compare_Operation {{Greater_Than}} \
---   CONFIG.C_Latency {{2}} \
---   CONFIG.C_Mult_Usage {{No_Usage}} \
---   CONFIG.C_Rate {{1}} \
---   CONFIG.C_Result_Exponent_Width {{1}} \
---   CONFIG.C_Result_Fraction_Width {{0}} \
---   CONFIG.Component_Name {{fl_gt}} \
---   CONFIG.Flow_Control {{NonBlocking}} \
---   CONFIG.Has_ARESETn {{true}} \
---   CONFIG.Has_A_TLAST {{true}} \
---   CONFIG.Has_B_TLAST {{true}} \
---   CONFIG.Has_RESULT_TREADY {{false}} \
---   CONFIG.Operation_Type {{Compare}} \
---   CONFIG.RESULT_TLAST_Behv {{Pass_A_TLAST}} \
---   CONFIG.Result_Precision_Type {{Custom}} \
--- ] [get_ips fl_gt]
-
 component fl_gt
 port (
     s_axis_a_tvalid : in std_logic;

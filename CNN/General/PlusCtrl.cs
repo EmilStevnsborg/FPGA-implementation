@@ -26,30 +26,8 @@ namespace CNN
 
             public string BodyRegion(RenderStateProcess rsp, int indentation)
             {
-                // TODO adjust the parameters
                 return $@"
--- create_ip -name floating_point -vendor xilinx.com -library ip -version 7.1 -module_name plusctrl_fl_accum
--- set_property -dict [list \
---   CONFIG.A_Precision_Type {{Single}} \
---   CONFIG.Add_Sub_Value {{Add}} \
---   CONFIG.C_A_Exponent_Width {{8}} \
---   CONFIG.C_A_Fraction_Width {{24}} \
---   CONFIG.C_Latency {{23}} \
---   CONFIG.C_Mult_Usage {{Full_Usage}} \
---   CONFIG.C_Rate {{1}} \
---   CONFIG.C_Result_Exponent_Width {{8}} \
---   CONFIG.C_Result_Fraction_Width {{24}} \
---   CONFIG.Component_Name {{plusctrl_fl_accum}} \
---   CONFIG.Flow_Control {{NonBlocking}} \
---   CONFIG.Has_ARESETn {{true}} \
---   CONFIG.Has_A_TLAST {{true}} \
---   CONFIG.Has_RESULT_TREADY {{false}} \
---   CONFIG.Operation_Type {{Accumulator}} \
---   CONFIG.RESULT_TLAST_Behv {{Pass_A_TLAST}} \
---   CONFIG.Result_Precision_Type {{Single}} \
--- ] [get_ips plusctrl_fl_accum]
-
-component plusctrl_fl_accum
+component fl_accum
 port (
     aclk : in std_logic;
     aresetn : in std_logic;
@@ -79,7 +57,7 @@ begin
 
     RSTn <= not RST;
 
-    fl_accum_inst : plusctrl_fl_accum
+    fl_accum_inst : fl_accum
     port map (
         aclk => CLK,
         aresetn => RSTn,

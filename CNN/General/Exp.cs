@@ -25,26 +25,6 @@ namespace CNN
             {
                 // TODO adjust the parameters
                 return $@"
--- create_ip -name floating_point -vendor xilinx.com -library ip -version 7.1 -module_name fl_exp
--- set_property -dict [list \
---   CONFIG.A_Precision_Type {{Single}} \
---   CONFIG.C_A_Exponent_Width {{8}} \
---   CONFIG.C_A_Fraction_Width {{24}} \
---   CONFIG.C_Latency {{20}} \
---   CONFIG.C_Mult_Usage {{Medium_Usage}} \
---   CONFIG.C_Rate {{1}} \
---   CONFIG.C_Result_Exponent_Width {{8}} \
---   CONFIG.C_Result_Fraction_Width {{24}} \
---   CONFIG.Component_Name {{fl_exp}} \
---   CONFIG.Flow_Control {{NonBlocking}} \
---   CONFIG.Has_ARESETn {{true}} \
---   CONFIG.Has_A_TLAST {{true}} \
---   CONFIG.Has_RESULT_TREADY {{false}} \
---   CONFIG.Operation_Type {{Exponential}} \
---   CONFIG.RESULT_TLAST_Behv {{Pass_A_TLAST}} \
---   CONFIG.Result_Precision_Type {{Single}} \
--- ] [get_ips fl_exp]
-
 component fl_exp
 port (
     aclk : in std_logic;
