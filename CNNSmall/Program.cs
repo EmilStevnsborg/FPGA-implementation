@@ -160,8 +160,8 @@ class MainClass
                     tester.Input = softmaxLayer.Output;
 
                     sim
-                        .AddTopLevelInputs(tester.Output)
-                        .AddTopLevelOutputs(tester.Input)
+                        .AddTopLevelInputs(convLayer1.Input)
+                        .AddTopLevelOutputs(softmaxLayer.Output)
                         .BuildCSVFile()
                         .BuildVHDL()
                         .AddTicker(s => ticks = Scope.Current.Clock.Ticks)
