@@ -27,10 +27,9 @@ Below are the steps for generating the VHDL and synthesizing it in Vivado.
   source path_to_script/generate_ip.tcl
   ```
 - Open elaborated design
-- Clock constraint (sources/create constraints)
-- Set CLK in the TCL console, e.g.:
+- Clock constraint
   ```
-  create_clock -period 10.000 -name clk -waveform {0.000 5.000} [get_ports CLK]
+  source path_to_script/generate_constraints.tcl
   ```
 - Run synthesis
 - Open Synthesized Design

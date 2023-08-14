@@ -34,9 +34,9 @@ class MainClass
         {
             int tests = 1;
             // Which layer should be tested
-            string layer = "conv2";
+            string layer = "conv1";
             // What type of implementation
-            string layerType = "01";
+            string layerType = "00";
             string path = @"../../CNNSmall/Tests/" + layer;
 
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
@@ -49,9 +49,9 @@ class MainClass
                 using(var sim = new Simulation())
                 {
                     // depending on layerType
-                    var convLayer = convConfig.PushConfig_01();
+                    var convLayer = convConfig.PushConfig_00();
 
-                    var tester = new Tester_10(convConfig.numInChannels,
+                    var tester = new Tester_00(convConfig.numInChannels,
                                                 convConfig.numOutChannels,
                                                 (convConfig.channelHeight,convConfig.channelWidth));
 
@@ -67,7 +67,7 @@ class MainClass
                     long ticks = 0;
 
                     sim
-                        .AddTopLevelInputs(tester.Output)
+                        .AddTopLevelInputs(convLayer.Input)
                         .AddTopLevelOutputs(convLayer.Output)
                         .BuildCSVFile()
                         .BuildVHDL()

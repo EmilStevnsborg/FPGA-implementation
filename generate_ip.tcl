@@ -1,4 +1,4 @@
-create_ip -name floating_point -vendor xilinx.com -library ip -version 7.1 -module_name fl_accumulate
+create_ip -name floating_point -vendor xilinx.com -library ip -version 7.1 -module_name fl_accum
 set_property -dict [list \
   CONFIG.A_Precision_Type {Single} \
   CONFIG.Add_Sub_Value {Add} \
@@ -16,7 +16,7 @@ set_property -dict [list \
   CONFIG.Operation_Type {Accumulator} \
   CONFIG.RESULT_TLAST_Behv {Pass_A_TLAST} \
   CONFIG.Result_Precision_Type {Single} \
-] [get_ips fl_accumulate]
+] [get_ips fl_accum]
 
 create_ip -name floating_point -vendor xilinx.com -library ip -version 7.1 -module_name fl_add
 set_property -dict [list \

@@ -68,18 +68,18 @@ def analysis_network(layers, types, iso_accum):
 
 
 layers = ["conv1","batchNorm1","relu1","maxPool1","conv2","batchNorm2","relu2","maxPool2","linear","softmax"]
-types = ["00", "00", "00", "00", "01", "11", "11", "11", "10", "00"]
+types = ["00", "00", "00", "00", "00", "11", "11", "11", "10", "00"]
 
-# layers_df = analysis_network(layers, types, "iso")
-# print("Stats for the layers isolated")
-# # print(layers_df.to_string())
-# print(layers_df.T.to_latex(header=False))
-# print("\n")
+layers_df = analysis_network(layers, types, "iso")
+print("Stats for the layers isolated")
+# print(layers_df.to_string())
+print(layers_df.T.to_latex(header=False))
+print("\n")
 
-print("Accumulated layer loss, and accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
-layers_accum_df = analysis_network(layers, types, "accum")
-# print(layers_accum_df.to_string())
-print(layers_accum_df.T.to_latex(header=False))
+# print("Accumulated layer loss, and accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
+# layers_accum_df = analysis_network(layers, types, "accum")
+# # print(layers_accum_df.to_string())
+# print(layers_accum_df.T.to_latex(header=False))
 
 
 
