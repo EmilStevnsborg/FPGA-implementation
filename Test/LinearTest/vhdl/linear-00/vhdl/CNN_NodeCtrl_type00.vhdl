@@ -13,14 +13,14 @@ use work.CUSTOM_TYPES.ALL;
 
 entity CNN_NodeCtrl_type00 is
     generic(
-        reset_numInChannels: in T_SYSTEM_INT32;
-        reset_channelHeight: in T_SYSTEM_INT32;
-        reset_channelWidth: in T_SYSTEM_INT32;
-        reset_x: in T_SYSTEM_INT32;
-        reset_i: in T_SYSTEM_INT32;
-        reset_j: in T_SYSTEM_INT32;
-        reset_k: in T_SYSTEM_INT32;
-        reset_adress: in T_SYSTEM_INT32;
+        reset_numInChannels: in T_UINT3;
+        reset_channelHeight: in T_UINT4;
+        reset_channelWidth: in T_UINT4;
+        reset_j: in T_UINT4;
+        reset_adress: in T_UINT6;
+        reset_k: in T_UINT6;
+        reset_x: in T_UINT6;
+        reset_i: in T_UINT6;
         reset_vhdl_buffer: in CNN_NodeCtrl_type00_vhdl_buffer_type;
         reset_ramValid: in T_SYSTEM_BOOL;
         reset_Input_Length: in T_SYSTEM_INT32
@@ -88,15 +88,15 @@ begin
     )
         -- Internal variables
         variable local_var_0 : T_SYSTEM_BOOL;
-        variable local_var_1 : T_SYSTEM_INT32;
-        variable numInChannels : T_SYSTEM_INT32 := reset_numInChannels;
-        variable channelHeight : T_SYSTEM_INT32 := reset_channelHeight;
-        variable channelWidth : T_SYSTEM_INT32 := reset_channelWidth;
-        variable x : T_SYSTEM_INT32 := reset_x;
-        variable i : T_SYSTEM_INT32 := reset_i;
-        variable j : T_SYSTEM_INT32 := reset_j;
-        variable k : T_SYSTEM_INT32 := reset_k;
-        variable adress : T_SYSTEM_INT32 := reset_adress;
+        variable local_var_1 : T_UINT4;
+        variable numInChannels : T_UINT3 := reset_numInChannels;
+        variable channelHeight : T_UINT4 := reset_channelHeight;
+        variable channelWidth : T_UINT4 := reset_channelWidth;
+        variable j : T_UINT4 := reset_j;
+        variable adress : T_UINT6 := reset_adress;
+        variable k : T_UINT6 := reset_k;
+        variable x : T_UINT6 := reset_x;
+        variable i : T_UINT6 := reset_i;
         variable vhdl_buffer : CNN_NodeCtrl_type00_vhdl_buffer_type (0 to 44) := reset_vhdl_buffer;
         variable ramValid : T_SYSTEM_BOOL := reset_ramValid;
 
@@ -120,15 +120,15 @@ begin
             ram_ctrl_IsWriting <= '0';
             ram_ctrl_Data <= std_logic_vector'(x"00000000");
             local_var_0 := '0';
-            local_var_1 := TO_SIGNED(0, 32);
+            local_var_1 := TO_UNSIGNED(0, 4);
             numInChannels := reset_numInChannels;
             channelHeight := reset_channelHeight;
             channelWidth := reset_channelWidth;
+            j := reset_j;
+            adress := reset_adress;
+            k := reset_k;
             x := reset_x;
             i := reset_i;
-            j := reset_j;
-            k := reset_k;
-            adress := reset_adress;
             vhdl_buffer := reset_vhdl_buffer;
             ramValid := reset_ramValid;
             FIN <= '0';
@@ -146,47 +146,47 @@ begin
             if Input_Length > TO_SIGNED(0, 32) then
                 for OnTick_ii in 0 to 5-1 loop
                     if Input_enable(OnTick_ii) = '1' then
-                        vhdl_buffer(TO_INTEGER(x)) := Input_Value(OnTick_ii);
-                        x := x + TO_SIGNED(1, 32);
+                        vhdl_buffer(TO_INTEGER(SIGNED(resize(x, T_SYSTEM_INT32'length)))) := Input_Value(OnTick_ii);
+                        x := x + TO_UNSIGNED(1, 6);
                     end if;
                 end loop;
             end if;
             OutputValue_enable <= '0';
             OutputWeight_enable <= '0';
             OutputValue_LastValue <= '0';
-            if (x > TO_SIGNED(0, 32)) and (i < x) then
+            if (x > TO_UNSIGNED(0, 6)) and (i < x) then
                 ram_ctrl_Enabled <= '1';
-                ram_ctrl_Address <= adress;
+                ram_ctrl_Address <= SIGNED(resize(adress, T_SYSTEM_INT32'length));
                 ram_ctrl_IsWriting <= '0';
                 ram_ctrl_Data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0, T_SYSTEM_FLOAT'length));
-                if k >= TO_SIGNED(2, 32) then
+                if k >= TO_UNSIGNED(2, 6) then
                     ramValid := '1';
                 else
                     ramValid := '0';
                 end if;
-                k := k + TO_SIGNED(1, 32);
-                if (k mod numInChannels) = TO_SIGNED(0, 32) then
-                    local_var_1 := j + TO_SIGNED(1, 32);
+                k := k + TO_UNSIGNED(1, 6);
+                if (k mod resize(numInChannels, T_UINT6'length)) = TO_UNSIGNED(0, 6) then
+                    local_var_1 := j + TO_UNSIGNED(1, 4);
                 else
                     local_var_1 := j;
                 end if;
                 j := local_var_1;
-                adress := (resize((k mod numInChannels) * (resize(channelHeight * channelWidth, 32)), 32)) + j;
+                adress := (resize((k mod resize(numInChannels, T_UINT6'length)) * resize((resize(channelHeight * channelWidth, 4)), T_UINT6'length), 6)) + resize(j, T_UINT6'length);
                 local_var_0 := ramValid;
                 OutputValue_enable <= local_var_0;
                 OutputWeight_enable <= local_var_0;
                 if ramValid = '1' then
-                    OutputValue_Value <= vhdl_buffer(TO_INTEGER(i));
+                    OutputValue_Value <= vhdl_buffer(TO_INTEGER(SIGNED(resize(i, T_SYSTEM_INT32'length))));
                     OutputWeight_Value <= ram_read_Data;
-                    i := i + TO_SIGNED(1, 32);
+                    i := i + TO_UNSIGNED(1, 6);
                     if i = x then
                         OutputValue_LastValue <= '1';
                         ramValid := '0';
-                        x := TO_SIGNED(0, 32);
-                        i := TO_SIGNED(0, 32);
-                        k := TO_SIGNED(0, 32);
-                        j := TO_SIGNED(0, 32);
-                        adress := TO_SIGNED(0, 32);
+                        x := TO_UNSIGNED(0, 6);
+                        i := TO_UNSIGNED(0, 6);
+                        k := TO_UNSIGNED(0, 6);
+                        j := TO_UNSIGNED(0, 4);
+                        adress := TO_UNSIGNED(0, 6);
                     end if;
                 end if;
             end if;

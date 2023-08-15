@@ -180,14 +180,14 @@ begin
     -- Entity NodeCtrl_type00#0 signals
     NodeCtrl_type00_0: entity work.CNN_NodeCtrl_type00
     generic map(
-        reset_numInChannels => TO_SIGNED(5, 32),
-        reset_channelHeight => TO_SIGNED(3, 32),
-        reset_channelWidth => TO_SIGNED(3, 32),
-        reset_x => TO_SIGNED(0, 32),
-        reset_i => TO_SIGNED(0, 32),
-        reset_j => TO_SIGNED(0, 32),
-        reset_k => TO_SIGNED(0, 32),
-        reset_adress => TO_SIGNED(0, 32),
+        reset_numInChannels => TO_UNSIGNED(5, 3),
+        reset_channelHeight => TO_UNSIGNED(3, 4),
+        reset_channelWidth => TO_UNSIGNED(3, 4),
+        reset_j => TO_UNSIGNED(0, 4),
+        reset_adress => TO_UNSIGNED(0, 6),
+        reset_k => TO_UNSIGNED(0, 6),
+        reset_x => TO_UNSIGNED(0, 6),
+        reset_i => TO_UNSIGNED(0, 6),
         reset_vhdl_buffer (0 to 44) => (others => std_logic_vector'(x"00000000")),
         reset_ramValid => '0',
         reset_Input_Length => TO_SIGNED(5, 32)
@@ -341,14 +341,14 @@ begin
     -- Entity NodeCtrl_type00#1 signals
     NodeCtrl_type00_1: entity work.CNN_NodeCtrl_type00
     generic map(
-        reset_numInChannels => TO_SIGNED(5, 32),
-        reset_channelHeight => TO_SIGNED(3, 32),
-        reset_channelWidth => TO_SIGNED(3, 32),
-        reset_x => TO_SIGNED(0, 32),
-        reset_i => TO_SIGNED(0, 32),
-        reset_j => TO_SIGNED(0, 32),
-        reset_k => TO_SIGNED(0, 32),
-        reset_adress => TO_SIGNED(0, 32),
+        reset_numInChannels => TO_UNSIGNED(5, 3),
+        reset_channelHeight => TO_UNSIGNED(3, 4),
+        reset_channelWidth => TO_UNSIGNED(3, 4),
+        reset_j => TO_UNSIGNED(0, 4),
+        reset_adress => TO_UNSIGNED(0, 6),
+        reset_k => TO_UNSIGNED(0, 6),
+        reset_x => TO_UNSIGNED(0, 6),
+        reset_i => TO_UNSIGNED(0, 6),
         reset_vhdl_buffer (0 to 44) => (others => std_logic_vector'(x"00000000")),
         reset_ramValid => '0',
         reset_Input_Length => TO_SIGNED(5, 32)

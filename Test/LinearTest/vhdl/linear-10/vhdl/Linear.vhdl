@@ -184,9 +184,9 @@ begin
         reset_channelHeight => TO_UNSIGNED(3, 4),
         reset_channelWidth => TO_UNSIGNED(3, 4),
         reset_numInputs => TO_UNSIGNED(45, 9),
+        reset_k => TO_UNSIGNED(0, 2),
         reset_x => TO_UNSIGNED(0, 9),
         reset_i => TO_UNSIGNED(0, 9),
-        reset_k => TO_UNSIGNED(0, 9),
         reset_adress => TO_UNSIGNED(0, 9),
         reset_vhdl_buffer (0 to 2) => (others => std_logic_vector'(x"00000000")),
         reset_ramValid => '0'
@@ -332,9 +332,9 @@ begin
         reset_channelHeight => TO_UNSIGNED(3, 4),
         reset_channelWidth => TO_UNSIGNED(3, 4),
         reset_numInputs => TO_UNSIGNED(45, 9),
+        reset_k => TO_UNSIGNED(0, 2),
         reset_x => TO_UNSIGNED(0, 9),
         reset_i => TO_UNSIGNED(0, 9),
-        reset_k => TO_UNSIGNED(0, 9),
         reset_adress => TO_UNSIGNED(0, 9),
         reset_vhdl_buffer (0 to 2) => (others => std_logic_vector'(x"00000000")),
         reset_ramValid => '0'

@@ -17,9 +17,9 @@ entity CNN_NodeCtrl_type10 is
         reset_channelHeight: in T_UINT4;
         reset_channelWidth: in T_UINT4;
         reset_numInputs: in T_UINT9;
+        reset_k: in T_UINT2;
         reset_x: in T_UINT9;
         reset_i: in T_UINT9;
-        reset_k: in T_UINT9;
         reset_adress: in T_UINT9;
         reset_vhdl_buffer: in CNN_NodeCtrl_type10_vhdl_buffer_type;
         reset_ramValid: in T_SYSTEM_BOOL
@@ -88,9 +88,9 @@ begin
         variable channelHeight : T_UINT4 := reset_channelHeight;
         variable channelWidth : T_UINT4 := reset_channelWidth;
         variable numInputs : T_UINT9 := reset_numInputs;
+        variable k : T_UINT2 := reset_k;
         variable x : T_UINT9 := reset_x;
         variable i : T_UINT9 := reset_i;
-        variable k : T_UINT9 := reset_k;
         variable adress : T_UINT9 := reset_adress;
         variable vhdl_buffer : CNN_NodeCtrl_type10_vhdl_buffer_type (0 to 2) := reset_vhdl_buffer;
         variable ramValid : T_SYSTEM_BOOL := reset_ramValid;
@@ -119,9 +119,9 @@ begin
             channelHeight := reset_channelHeight;
             channelWidth := reset_channelWidth;
             numInputs := reset_numInputs;
+            k := reset_k;
             x := reset_x;
             i := reset_i;
-            k := reset_k;
             adress := reset_adress;
             vhdl_buffer := reset_vhdl_buffer;
             ramValid := reset_ramValid;
@@ -153,12 +153,14 @@ begin
                 ram_ctrl_Address <= SIGNED(resize(adress, T_SYSTEM_INT32'length));
                 ram_ctrl_IsWriting <= '0';
                 ram_ctrl_Data <= STD_LOGIC_VECTOR(TO_UNSIGNED(0, T_SYSTEM_FLOAT'length));
-                if k >= TO_UNSIGNED(2, 9) then
+                if k >= TO_UNSIGNED(2, 2) then
                     ramValid := '1';
                 else
                     ramValid := '0';
                 end if;
-                k := k + TO_UNSIGNED(1, 9);
+                if not (ramValid = '1') then
+                    k := k + TO_UNSIGNED(1, 2);
+                end if;
                 adress := adress + TO_UNSIGNED(1, 9);
                 local_var_0 := ramValid;
                 OutputValue_enable <= local_var_0;
@@ -168,7 +170,7 @@ begin
                     OutputWeight_Value <= ram_read_Data;
                     i := i + TO_UNSIGNED(1, 9);
                     if i = x then
-                        k := TO_UNSIGNED(0, 9);
+                        k := TO_UNSIGNED(0, 2);
                         adress := adress - TO_UNSIGNED(1, 9);
                         adress := adress - TO_UNSIGNED(1, 9);
                     end if;
@@ -177,7 +179,7 @@ begin
                         ramValid := '0';
                         x := TO_UNSIGNED(0, 9);
                         i := TO_UNSIGNED(0, 9);
-                        k := TO_UNSIGNED(0, 9);
+                        k := TO_UNSIGNED(0, 2);
                     end if;
                 end if;
             end if;

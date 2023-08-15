@@ -23,10 +23,11 @@ namespace CNN
         public TrueDualPortMemory<float>.IControl ram_ctrl;
         
         private SME.VHDL.UInt2 numInChannels;                   // (3 dec)
-        private SME.VHDL.UInt4 channelHeight;                   // (13 dec)
-        private SME.VHDL.UInt4 channelWidth;                    // (13 dec)
+        private SME.VHDL.UInt4 channelHeight;                   // (9 dec)
+        private SME.VHDL.UInt4 channelWidth;                    // (9 dec)
         private SME.VHDL.UInt9 numInputs;                       // (507 dec)
-        private SME.VHDL.UInt9 x = 0, i = 0, k = 0, adress = 0; // (507 || 509 dec)
+        private SME.VHDL.UInt2 k = 0;                           // (2 dec)
+        private SME.VHDL.UInt9 x = 0, i = 0, adress = 0;        // (507 || 509 dec)
 
         private float[] buffer;
         private bool ramValid = false;
@@ -57,7 +58,10 @@ namespace CNN
 
                 // After two clock cycles, the results comes back from memory.
                 ramValid = k >= 2;
-                k++;
+                if (!ramValid) 
+                {
+                    k++;
+                }
 
                 adress++;
 

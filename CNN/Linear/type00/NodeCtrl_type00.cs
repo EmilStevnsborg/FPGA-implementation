@@ -20,19 +20,20 @@ namespace CNN
         public ValueBus OutputWeight = Scope.CreateBus<ValueBus>();
         [OutputBus]
         public TrueDualPortMemory<float>.IControl ram_ctrl;
-        private int numInChannels;
-        private int channelHeight;
-        private int channelWidth;
-        private int x = 0, i = 0, j = 0, k = 0, adress = 0;
+        private SME.VHDL.UInt3 numInChannels;                       // (5 dec)
+        private SME.VHDL.UInt4 channelHeight;                       // (13 dec)
+        private SME.VHDL.UInt4 channelWidth;                        // (13 dec)
+        private SME.VHDL.UInt4 j = 0;                               // (9 dec)
+        private SME.VHDL.UInt6 adress = 0, k = 0, x = 0, i = 0;     // (45 dec)
         private float[] buffer;
         private bool ramValid = false;
 
         public NodeCtrl_type00(int numInChannels, (int,int) channelSize)
         {
-            this.numInChannels = numInChannels;
-            this.channelHeight = channelSize.Item1;
-            this.channelWidth = channelSize.Item2;
-            buffer = new float[numInChannels * channelHeight * channelWidth];
+            this.numInChannels = (SME.VHDL.UInt3) numInChannels;
+            this.channelHeight = (SME.VHDL.UInt4) channelSize.Item1;
+            this.channelWidth = (SME.VHDL.UInt4) channelSize.Item2;
+            buffer = new float[numInChannels * channelSize.Item1 * channelSize.Item1];
         }
         protected override void OnTick()
         {
@@ -43,8 +44,8 @@ namespace CNN
                 {
                     if (Input[ii].enable)
                     {
-                        buffer[x] = Input[ii].Value;
-                        x = x + 1;
+                        buffer[(int)x] = Input[ii].Value;
+                        x++;
                     }
                 }
             }
@@ -60,11 +61,11 @@ namespace CNN
 
                 // After two clock cycles, the results comes back from memory.
                 ramValid = k >= 2;
-                k = (k + 1);
+                k++;
                 // j controls which index in a channel ram selects
-                j = k % numInChannels == 0 ? (j + 1) : j;
+                j = (SME.VHDL.UInt4) ((k % numInChannels) == 0 ? (j + (SME.VHDL.UInt4) 1) : j);
                 // k will keep incrementing and j will be reset
-                adress = (k % numInChannels) * (channelHeight * channelWidth) + j;
+                adress = (SME.VHDL.UInt6) ((k % numInChannels) * (channelHeight * channelWidth) + j);
 
                 // If the results are back from memory, they can be forwarded along
                 // side the Value data.
@@ -72,17 +73,21 @@ namespace CNN
 
                 if (ramValid)
                 {
-                    OutputValue.Value = buffer[i];
+                    OutputValue.Value = buffer[(int)i];
                     OutputWeight.Value = ram_read.Data;
 
-                    i = i + 1;
+                    i++;
 
                     // buffer is done
                     if (i == x)
                     {
                         OutputValue.LastValue = true;
                         ramValid = false;
-                        x = i = k = j = adress = 0;
+                        x = 0;
+                        i = 0;
+                        k = 0;
+                        j = 0;
+                        adress = 0;
                     }
                 }
             }
