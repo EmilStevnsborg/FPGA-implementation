@@ -68,7 +68,7 @@ def analysis_network(layers, types, iso_accum):
 
 
 layers = ["conv1","batchNorm1","relu1","maxPool1","conv2","batchNorm2","relu2","maxPool2","linear","softmax"]
-types = ["00", "00", "00", "00", "00", "11", "11", "11", "10", "00"]
+types = ["00", "00", "00", "00", "01", "11", "11", "11", "10", "00"]
 
 layers_df = analysis_network(layers, types, "iso")
 print("Stats for the layers isolated")

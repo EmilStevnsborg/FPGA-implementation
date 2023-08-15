@@ -67,7 +67,7 @@ class MainClass
                     long ticks = 0;
 
                     sim
-                        .AddTopLevelInputs(tester.Output)
+                        .AddTopLevelInputs(linearLayer.Input)
                         .AddTopLevelOutputs(linearLayer.Output)
                         .BuildCSVFile()
                         .BuildVHDL()

@@ -36,7 +36,7 @@ class MainClass
             // Which layer should be tested
             string layer = "maxPool2";
             // What type of implementation
-            string layerType = "00";
+            string layerType = "11";
             string path = @"../../CNNSmall/Tests/" + layer;
 
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
@@ -49,9 +49,9 @@ class MainClass
                 using(var sim = new Simulation())
                 {
                     // depending on layerType
-                    var maxPoolLayer = maxPoolConfig.PushConfig_00();
+                    var maxPoolLayer = maxPoolConfig.PushConfig_11();
 
-                    var tester = new Tester_00(maxPoolConfig.numInChannels,
+                    var tester = new Tester_11(maxPoolConfig.numInChannels,
                                                 maxPoolConfig.numOutChannels,
                                                 (maxPoolConfig.channelHeight,maxPoolConfig.channelWidth));
 
@@ -67,7 +67,7 @@ class MainClass
                     long ticks = 0;
 
                     sim
-                        .AddTopLevelInputs(tester.Output)
+                        .AddTopLevelInputs(maxPoolLayer.Input)
                         .AddTopLevelOutputs(maxPoolLayer.Output)
                         .BuildCSVFile()
                         .BuildVHDL()
