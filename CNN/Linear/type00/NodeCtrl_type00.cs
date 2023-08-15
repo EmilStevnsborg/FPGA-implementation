@@ -21,10 +21,10 @@ namespace CNN
         [OutputBus]
         public TrueDualPortMemory<float>.IControl ram_ctrl;
         private SME.VHDL.UInt3 numInChannels;                       // (5 dec)
-        private SME.VHDL.UInt4 channelHeight;                       // (13 dec)
-        private SME.VHDL.UInt4 channelWidth;                        // (13 dec)
+        private SME.VHDL.UInt4 channelHeight;                       // (9 dec)
+        private SME.VHDL.UInt4 channelWidth;                        // (9 dec)
         private SME.VHDL.UInt4 j = 0;                               // (9 dec)
-        private SME.VHDL.UInt6 adress = 0, k = 0, x = 0, i = 0;     // (45 dec)
+        private SME.VHDL.UInt6 adress = 0, k = 0, x = 0, i = 0;     // (45 (+2) dec)
         private float[] buffer;
         private bool ramValid = false;
 
