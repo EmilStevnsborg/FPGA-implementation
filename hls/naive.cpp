@@ -49,20 +49,27 @@ void relu(const float *input, float *output, const image_shape shape) {
     }
 }
 
-void maxpool2d(float *input, float *output, const int b, const int n, const int m, const int k) {
-    const int kh = k >> 1;
-    for (int i = 0; i < b; i++) {
-        for (int j = 0; j < n; j += k) {
-            for (int l = 0; l < m; l += k) {
-                float tmp = 0;
-                for (int ii = -kh; ii < kh; ii++) {
-                    for (int jj = -kh; jj < kh; jj++) {
-                        if (!(j + ii < 0 || j + ii >= n || l + jj < 0 || l + jj >= m)) {
-                            tmp = tmp > input[i*n*m + (j + ii)*m + (l + jj)] ? tmp : input[i*n*m + (j + ii)*m + (l + jj)];
+void maxpool2d(const float *input, float *output, const image_shape shape, const int k) {
+    const int
+        b = shape.batch_size,
+        n = shape.n,
+        m = shape.m,
+        c = shape.channels,
+        out_m = m / k,
+        out_n = n / k;
+    for (int img = 0; img < b; img++) {
+        for (int ch = 0; ch < c; ch++) {
+            for (int y = 0; y < out_n; y++) {
+                for (int x = 0; x < out_m; x++) {
+                    float tmp = 0; // Isn't a problem because of ReLU
+                    for (int ii = 0; ii < k; ii++) {
+                        for (int jj = 0; jj < k; jj++) {
+                            int ry = y*k + ii, rx = x*k + jj;
+                            tmp = std::fmax(tmp, input[img*c*n*m + ch*n*m + ry*m + rx]);
                         }
                     }
+                    output[img*c*out_n*out_m + ch*out_n*out_m + y*out_m + x] = tmp;
                 }
-                output[i*n*m + j*m + l] = tmp;
             }
         }
     }

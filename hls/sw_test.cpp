@@ -16,6 +16,8 @@ int matches(const float *actual, const float *expected, int size, std::string na
     for (int i = 0; i < size; i++) {
         float err = std::abs(expected[i] - actual[i]);
         if (err >= 1e-6) {
+            if (errors == 0)
+                std::cout << "format: expected - actual = error" << std::endl;
             std::cout << name << " failed at index " << i << ": " << expected[i] << " - " << actual[i] << " = " << err << std::endl;
             errors++;
             if (errors > 10) {
@@ -27,8 +29,9 @@ int matches(const float *actual, const float *expected, int size, std::string na
     if (errors > 10) {
         std::ofstream out(name + "_output.csv");
         for (int i = 0; i < size; i++) {
-            out << expected[i] << std::endl;
+            out << actual[i] << (i == size - 1 ? "" : ",");
         }
+        out << std::endl;
     }
 
     return errors;
@@ -44,21 +47,29 @@ int test_conv1() {
 int test_batchnorm1() {
     int output_size = flat_size(batchnorm1_shape);
     float output[1*3*26*26];
-    batchnorm2d(conv1_output, output, batchnorm1_shape, batchnorm1_means, batchnorm1_denoms, batchnorm1_gammas, batchnorm1_betas);
+    batchnorm2d(conv1_output, output, conv1_shape, batchnorm1_means, batchnorm1_denoms, batchnorm1_gammas, batchnorm1_betas);
     return matches(output, batchnorm1_output, output_size, "batchnorm1");
 }
 
 int test_relu1() {
     int output_size = flat_size(relu1_shape);
     float output[1*3*26*26];
-    relu(batchnorm1_output, output, relu1_shape);
+    relu(batchnorm1_output, output, batchnorm1_shape);
     return matches(output, relu1_output, output_size, "relu1");
+}
+
+int test_maxpool1() {
+    int output_size = flat_size(maxpool1_shape);
+    float output[1*3*13*13];
+    maxpool2d(relu1_output, output, relu1_shape, 2);
+    return matches(output, maxpool1_output, output_size, "maxpool1");
 }
 
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
     assert(test_relu1() == 0);
+    assert(test_maxpool1() == 0);
 
     return 0;
 }

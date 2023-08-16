@@ -3,14 +3,14 @@ import numpy as np
 import json
 
 def conv1():
-    with open('../CNNSmall/Tests/conv1/inputs/input1.json') as f:
+    with open('../CNNSmall/Tests/maxPool1/inputs/input1.json') as f:
         data = json.load(f)
 
     expected = np.array(data['computed'])
     print (expected.shape)
-    expected = expected.reshape((3, 26, 26))
+    expected = expected.reshape((3, 13, 13))
 
-    with open('conv1_output.csv', 'r') as f:
+    with open('maxpool1_output.csv', 'r') as f:
         actual = np.loadtxt(f, delimiter=',')
 
     print (actual.shape)
