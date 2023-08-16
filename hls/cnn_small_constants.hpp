@@ -1,6 +1,8 @@
 #ifndef CNN_SMALL_CONSTANTS_HPP
 #define CNN_SMALL_CONSTANTS_HPP
 
+#define FLAT_SIZE(shape) (shape.batch_size * shape.channels * shape.n * shape.m)
+
 /*
 Same order as pytorch uses: [batch_size, channels, n, m]
 */
@@ -10,6 +12,10 @@ typedef struct image_shape {
     int n;
     int m;
 } image_shape;
+
+int flat_size(image_shape shape) {
+    return shape.batch_size * shape.channels * shape.n * shape.m;
+}
 
 // Input image
 const int batch_size = 1; // Only one image at a time, since this matches the SME implementation.
@@ -34,6 +40,26 @@ const float conv1_w[3 * 3 * 1 * 3] = {
 // const int conv1_bias_size = conv1_shape.channels;
 const float conv1_bias[3] = {
     0.31626051664352417, -0.26537808775901794, 0.1493488848209381
+};
+
+// Batch normalization layer 1
+const image_shape batchnorm1_shape = {batch_size, 3, 26, 26};
+const float batchnorm1_means[3] = {
+    0.36052051186561584, -0.23619629442691803, 0.13358604907989502
+};
+const float batchnorm1_vars[3] = {
+    0.03489356487989426, 0.02087334357202053, 0.010060370899736881
+};
+const float batchnorm1_gammas[3] = {
+    1.0154627561569214, 1.0381227731704712, 0.9544557929039001
+};
+const float batchnorm1_betas[3] = {
+    -0.007384154014289379, -0.005790943279862404, 0.002264766488224268
+};
+const float batchnorm1_denoms[3] = {
+    1 / std::sqrt(batchnorm1_vars[0] + 1e-5f),
+    1 / std::sqrt(batchnorm1_vars[1] + 1e-5f),
+    1 / std::sqrt(batchnorm1_vars[2] + 1e-5f)
 };
 
 #endif

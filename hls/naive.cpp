@@ -30,22 +30,14 @@ void conv2d(const float *input, const float *w, const float *bias, float *output
     }
 }
 
-void batchnorm2d(float *input, float *output, const int b, const int n, const int m) {
-    for (int i = 0; i < b; i++) {
-        float mean = 0;
-        float var = 0;
-        for (int j = 0; j < n; j++) {
-            for (int k = 0; k < m; k++) {
-                mean += input[i*n*m + j*m + k];
-                var += input[i*n*m + j*m + k] * input[i*n*m + j*m + k];
-            }
-        }
-        mean /= n*m;
-        var /= n*m;
-        var -= mean * mean;
-        for (int j = 0; j < n; j++) {
-            for (int k = 0; k < m; k++) {
-                output[i*n*m + j*m + k] = (input[i*n*m + j*m + k] - mean) / std::sqrt(var + 1e-5);
+void batchnorm2d(const float *input, float *output, const image_shape shape, const float *mean, const float *denom, const float *gamma, const float *beta) {
+    for (int img = 0; img < shape.batch_size; img++) {
+        for (int ch = 0; ch < shape.channels; ch++) {
+            for (int y = 0; y < shape.n; y++) {
+                for (int x = 0; x < shape.m; x++) {
+                    output[img*shape.channels*shape.n*shape.m + ch*shape.n*shape.m + y*shape.m + x] =
+                    (input[img*shape.channels*shape.n*shape.m + ch*shape.n*shape.m + y*shape.m + x] - mean[ch]) * denom[ch] * gamma[ch] + beta[ch];
+                }
             }
         }
     }
