@@ -72,12 +72,20 @@ int test_conv2() {
     return matches(output, conv2_output, output_size, "conv2");
 }
 
+int test_batchnorm2() {
+    int output_size = flat_size(batchnorm2_shape);
+    float output[1*5*9*9];
+    batchnorm2d(conv2_output, output, conv2_shape, batchnorm2_means, batchnorm2_denoms, batchnorm2_gammas, batchnorm2_betas);
+    return matches(output, batchnorm2_output, output_size, "batchnorm2");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
     assert(test_relu1() == 0);
     assert(test_maxpool1() == 0);
     assert(test_conv2() == 0);
+    assert(test_batchnorm2() == 0);
 
     return 0;
 }

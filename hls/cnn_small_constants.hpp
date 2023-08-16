@@ -204,4 +204,30 @@ const float conv2_bias[5] = {
     0.07129281014204025, 0.03910800442099571
 };
 
+// Batch Normalization layer 2
+const image_shape batchnorm2_shape = { batch_size, 5, 9, 9 };
+const float batchnorm2_means[5] = {
+    0.001691692043095827, 0.20957469940185547, 0.7531698942184448,
+    -0.11598194390535355, -0.2380867600440979
+};
+const float batchnorm2_vars[5] = {
+    0.7013558745384216, 1.0189189910888672, 0.5014127492904663,
+    0.7555098533630371, 0.515636146068573
+};
+const float batchnorm2_gammas[5] = {
+    1.5110524892807007, 1.4778906106948853, 1.4420918226242065,
+    1.313030481338501, 1.5031393766403198
+};
+const float batchnorm2_betas[5] = {
+    0.0236506424844265, 0.02725145034492016, -0.013462454080581665,
+    0.048654135316610336, 0.05783114209771156
+};
+const float batchnorm2_denoms[5] = {
+    1 / std::sqrt(batchnorm2_vars[0] + 1e-5f),
+    1 / std::sqrt(batchnorm2_vars[1] + 1e-5f),
+    1 / std::sqrt(batchnorm2_vars[2] + 1e-5f),
+    1 / std::sqrt(batchnorm2_vars[3] + 1e-5f),
+    1 / std::sqrt(batchnorm2_vars[4] + 1e-5f)
+};
+
 #endif
