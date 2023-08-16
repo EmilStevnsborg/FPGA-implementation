@@ -13,10 +13,6 @@ typedef struct image_shape {
     int m;
 } image_shape;
 
-int flat_size(image_shape shape) {
-    return shape.batch_size * shape.channels * shape.n * shape.m;
-}
-
 // Input image
 const int batch_size = 1; // Only one image at a time, since this matches the SME implementation.
 const image_shape input_shape = {batch_size, 1, 28, 28};
@@ -61,5 +57,8 @@ const float batchnorm1_denoms[3] = {
     1 / std::sqrt(batchnorm1_vars[1] + 1e-5f),
     1 / std::sqrt(batchnorm1_vars[2] + 1e-5f)
 };
+
+// Relu layer 1
+const image_shape relu1_shape = {batch_size, 3, 26, 26};
 
 #endif

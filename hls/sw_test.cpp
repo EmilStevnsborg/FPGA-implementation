@@ -7,6 +7,10 @@
 #include <cmath>
 #include <string>
 
+int flat_size(image_shape shape) {
+    return shape.batch_size * shape.channels * shape.n * shape.m;
+}
+
 int matches(const float *actual, const float *expected, int size, std::string name) {
     int errors = 0;
     for (int i = 0; i < size; i++) {
@@ -44,9 +48,17 @@ int test_batchnorm1() {
     return matches(output, batchnorm1_output, output_size, "batchnorm1");
 }
 
+int test_relu1() {
+    int output_size = flat_size(relu1_shape);
+    float output[1*3*26*26];
+    relu(batchnorm1_output, output, relu1_shape);
+    return matches(output, relu1_output, output_size, "relu1");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
+    assert(test_relu1() == 0);
 
     return 0;
 }

@@ -43,13 +43,9 @@ void batchnorm2d(const float *input, float *output, const image_shape shape, con
     }
 }
 
-void relu(float *input, float *output, const int b, const int n, const int m) {
-    for (int i = 0; i < b; i++) {
-        for (int j = 0; j < n; j++) {
-            for (int k = 0; k < m; k++) {
-                output[i*n*m + j*m + k] = input[i*n*m + j*m + k] > 0 ? input[i*n*m + j*m + k] : 0;
-            }
-        }
+void relu(const float *input, float *output, const image_shape shape) {
+    for (int i = 0; i < shape.batch_size * shape.channels * shape.n * shape.m; i++) {
+        output[i] = input[i] > 0 ? input[i] : 0;
     }
 }
 
