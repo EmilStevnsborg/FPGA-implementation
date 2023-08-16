@@ -233,4 +233,8 @@ const float batchnorm2_denoms[5] = {
 // Relu layer 2
 const image_shape relu2_shape = { batch_size, 5, 9, 9 };
 
+// Maxpool layer 2
+const image_shape maxpool2_shape = { batch_size, 5, 3, 3 };
+const int maxpool2_k = 3;
+
 #endif

@@ -86,6 +86,13 @@ int test_relu2() {
     return matches(output, relu2_output, output_size, "relu2");
 }
 
+int test_maxpool2() {
+    int output_size = flat_size(maxpool2_shape);
+    float output[1*5*3*3];
+    maxpool2d(relu2_output, output, relu2_shape, 3);
+    return matches(output, maxpool2_output, output_size, "maxpool2");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
@@ -94,6 +101,7 @@ int main() {
     assert(test_conv2() == 0);
     assert(test_batchnorm2() == 0);
     assert(test_relu2() == 0);
+    assert(test_maxpool2() == 0);
 
     return 0;
 }
