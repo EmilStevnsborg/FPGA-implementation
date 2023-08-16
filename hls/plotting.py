@@ -2,15 +2,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 
-def conv1():
-    with open('../CNNSmall/Tests/maxPool1/inputs/input1.json') as f:
+def plot_it(exp_path, act_path, shape):
+    with open(exp_path) as f:
         data = json.load(f)
 
     expected = np.array(data['computed'])
     print (expected.shape)
-    expected = expected.reshape((3, 13, 13))
+    expected = expected.reshape(shape)
 
-    with open('maxpool1_output.csv', 'r') as f:
+    with open(act_path, 'r') as f:
         actual = np.loadtxt(f, delimiter=',')
 
     print (actual.shape)
@@ -33,4 +33,4 @@ def conv1():
     plt.colorbar()
     plt.show()
 
-conv1()
+plot_it('../CNNSmall/Tests/conv2/inputs/input1.json', 'conv2_output.csv', (5, 9, 9))

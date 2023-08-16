@@ -65,11 +65,19 @@ int test_maxpool1() {
     return matches(output, maxpool1_output, output_size, "maxpool1");
 }
 
+int test_conv2() {
+    const int output_size = flat_size(conv2_shape);
+    float output[1*5*9*9];
+    conv2d(maxpool1_output, conv2_w, conv2_bias, output, maxpool1_shape, 5, 5);
+    return matches(output, conv2_output, output_size, "conv2");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
     assert(test_relu1() == 0);
     assert(test_maxpool1() == 0);
+    assert(test_conv2() == 0);
 
     return 0;
 }
