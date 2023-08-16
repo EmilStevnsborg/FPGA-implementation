@@ -230,4 +230,7 @@ const float batchnorm2_denoms[5] = {
     1 / std::sqrt(batchnorm2_vars[4] + 1e-5f)
 };
 
+// Relu layer 2
+const image_shape relu2_shape = { batch_size, 5, 9, 9 };
+
 #endif

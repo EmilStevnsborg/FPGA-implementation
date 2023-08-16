@@ -79,6 +79,13 @@ int test_batchnorm2() {
     return matches(output, batchnorm2_output, output_size, "batchnorm2");
 }
 
+int test_relu2() {
+    int output_size = flat_size(relu2_shape);
+    float output[1*5*9*9];
+    relu(batchnorm2_output, output, batchnorm2_shape);
+    return matches(output, relu2_output, output_size, "relu2");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
@@ -86,6 +93,7 @@ int main() {
     assert(test_maxpool1() == 0);
     assert(test_conv2() == 0);
     assert(test_batchnorm2() == 0);
+    assert(test_relu2() == 0);
 
     return 0;
 }
