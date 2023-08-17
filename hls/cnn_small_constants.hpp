@@ -1,24 +1,24 @@
 #ifndef CNN_SMALL_CONSTANTS_HPP
 #define CNN_SMALL_CONSTANTS_HPP
 
-#define FLAT_SIZE(shape) (shape.batch_size * shape.channels * shape.n * shape.m)
+#include <cmath>
 
 /*
 Same order as pytorch uses: [batch_size, channels, n, m]
-*/
 typedef struct image_shape {
     int batch_size;
     int channels;
     int n;
     int m;
 } image_shape;
+*/
 
 // Input image
 const int batch_size = 1; // Only one image at a time, since this matches the SME implementation.
-const image_shape input_shape = {batch_size, 1, 28, 28};
+const int input_shape_ch = 1, input_shape_n = 28, input_shape_m = 28;
 
 // Convolutional layer 1
-const image_shape conv1_shape = {batch_size, 3, 26, 26};
+const int conv1_shape_ch = 3, conv1_shape_n = 26, conv1_shape_m = 26;
 const int conv1_k = 3;
 //const int conv1_w_size = conv1_k * conv1_k * input_shape.channels * conv1_shape.channels;
 const float conv1_w[3 * 3 * 1 * 3] = {
@@ -40,7 +40,7 @@ const float conv1_bias[3] = {
 };
 
 // Batch normalization layer 1
-const image_shape batchnorm1_shape = {batch_size, 3, 26, 26};
+const int batchnorm1_shape_ch = 3, batchnorm1_shape_n = 26, batchnorm1_shape_m = 26;
 const float batchnorm1_means[3] = {
     0.36052051186561584, -0.23619629442691803, 0.13358604907989502
 };
@@ -60,14 +60,14 @@ const float batchnorm1_denoms[3] = {
 };
 
 // Relu layer 1
-const image_shape relu1_shape = {batch_size, 3, 26, 26};
+const int relu1_shape_ch = 3, relu1_shape_n = 26, relu1_shape_m = 26;
 
 // Maxpool layer 1
-const image_shape maxpool1_shape = {batch_size, 3, 13, 13};
+const int maxpool1_shape_ch = 3, maxpool1_shape_n = 13, maxpool1_shape_m = 13;
 const int maxpool1_k = 2;
 
 // Convolutional layer 2
-const image_shape conv2_shape = {batch_size, 5, 9, 9};
+const int conv2_shape_ch = 5, conv2_shape_n = 9, conv2_shape_m = 9;
 const int conv2_k = 5;
 //const int conv2_w_size = conv2_k * conv2_k * maxpool1_shape.channels * conv2_shape.channels;
 const float conv2_w[5 * 5 * 3 * 5] = {
@@ -205,7 +205,7 @@ const float conv2_bias[5] = {
 };
 
 // Batch Normalization layer 2
-const image_shape batchnorm2_shape = { batch_size, 5, 9, 9 };
+const int batchnorm2_shape_ch = 5, batchnorm2_shape_n = 9, batchnorm2_shape_m = 9;
 const float batchnorm2_means[5] = {
     0.001691692043095827, 0.20957469940185547, 0.7531698942184448,
     -0.11598194390535355, -0.2380867600440979
@@ -231,15 +231,15 @@ const float batchnorm2_denoms[5] = {
 };
 
 // Relu layer 2
-const image_shape relu2_shape = { batch_size, 5, 9, 9 };
+const int relu2_shape_ch = 5, relu2_shape_n = 9, relu2_shape_m = 9;
 
 // Maxpool layer 2
-const image_shape maxpool2_shape = { batch_size, 5, 3, 3 };
+const int maxpool2_shape_ch = 5, maxpool2_shape_n = 3, maxpool2_shape_m = 3;
 const int maxpool2_k = 3;
 
 // Linear layer 1
-const image_shape flatten_shape = { batch_size, 1, 1, 45 };
-const image_shape linear1_shape = { batch_size, 1, 1, 2 };
+const int flatten_shape_ch = 1, flatten_shape_n = 1, flatten_shape_m = 45;
+const int linear1_shape_ch = 1, linear1_shape_n = 1, linear1_shape_m = 2;
 const float linear1_weights[45 * 2] = {
     -0.3078191578388214, 0.3519742786884308, 0.1661590039730072,
     -0.33547666668891907, 0.14000685513019562, -0.3244403898715973,
@@ -277,6 +277,6 @@ const float linear1_bias[2] = {
 };
 
 // Softmax layer 1
-const image_shape softmax1_shape = { batch_size, 1, 1, 2 };
+const int softmax1_shape_ch = 1, softmax1_shape_n = 1, softmax1_shape_m = 2;
 
 #endif
