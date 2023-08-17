@@ -26,7 +26,7 @@ int matches(const float *actual, const float *expected, int size, std::string na
         }
     }
 
-    if (errors > 10) {
+    if (errors > 0) {
         std::ofstream out(name + "_output.csv");
         for (int i = 0; i < size; i++) {
             out << actual[i] << (i == size - 1 ? "" : ",");
@@ -93,6 +93,13 @@ int test_maxpool2() {
     return matches(output, maxpool2_output, output_size, "maxpool2");
 }
 
+int test_linear() {
+    int output_size = flat_size(linear1_shape);
+    float output[1*2];
+    linear(maxpool2_output, linear1_weights, linear1_bias, output, flatten_shape, 2);
+    return matches(output, linear_output, output_size, "linear");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
@@ -102,6 +109,7 @@ int main() {
     assert(test_batchnorm2() == 0);
     assert(test_relu2() == 0);
     assert(test_maxpool2() == 0);
+    assert(test_linear() == 0);
 
     return 0;
 }

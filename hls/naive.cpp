@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 
 #include "cnn_small_constants.hpp"
 
@@ -75,15 +76,19 @@ void maxpool2d(const float *input, float *output, const image_shape shape, const
     }
 }
 
-void linear(float *input, float *w, float bias, float *output, const int b, const int n, const int m, const int k) {
-    for (int bi = 0; bi < b; bi++) {
+void linear(const float *input, const float *w, const float *bias, float *output, const image_shape shape, const int m) {
+    const int
+        b = shape.batch_size,
+        n = shape.n,
+        k = shape.m;
+    for (int img = 0; img < b; img++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 float tmp = 0;
-                for (int ki = 0; ki < k; ki++) {
-                    tmp += input[bi*n*k + i*k + ki] * w[i*m*k + j*k + ki];
+                for (int kk = 0; kk < k; kk++) {
+                    tmp += input[img*n*k + i*k + kk] * w[j*k + kk];
                 }
-                output[bi*n*m + i*m + j] = tmp + bias;
+                output[img*n*m + i*m + j] = tmp + bias[j];
             }
         }
     }

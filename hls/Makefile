@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -Werror -pedantic -std=c++17 -O3 -g
+CFLAGS=-Wall -Wextra -Werror -pedantic -std=c++17 -g
 
 all:
 	clang++ -g sw_test.cpp && ./a.out

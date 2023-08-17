@@ -33,4 +33,4 @@ def plot_it(exp_path, act_path, shape):
     plt.colorbar()
     plt.show()
 
-plot_it('../CNNSmall/Tests/conv2/inputs/input1.json', 'conv2_output.csv', (5, 9, 9))
+plot_it('../CNNSmall/Tests/linear/inputs/input1.json', 'linear_output.csv', (2,1))

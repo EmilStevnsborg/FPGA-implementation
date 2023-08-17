@@ -2279,4 +2279,8 @@ const float maxpool2_output[batch_size * 5 * 3 * 3] = {
     3.0868704319000244, 3.0388128757476807
 };
 
+const float linear_output[batch_size * 2] = {
+    -5.2322163581848145, 5.527724266052246
+};
+
 #endif
