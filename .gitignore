@@ -12,3 +12,5 @@ output/
 # HLS files
 a.out
 hls/*.csv
+csynth_*/
+vitis_hls.log
