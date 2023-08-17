@@ -11,3 +11,4 @@ output/
 
 # HLS files
 a.out
+hls/*.csv
