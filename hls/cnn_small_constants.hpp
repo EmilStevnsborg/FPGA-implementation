@@ -276,4 +276,7 @@ const float linear1_bias[2] = {
     0.160173237323761, -0.03356779366731644
 };
 
+// Softmax layer 1
+const image_shape softmax1_shape = { batch_size, 1, 1, 2 };
+
 #endif

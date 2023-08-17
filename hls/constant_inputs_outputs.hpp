@@ -2283,4 +2283,8 @@ const float linear_output[batch_size * 2] = {
     -5.2322163581848145, 5.527724266052246
 };
 
+const float softmax_output[batch_size * 2] = {
+    2.1232823200989515e-05, 0.99997878074646
+};
+
 #endif

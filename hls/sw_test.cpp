@@ -100,6 +100,13 @@ int test_linear() {
     return matches(output, linear_output, output_size, "linear");
 }
 
+int test_softmax() {
+    int output_size = flat_size(softmax1_shape);
+    float output[1*2];
+    softmax(linear_output, output, linear1_shape);
+    return matches(output, softmax_output, output_size, "softmax");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
@@ -110,6 +117,7 @@ int main() {
     assert(test_relu2() == 0);
     assert(test_maxpool2() == 0);
     assert(test_linear() == 0);
+    assert(test_softmax() == 0);
 
     return 0;
 }

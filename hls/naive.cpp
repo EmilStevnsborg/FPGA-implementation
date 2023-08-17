@@ -94,15 +94,19 @@ void linear(const float *input, const float *w, const float *bias, float *output
     }
 }
 
-void softmax(float *input, float *output, const int b, const int n, const int m) {
-    for (int bi = 0; bi < b; bi++) {
+void softmax(const float *input, float *output, const image_shape shape) {
+    const int
+        b = shape.batch_size,
+        n = shape.n,
+        m = shape.m;
+    for (int img = 0; img < b; img++) {
         for (int i = 0; i < n; i++) {
             float sum = 0;
             for (int j = 0; j < m; j++) {
-                sum += std::exp(input[bi*n*m + i*m + j]);
+                sum += std::exp(input[img*n*m + i*m + j]);
             }
             for (int j = 0; j < m; j++) {
-                output[bi*n*m + i*m + j] = std::exp(input[bi*n*m + i*m + j]) / sum;
+                output[img*n*m + i*m + j] = std::exp(input[img*n*m + i*m + j]) / sum;
             }
         }
     }
