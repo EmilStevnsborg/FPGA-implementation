@@ -8,8 +8,8 @@ sanitize:
 	clang++ $(CFLAGS) -fsanitize=thread sw_test.cpp && ./a.out
 	clang++ $(CFLAGS) -fsanitize=undefined sw_test.cpp && ./a.out
 
-csynth:
-	vitis_hls -f naive.tcl
+csynth_%: %.tcl
+	vitis_hls -f $<
 
 clean:
 	rm -rf a.out csynth_* vitis_hls.log
