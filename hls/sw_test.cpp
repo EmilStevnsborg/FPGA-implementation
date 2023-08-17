@@ -107,6 +107,13 @@ int test_softmax() {
     return matches(output, softmax_output, output_size, "softmax");
 }
 
+int test_network() {
+    int output_size = flat_size(softmax1_shape);
+    float output[1*2];
+    cnn_small(conv1_input, output);
+    return matches(output, softmax_output, output_size, "network");
+}
+
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
@@ -118,6 +125,8 @@ int main() {
     assert(test_maxpool2() == 0);
     assert(test_linear() == 0);
     assert(test_softmax() == 0);
+
+    assert(test_network() == 0);
 
     return 0;
 }

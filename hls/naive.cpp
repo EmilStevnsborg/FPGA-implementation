@@ -115,21 +115,45 @@ void softmax(const float *input, float *output, const image_shape shape) {
 extern "C" {
     // Input is (1, 1, 28, 28)
     // Output is (1, 2)
-    void cnn_small(float *input, float *output) {
+    void cnn_small(const float *input, float *output) {
         // conv1 3 (3,3) (1, 1, 28, 28) -> (1, 3, 26, 26)
-        //float conv1_output[1*3*26*26];
-        //conv2d(input, conv1_w, conv1_bias, conv1_output, input_shape, 3, 3);
-        conv2d(input, conv1_w, conv1_bias, output, input_shape, 3, 3);
+        float conv1_output[1*3*26*26];
+        conv2d(input, conv1_w, conv1_bias, conv1_output, input_shape, 3, 3);
 
         // batchnorm 3 (1, 3, 26, 26) -> (1, 3, 26, 26)
+        float batchnorm1_output[1*3*26*26];
+        batchnorm2d(conv1_output, batchnorm1_output, conv1_shape, batchnorm1_means, batchnorm1_denoms, batchnorm1_gammas, batchnorm1_betas);
+
         // relu (1, 3, 26, 26) -> (1, 3, 26, 26)
+        float relu1_output[1*3*26*26];
+        relu(batchnorm1_output, relu1_output, batchnorm1_shape);
+
         // maxpool (2,2) (1, 3, 26, 26) -> (1, 3, 13, 13)
+        float maxpool1_output[1*3*13*13];
+        maxpool2d(relu1_output, maxpool1_output, relu1_shape, 2);
+
         // conv2 5 (5,5) (1, 5, 13, 13) -> (1, 5, 9, 9)
+        float conv2_output[1*5*9*9];
+        conv2d(maxpool1_output, conv2_w, conv2_bias, conv2_output, maxpool1_shape, 5, 5);
+
         // batchnorm (1, 5, 9, 9) -> (1, 5, 9, 9)
+        float batchnorm2_output[1*5*9*9];
+        batchnorm2d(conv2_output, batchnorm2_output, conv2_shape, batchnorm2_means, batchnorm2_denoms, batchnorm2_gammas, batchnorm2_betas);
+
         // relu (1, 5, 9, 9) -> (1, 5, 9, 9)
+        float relu2_output[1*5*9*9];
+        relu(batchnorm2_output, relu2_output, batchnorm2_shape);
+
         // maxpool (3,3) (1, 5, 9, 9) -> (1, 5, 3, 3)
+        float maxpool2_output[1*5*3*3];
+        maxpool2d(relu2_output, maxpool2_output, relu2_shape, 3);
+
         // flatten (1, 5, 3, 3) -> (1, 45)
         // linear (1, 45) -> (1, 2)
+        float linear_output[1*2];
+        linear(maxpool2_output, linear1_weights, linear1_bias, linear_output, flatten_shape, 2);
+
         // softmax (1, 2) -> (1, 2)
+        softmax(linear_output, output, linear1_shape);
     }
 }
