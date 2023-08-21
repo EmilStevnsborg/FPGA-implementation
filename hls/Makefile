@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -Werror -Wno-unknown-pragmas -pedantic -std=c++14 -g
+CFLAGS=-Wall -Wextra -Werror -Wno-unknown-pragmas -Wno-unused-parameter -pedantic -std=c++14 -g
 INCLUDES=-Iinclude/ -Isrc/kernel/
 ifdef XILINX_HLS
 	INCLUDES+=-I$(XILINX_HLS)/include
