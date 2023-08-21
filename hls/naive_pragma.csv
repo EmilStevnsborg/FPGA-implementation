@@ -81,3 +81,4 @@
 "above 300 mhz", 6.363, 3765, 7, 16, 11, 26, 0
 "above 35 mhz (II > 1)", 20.691, 2970, 15, 16, 6, 26, 0
 "above 30 mhz (II = 1)", 24.166, 1844, 15, 16, 6, 26, 0, (1336 us for estimated clockrate)
+"above, but with correct init ( ͡° ͜ʖ ͡°)", 24.166, 1879, 15, 14, 6, 25, 0

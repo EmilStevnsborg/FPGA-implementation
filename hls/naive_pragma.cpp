@@ -113,9 +113,8 @@ void conv2d(const float *input, const float *w, const float *bias, float *output
 
 template <int b, int c, int n, int m>
 void batchnorm2d(const float *input, float *output, const float *mean, const float *denom, const float *gamma, const float *beta) {
-    const int out_size = b * c * n * m;
-
     /* ultra flat
+    const int out_size = b * c * n * m;
     for (int i = 0; i < out_size; i += 8) {
         #pragma HLS PIPELINE II=1
         int ch = i / (n * m) % c;
@@ -163,11 +162,11 @@ void batchnorm2d(const float *input, float *output, const float *mean, const flo
     }
     */
     /* flatten + pipeline */
-    img_loop: for (int img = 0; img < b; img++) {
-        ch_loop: for (int ch = 0; ch < c; ch++) {
+    for (int img = 0; img < b; img++) {
+        for (int ch = 0; ch < c; ch++) {
             #pragma HLS UNROLL
-            y_loop: for (int y = 0; y < n; y++) {
-                x_loop: for (int x = 0; x < m; x++) {
+            for (int y = 0; y < n; y++) {
+                for (int x = 0; x < m; x++) {
                     #pragma HLS LOOP_FLATTEN
                     #pragma HLS PIPELINE II=1
                     output[img*c*n*m + ch*n*m + y*m + x] =
@@ -247,11 +246,13 @@ void maxpool2d(const float *input, float *output) {
 template <int b, int n, int k, int m>
 void linear(const float *input, const float *w, const float *bias, float *output) {
     /* init loop + perfect nest */
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            #pragma HLS LOOP_FLATTEN
-            #pragma HLS PIPELINE II=1
-            output[i] = bias[j];
+    for (int img = 0; img < b; img++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                #pragma HLS LOOP_FLATTEN
+                #pragma HLS PIPELINE II=1
+                output[img*n*m + i*m + j] = bias[j];
+            }
         }
     }
 
@@ -322,7 +323,7 @@ extern "C" {
 
         // conv2 5 (5,5) (1, 3, 13, 13) -> (1, 5, 9, 9)
         float conv2_output[1*5*9*9];
-        conv2d<batch_size, maxpool1_shape_ch, maxpool1_shape_m, maxpool1_shape_n, conv2_shape_ch, conv2_k>(maxpool1_output, conv2_w, conv2_bias, conv1_output);
+        conv2d<batch_size, maxpool1_shape_ch, maxpool1_shape_n, maxpool1_shape_m, conv2_shape_ch, conv2_k>(maxpool1_output, conv2_w, conv2_bias, conv2_output);
 
         // batchnorm (1, 5, 9, 9) -> (1, 5, 9, 9)
         float batchnorm2_output[1*5*9*9];

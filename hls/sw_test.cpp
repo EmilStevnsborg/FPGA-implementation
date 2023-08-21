@@ -1,4 +1,4 @@
-#include "naive.cpp" // lazy approach, but oh well.
+#include "naive_pragma.cpp" // lazy approach, but oh well.
 #include <iostream>
 #include <cassert>
 #include "constant_inputs_outputs.hpp"

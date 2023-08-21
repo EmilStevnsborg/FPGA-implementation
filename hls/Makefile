@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -Werror -pedantic -std=c++14 -g
+CFLAGS=-Wall -Wextra -Werror -Wno-unknown-pragmas -pedantic -std=c++14 -g
 INCLUDES=-I$(XILINX_HLS)/include
 
 all:
