@@ -1,4 +1,8 @@
+#ifdef KERNEL_IMPL
+#include KERNEL_IMPL
+#else
 #include "naive_pragma.cpp" // lazy approach, but oh well.
+#endif
 #include <iostream>
 #include <cassert>
 #include "constant_inputs_outputs.hpp"
