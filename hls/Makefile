@@ -1,5 +1,8 @@
 CFLAGS=-Wall -Wextra -Werror -Wno-unknown-pragmas -pedantic -std=c++14 -g
-INCLUDES=-I$(XILINX_HLS)/include -Iinclude/ -Isrc/kernel/
+INCLUDES=-Iinclude/ -Isrc/kernel/
+ifdef XILINX_HLS
+	INCLUDES+=-I$(XILINX_HLS)/include
+endif
 KERNELS=$(foreach KERNEL, $(wildcard src/kernel/*.cpp), $(notdir $(basename $(KERNEL))))
 SANITIZERS=address thread undefined
 SW_TARGETS=$(foreach KERNEL, $(KERNELS),$(addprefix sanitize_,$(addsuffix _$(KERNEL),$(SANITIZERS))))
