@@ -12,5 +12,6 @@ output/
 # HLS files
 a.out
 hls/*.csv
+!hls/naive_pragma.csv
 csynth_*/
 vitis_hls.log
