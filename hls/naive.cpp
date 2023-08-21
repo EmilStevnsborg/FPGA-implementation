@@ -3,7 +3,8 @@
 
 #include "cnn_small_constants.hpp"
 
-void conv2d(const float *input, const float *w, const float *bias, float *output, const int b, const int c, const int n, const int m, const int f, const int k) {
+template <int b, int c, int n, int m, int f, int k>
+void conv2d(const float *input, const float *w, const float *bias, float *output) {
     const int
         out_m = m - k + 1,
         out_n = n - k + 1;
@@ -27,7 +28,8 @@ void conv2d(const float *input, const float *w, const float *bias, float *output
     }
 }
 
-void batchnorm2d(const float *input, float *output, const int b, const int c, const int n, const int m, const float *mean, const float *denom, const float *gamma, const float *beta) {
+template <int b, int c, int n, int m>
+void batchnorm2d(const float *input, float *output, const float *mean, const float *denom, const float *gamma, const float *beta) {
     for (int img = 0; img < b; img++) {
         for (int ch = 0; ch < c; ch++) {
             for (int y = 0; y < n; y++) {
@@ -40,13 +42,15 @@ void batchnorm2d(const float *input, float *output, const int b, const int c, co
     }
 }
 
-void relu(const float *input, float *output, const int size) {
+template <int size>
+void relu(const float *input, float *output) {
     for (int i = 0; i < size; i++) {
         output[i] = input[i] > 0 ? input[i] : 0;
     }
 }
 
-void maxpool2d(const float *input, float *output, const int b, const int c, const int n, const int m, const int k) {
+template <int b, int c, int n, int m, int k>
+void maxpool2d(const float *input, float *output) {
     const int
         out_m = m / k,
         out_n = n / k;
@@ -68,7 +72,8 @@ void maxpool2d(const float *input, float *output, const int b, const int c, cons
     }
 }
 
-void linear(const float *input, const float *w, const float *bias, float *output, const int b, const int n, const int k, const int m) {
+template <int b, int n, int k, int m>
+void linear(const float *input, const float *w, const float *bias, float *output) {
     for (int img = 0; img < b; img++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -82,7 +87,8 @@ void linear(const float *input, const float *w, const float *bias, float *output
     }
 }
 
-void softmax(const float *input, float *output, const int b, const int n, const int m) {
+template <int b, int n, int m>
+void softmax(const float *input, float *output) {
     for (int img = 0; img < b; img++) {
         for (int i = 0; i < n; i++) {
             float sum = 0;
@@ -102,42 +108,42 @@ extern "C" {
     void cnn_small(const float *input, float *output) {
         // conv1 3 (3,3) (1, 1, 28, 28) -> (1, 3, 26, 26)
         float conv1_output[1*3*26*26];
-        conv2d(input, conv1_w, conv1_bias, conv1_output, batch_size, input_shape_ch, input_shape_n, input_shape_m, conv1_shape_ch, conv1_k);
+        conv2d<batch_size, input_shape_ch, input_shape_n, input_shape_m, conv1_shape_ch, conv1_k>(input, conv1_w, conv1_bias, conv1_output);
 
         // batchnorm 3 (1, 3, 26, 26) -> (1, 3, 26, 26)
         float batchnorm1_output[1*3*26*26];
-        batchnorm2d(conv1_output, batchnorm1_output, batch_size, conv1_shape_ch, conv1_shape_n, conv1_shape_m, batchnorm1_means, batchnorm1_denoms, batchnorm1_gammas, batchnorm1_betas);
+        batchnorm2d<batch_size, conv1_shape_ch, conv1_shape_n, conv1_shape_m>(conv1_output, batchnorm1_output, batchnorm1_means, batchnorm1_denoms, batchnorm1_gammas, batchnorm1_betas);
 
         // relu (1, 3, 26, 26) -> (1, 3, 26, 26)
         float relu1_output[1*3*26*26];
-        relu(batchnorm1_output, relu1_output, batch_size * batchnorm1_shape_ch * batchnorm1_shape_n * batchnorm1_shape_m);
+        relu<batch_size * batchnorm1_shape_ch * batchnorm1_shape_n * batchnorm1_shape_m>(batchnorm1_output, relu1_output);
 
         // maxpool (2,2) (1, 3, 26, 26) -> (1, 3, 13, 13)
         float maxpool1_output[1*3*13*13];
-        maxpool2d(relu1_output, maxpool1_output, batch_size, relu1_shape_ch, relu1_shape_n, relu1_shape_m, maxpool1_k);
+        maxpool2d<batch_size, relu1_shape_ch, relu1_shape_n, relu1_shape_m, maxpool1_k>(relu1_output, maxpool1_output);
 
         // conv2 5 (5,5) (1, 3, 13, 13) -> (1, 5, 9, 9)
         float conv2_output[1*5*9*9];
-        conv2d(maxpool1_output, conv2_w, conv2_bias, conv2_output, batch_size, maxpool1_shape_ch, maxpool1_shape_n, maxpool1_shape_m, conv2_shape_ch, conv2_k);
+        conv2d<batch_size, maxpool1_shape_ch, maxpool1_shape_n, maxpool1_shape_m, conv2_shape_ch, conv2_k>(maxpool1_output, conv2_w, conv2_bias, conv2_output);
 
         // batchnorm (1, 5, 9, 9) -> (1, 5, 9, 9)
         float batchnorm2_output[1*5*9*9];
-        batchnorm2d(conv2_output, batchnorm2_output, batch_size, conv2_shape_ch, conv2_shape_n, conv2_shape_m, batchnorm2_means, batchnorm2_denoms, batchnorm2_gammas, batchnorm2_betas);
+        batchnorm2d<batch_size, conv2_shape_ch, conv2_shape_n, conv2_shape_m>(conv2_output, batchnorm2_output, batchnorm2_means, batchnorm2_denoms, batchnorm2_gammas, batchnorm2_betas);
 
         // relu (1, 5, 9, 9) -> (1, 5, 9, 9)
         float relu2_output[1*5*9*9];
-        relu(batchnorm2_output, relu2_output, batch_size * batchnorm2_shape_ch * batchnorm2_shape_n * batchnorm2_shape_m);
+        relu<batch_size * batchnorm2_shape_ch * batchnorm2_shape_n * batchnorm2_shape_m>(batchnorm2_output, relu2_output);
 
         // maxpool (3,3) (1, 5, 9, 9) -> (1, 5, 3, 3)
         float maxpool2_output[1*5*3*3];
-        maxpool2d(relu2_output, maxpool2_output, batch_size, relu2_shape_ch, relu2_shape_n, relu2_shape_m, maxpool2_k);
+        maxpool2d<batch_size, relu2_shape_ch, relu2_shape_n, relu2_shape_m, maxpool2_k>(relu2_output, maxpool2_output);
 
         // flatten (1, 5, 3, 3) -> (1, 45)
         // linear (1, 45) -> (1, 2)
         float linear_output[1*2];
-        linear(maxpool2_output, linear1_weights, linear1_bias, linear_output, batch_size, 1, maxpool2_shape_ch * maxpool2_shape_n * maxpool2_shape_m, linear1_shape_m);
+        linear<batch_size, 1, maxpool2_shape_ch * maxpool2_shape_n * maxpool2_shape_m, linear1_shape_m>(maxpool2_output, linear1_weights, linear1_bias, linear_output);
 
         // softmax (1, 2) -> (1, 2)
-        softmax(linear_output, output, batch_size, linear1_shape_n, linear1_shape_m);
+        softmax<batch_size, linear1_shape_n, linear1_shape_m>(linear_output, output);
     }
 }
