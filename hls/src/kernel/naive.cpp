@@ -1,6 +1,5 @@
 #include <cmath>
-#include <iostream>
-
+#include "cnn_small.hpp"
 #include "cnn_small_constants.hpp"
 
 template <int b, int c, int n, int m, int f, int k>

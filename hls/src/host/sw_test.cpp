@@ -1,15 +1,12 @@
-#ifdef KERNEL_IMPL
-#include KERNEL_IMPL
-#else
-#include "naive_pragma.cpp" // lazy approach, but oh well.
-#endif
 #include <iostream>
 #include <cassert>
-#include "constant_inputs_outputs.hpp"
-#include "cnn_small_constants.hpp"
 #include <fstream>
 #include <cmath>
 #include <string>
+
+#include "constant_inputs_outputs.hpp"
+#include "cnn_small_constants.hpp"
+#include "cnn_small.hpp"
 
 #define FLAT_SIZE(x) (batch_size * x##_ch * x##_n * x##_m)
 

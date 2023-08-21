@@ -21,7 +21,8 @@ define GEN_SANITIZER_TARGET
 .PHONY: sanitize_$(SANITIZER)_$(notdir $(KERNEL))
 sanitize_$(SANITIZER)_$(KERNEL): src/kernel/$(KERNEL).cpp
 	@mkdir -p bin
-	clang++ $(CFLAGS) $(INCLUDES) -DKERNEL_IMPL=\"$(KERNEL).cpp\" -fsanitize=$(SANITIZER) src/host/sw_test.cpp -o bin/$$@
+	clang++ $(CFLAGS) $(INCLUDES) -c -fsanitize=$(SANITIZER) $$< -o bin/$(KERNEL).o
+	clang++ $(CFLAGS) $(INCLUDES) -fsanitize=$(SANITIZER) src/host/sw_test.cpp -o bin/$$@ bin/$(KERNEL).o
 	./bin/$$@
 endef
 
