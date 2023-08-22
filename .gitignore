@@ -1,5 +1,5 @@
-**/bin/*
-**/obj/*
+**/bin
+**/obj
 **/.vscode
 **/__pycache__/*
 **/MNIST_data/*
@@ -15,4 +15,3 @@ hls/*.csv
 !hls/naive_pragma.csv
 csynth_*/
 vitis_hls.log
-hls/bin
