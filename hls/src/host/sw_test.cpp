@@ -125,7 +125,7 @@ int main() {
     assert(test_linear() == 0);
     assert(test_softmax() == 0);
 
-    //assert(test_network() == 0);
+    assert(test_network() == 0);
 
     std::cout << "All tests passed!" << std::endl;
 

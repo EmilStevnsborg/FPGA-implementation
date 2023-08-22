@@ -237,10 +237,7 @@ void softmax(const float *input, float *output) {
 
 // Top-level function
 extern "C" {
-    void cnn_small(const float *input, float *output) {
-        #pragma HLS DATAFLOW
-        /**/
-        // conv1 3 (3,3) (1, 1, 28, 28) -> (1, 3, 26, 26)
+    void cnn_small_mm(const float *input, float *output) {
         float conv1_output[1*3*26*26];
         conv2d<batch_size, input_shape_ch, input_shape_n, input_shape_m, conv1_shape_ch, conv1_k>(input, conv1_w, conv1_bias, conv1_output);
 
@@ -279,6 +276,54 @@ extern "C" {
 
         // softmax (1, 2) -> (1, 2)
         softmax<batch_size, linear1_shape_n, linear1_shape_m>(linear_output, output);
+    }
+
+    void cnn_small(const float *input, float *output) {
+        #pragma HLS DATAFLOW
+        /**/
+        // conv1 3 (3,3) (1, 1, 28, 28) -> (1, 3, 26, 26)
+        hls::stream<float> input_stream, conv1_output;
+        reader<batch_size, input_shape_ch, input_shape_n, input_shape_m>(input, input_stream);
+        conv2d_core<batch_size, input_shape_ch, input_shape_n, input_shape_m, conv1_shape_ch, conv1_k>(input_stream, conv1_w, conv1_bias, conv1_output);
+
+        // batchnorm 3 (1, 3, 26, 26) -> (1, 3, 26, 26)
+        hls::stream<float> batchnorm1_output;
+        batchnorm2d_core<batch_size, conv1_shape_ch, conv1_shape_n, conv1_shape_m>(conv1_output, batchnorm1_output, batchnorm1_means, batchnorm1_denoms, batchnorm1_gammas, batchnorm1_betas);
+
+        // relu (1, 3, 26, 26) -> (1, 3, 26, 26)
+        hls::stream<float> relu1_output;
+        relu_core<batch_size * batchnorm1_shape_ch * batchnorm1_shape_n * batchnorm1_shape_m>(batchnorm1_output, relu1_output);
+
+        // maxpool (2,2) (1, 3, 26, 26) -> (1, 3, 13, 13)
+        hls::stream<float> maxpool1_output;
+        maxpool2d_core<batch_size, relu1_shape_ch, relu1_shape_n, relu1_shape_m, maxpool1_k>(relu1_output, maxpool1_output);
+
+        // conv2 5 (5,5) (1, 3, 13, 13) -> (1, 5, 9, 9)
+        hls::stream<float> conv2_output;
+        conv2d_core<batch_size, maxpool1_shape_ch, maxpool1_shape_n, maxpool1_shape_m, conv2_shape_ch, conv2_k>(maxpool1_output, conv2_w, conv2_bias, conv2_output);
+
+        // batchnorm (1, 5, 9, 9) -> (1, 5, 9, 9)
+        hls::stream<float> batchnorm2_output;
+        batchnorm2d_core<batch_size, conv2_shape_ch, conv2_shape_n, conv2_shape_m>(conv2_output, batchnorm2_output, batchnorm2_means, batchnorm2_denoms, batchnorm2_gammas, batchnorm2_betas);
+
+        // relu (1, 5, 9, 9) -> (1, 5, 9, 9)
+        hls::stream<float> relu2_output;
+        relu_core<batch_size * batchnorm2_shape_ch * batchnorm2_shape_n * batchnorm2_shape_m>(batchnorm2_output, relu2_output);
+
+        // maxpool (3,3) (1, 5, 9, 9) -> (1, 5, 3, 3)
+        hls::stream<float> maxpool2_output;
+        maxpool2d_core<batch_size, relu2_shape_ch, relu2_shape_n, relu2_shape_m, maxpool2_k>(relu2_output, maxpool2_output);
+
+        // flatten (1, 5, 3, 3) -> (1, 45)
+        // linear (1, 45) -> (1, 2)
+        hls::stream<float> linear_output;
+        linear_core<batch_size, 1, maxpool2_shape_ch * maxpool2_shape_n * maxpool2_shape_m, linear1_shape_m>(maxpool2_output, linear1_weights, linear1_bias, linear_output);
+
+        // softmax (1, 2) -> (1, 2)
+        hls::stream<float> softmax_output;
+        softmax_core<batch_size, linear1_shape_n, linear1_shape_m>(linear_output, softmax_output);
+
+        writer<batch_size, softmax1_shape_ch, softmax1_shape_n, softmax1_shape_m>(softmax_output, output);
 
         /**/
     }
