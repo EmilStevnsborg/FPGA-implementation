@@ -138,6 +138,25 @@ void maxpool2d_core(hls::stream<float> &input, hls::stream<float> &output) {
     }
 }
 
+template <int b, int n, int k, int m>
+void linear_core(hls::stream<float> &input, const float *w, const float *bias, hls::stream<float> &output) {
+    for (int img = 0; img < b; img++) {
+        for (int i = 0; i < n; i++) {
+            float buffer[k];
+            for (int kk = 0; kk < k; kk++) {
+                buffer[kk] = input.read();
+            }
+            for (int j = 0; j < m; j++) {
+                float tmp = bias[j];
+                for (int kk = 0; kk < k; kk++) {
+                    tmp += buffer[kk] * w[j*k + kk];
+                }
+                output.write(tmp);
+            }
+        }
+    }
+}
+
 // Memory mapped functions used for verification
 template <int b, int c, int n, int m, int f, int k>
 void conv2d(const float *input, const float *w, const float *bias, float *output) {
@@ -181,27 +200,12 @@ void maxpool2d(const float *input, float *output) {
 
 template <int b, int n, int k, int m>
 void linear(const float *input, const float *w, const float *bias, float *output) {
-    for (int img = 0; img < b; img++) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                #pragma HLS LOOP_FLATTEN
-                #pragma HLS PIPELINE II=1
-                output[img*n*m + i*m + j] = bias[j];
-            }
-        }
-    }
+    hls::stream<float> input_stream, output_stream;
 
-    for (int img = 0; img < b; img++) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                for (int kk = 0; kk < k; kk++) {
-                    #pragma HLS LOOP_FLATTEN
-                    #pragma HLS PIPELINE II=1
-                    output[img*n*m + i*m + j] += input[img*n*k + i*k + kk] * w[j*k + kk];
-                }
-            }
-        }
-    }
+    #pragma HLS DATAFLOW
+    reader<b, 1, n, k>(input, input_stream);
+    linear_core<b, n, k, m>(input_stream, w, bias, output_stream);
+    writer<b, 1, n, m>(output_stream, output);
 }
 
 template <int b, int n, int m>

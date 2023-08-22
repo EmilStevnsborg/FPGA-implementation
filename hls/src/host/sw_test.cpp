@@ -122,7 +122,7 @@ int main() {
     assert(test_batchnorm2() == 0);
     assert(test_relu2() == 0);
     assert(test_maxpool2() == 0);
-    //assert(test_linear() == 0);
+    assert(test_linear() == 0);
     //assert(test_softmax() == 0);
 
     //assert(test_network() == 0);
