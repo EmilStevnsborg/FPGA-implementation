@@ -83,9 +83,9 @@ void conv2d(const float *input, const float *w, const float *bias, float *output
     hls::stream<float> input_stream, output_stream;
 
     #pragma HLS DATAFLOW
-    reader<batch_size, input_shape_ch, input_shape_n, input_shape_m>(input, input_stream);
-    conv2d_core<batch_size, input_shape_ch, input_shape_n, input_shape_m, conv1_shape_ch, conv1_k>(input_stream, w, bias, output_stream);
-    writer<batch_size, conv1_shape_ch, conv1_shape_n, conv1_shape_m>(output_stream, output);
+    reader<b, c, n, m>(input, input_stream);
+    conv2d_core<b, c, n, m, f, k>(input_stream, w, bias, output_stream);
+    writer<b, f, n - k + 1, m - k + 1>(output_stream, output);
 }
 
 template <int b, int c, int n, int m>
@@ -137,11 +137,21 @@ void linear(const float *input, const float *w, const float *bias, float *output
     for (int img = 0; img < b; img++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                float tmp = 0;
+                #pragma HLS LOOP_FLATTEN
+                #pragma HLS PIPELINE II=1
+                output[img*n*m + i*m + j] = bias[j];
+            }
+        }
+    }
+
+    for (int img = 0; img < b; img++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 for (int kk = 0; kk < k; kk++) {
-                    tmp += input[img*n*k + i*k + kk] * w[j*k + kk];
+                    #pragma HLS LOOP_FLATTEN
+                    #pragma HLS PIPELINE II=1
+                    output[img*n*m + i*m + j] += input[img*n*k + i*k + kk] * w[j*k + kk];
                 }
-                output[img*n*m + i*m + j] = tmp + bias[j];
             }
         }
     }
@@ -166,7 +176,6 @@ void softmax(const float *input, float *output) {
 extern "C" {
     void cnn_small(const float *input, float *output) {
         #pragma HLS DATAFLOW
-        conv2d<batch_size, input_shape_ch, input_shape_n, input_shape_m, conv1_shape_ch, conv1_k>(input, conv1_w, conv1_bias, output);
         /**/
         // conv1 3 (3,3) (1, 1, 28, 28) -> (1, 3, 26, 26)
         float conv1_output[1*3*26*26];

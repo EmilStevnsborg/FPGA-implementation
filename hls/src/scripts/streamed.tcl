@@ -6,7 +6,7 @@ open_solution "solution1" -flow_target vivado
 set_part xc7z020clg400-1 ;# PYNQ Z2 / Z1 / ZedBoard
 create_clock -period 100MHz -name default
 csim_design
-#csynth_design
+csynth_design
 #cosim_design
 #export_design -format ip_catalog
 quit
