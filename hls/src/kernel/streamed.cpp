@@ -97,6 +97,47 @@ void relu_core(hls::stream<float> &input, hls::stream<float> &output) {
     }
 }
 
+template <int b, int c, int n, int m, int k>
+void maxpool2d_core(hls::stream<float> &input, hls::stream<float> &output) {
+    const int
+        out_m = m / k,
+        out_n = n / k,
+        buf_size = (k-1)*m*c + k*c;
+    float buffer[buf_size]; // Circular buffer with k-1 rows and an additional row that is only k wide
+
+    for (int img = 0; img < b; img++) {
+        for (int i = 0; i < buf_size; i++) {
+            buffer[i] = input.read();
+        }
+        int beg = 0;
+        for (int y = 0; y < out_n; y++) {
+            for (int x = 0; x < out_m; x++) {
+                for (int ch = 0; ch < c; ch++) {
+                    float tmp = 0; // Still ok because of relu
+                    for (int ii = 0; ii < k; ii++) {
+                        for (int jj = 0; jj < k; jj++) {
+                            int flat = ii*m*c + jj*c + ch;
+                            tmp = std::max(tmp, buffer[(beg + flat) % buf_size]);
+                        }
+                    }
+                    output.write(tmp);
+                }
+                if (x != out_m-1) {
+                    for (int i = 0; i < k*c; i++) {
+                        buffer[beg] = input.read();
+                        beg = (beg + 1) % buf_size;
+                    }
+                } else if (y != out_n-1) {
+                    for (int i = 0; i < buf_size; i++) {
+                        buffer[i] = input.read();
+                        beg = 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
 // Memory mapped functions used for verification
 template <int b, int c, int n, int m, int f, int k>
 void conv2d(const float *input, const float *w, const float *bias, float *output) {
@@ -130,25 +171,12 @@ void relu(const float *input, float *output) {
 
 template <int b, int c, int n, int m, int k>
 void maxpool2d(const float *input, float *output) {
-    const int
-        out_m = m / k,
-        out_n = n / k;
-    for (int img = 0; img < b; img++) {
-        for (int ch = 0; ch < c; ch++) {
-            for (int y = 0; y < out_n; y++) {
-                for (int x = 0; x < out_m; x++) {
-                    float tmp = 0; // Isn't a problem because of ReLU
-                    for (int ii = 0; ii < k; ii++) {
-                        for (int jj = 0; jj < k; jj++) {
-                            int ry = y*k + ii, rx = x*k + jj;
-                            tmp = std::fmax(tmp, input[img*c*n*m + ch*n*m + ry*m + rx]);
-                        }
-                    }
-                    output[img*c*out_n*out_m + ch*out_n*out_m + y*out_m + x] = tmp;
-                }
-            }
-        }
-    }
+    hls::stream<float> input_stream, output_stream;
+
+    #pragma HLS DATAFLOW
+    reader<b, c, n, m>(input, input_stream);
+    maxpool2d_core<b, c, n, m, k>(input_stream, output_stream);
+    writer<b, c, n/k, m/k>(output_stream, output);
 }
 
 template <int b, int n, int k, int m>
