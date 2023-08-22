@@ -76,6 +76,18 @@ void conv2d_core(hls::stream<float> &input, const float *w, const float *bias, h
     }
 }
 
+template <int b, int c, int n, int m>
+void batchnorm2d_core(hls::stream<float> &input, hls::stream<float> &output, const float *mean, const float *denom, const float *gamma, const float *beta) {
+    for (int img = 0; img < b; img++) {
+        for (int y = 0; y < n; y++) {
+            for (int x = 0; x < m; x++) {
+                for (int ch = 0; ch < c; ch++) {
+                    output.write((input.read() - mean[ch]) * denom[ch] * gamma[ch] + beta[ch]);
+                }
+            }
+        }
+    }
+}
 
 // Memory mapped functions used for verification
 template <int b, int c, int n, int m, int f, int k>
@@ -90,16 +102,12 @@ void conv2d(const float *input, const float *w, const float *bias, float *output
 
 template <int b, int c, int n, int m>
 void batchnorm2d(const float *input, float *output, const float *mean, const float *denom, const float *gamma, const float *beta) {
-    for (int img = 0; img < b; img++) {
-        for (int ch = 0; ch < c; ch++) {
-            for (int y = 0; y < n; y++) {
-                for (int x = 0; x < m; x++) {
-                    output[img*c*n*m + ch*n*m + y*m + x] =
-                    (input[img*c*n*m + ch*n*m + y*m + x] - mean[ch]) * denom[ch] * gamma[ch] + beta[ch];
-                }
-            }
-        }
-    }
+    hls::stream<float> input_stream, output_stream;
+
+    #pragma HLS DATAFLOW
+    reader<b, c, n, m>(input, input_stream);
+    batchnorm2d_core<b, c, n, m>(input_stream, output_stream, mean, denom, gamma, beta);
+    writer<b, c, n, m>(output_stream, output);
 }
 
 template <int size>
