@@ -116,11 +116,11 @@ int test_network() {
 int main() {
     assert(test_conv1() == 0);
     assert(test_batchnorm1() == 0);
-    //assert(test_relu1() == 0);
+    assert(test_relu1() == 0);
     //assert(test_maxpool1() == 0);
     assert(test_conv2() == 0);
     assert(test_batchnorm2() == 0);
-    //assert(test_relu2() == 0);
+    assert(test_relu2() == 0);
     //assert(test_maxpool2() == 0);
     //assert(test_linear() == 0);
     //assert(test_softmax() == 0);

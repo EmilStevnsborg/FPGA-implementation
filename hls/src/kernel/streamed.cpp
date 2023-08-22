@@ -89,6 +89,14 @@ void batchnorm2d_core(hls::stream<float> &input, hls::stream<float> &output, con
     }
 }
 
+template <int size>
+void relu_core(hls::stream<float> &input, hls::stream<float> &output) {
+    for (int i = 0; i < size; i++) {
+        float tmp = input.read();
+        output.write(tmp > 0 ? tmp : 0);
+    }
+}
+
 // Memory mapped functions used for verification
 template <int b, int c, int n, int m, int f, int k>
 void conv2d(const float *input, const float *w, const float *bias, float *output) {
@@ -112,9 +120,12 @@ void batchnorm2d(const float *input, float *output, const float *mean, const flo
 
 template <int size>
 void relu(const float *input, float *output) {
-    for (int i = 0; i < size; i++) {
-        output[i] = input[i] > 0 ? input[i] : 0;
-    }
+    hls::stream<float> input_stream, output_stream;
+
+    #pragma HLS DATAFLOW
+    reader<1, 1, 1, size>(input, input_stream);
+    relu_core<size>(input_stream, output_stream);
+    writer<1, 1, 1, size>(output_stream, output);
 }
 
 template <int b, int c, int n, int m, int k>
