@@ -157,6 +157,23 @@ void linear_core(hls::stream<float> &input, const float *w, const float *bias, h
     }
 }
 
+template <int b, int n, int m>
+void softmax_core(hls::stream<float> &input, hls::stream<float> &output) {
+    for (int img = 0; img < b; img++) {
+        for (int i = 0; i < n; i++) {
+            float sum = 0;
+            float buffer[m];
+            for (int j = 0; j < m; j++) {
+                buffer[j] = input.read();
+                sum += std::exp(buffer[j]);
+            }
+            for (int j = 0; j < m; j++) {
+                output.write(std::exp(buffer[j]) / sum);
+            }
+        }
+    }
+}
+
 // Memory mapped functions used for verification
 template <int b, int c, int n, int m, int f, int k>
 void conv2d(const float *input, const float *w, const float *bias, float *output) {
@@ -210,17 +227,12 @@ void linear(const float *input, const float *w, const float *bias, float *output
 
 template <int b, int n, int m>
 void softmax(const float *input, float *output) {
-    for (int img = 0; img < b; img++) {
-        for (int i = 0; i < n; i++) {
-            float sum = 0;
-            for (int j = 0; j < m; j++) {
-                sum += std::exp(input[img*n*m + i*m + j]);
-            }
-            for (int j = 0; j < m; j++) {
-                output[img*n*m + i*m + j] = std::exp(input[img*n*m + i*m + j]) / sum;
-            }
-        }
-    }
+    hls::stream<float> input_stream, output_stream;
+
+    #pragma HLS DATAFLOW
+    reader<b, 1, n, m>(input, input_stream);
+    softmax_core<b, n, m>(input_stream, output_stream);
+    writer<b, 1, n, m>(output_stream, output);
 }
 
 // Top-level function
