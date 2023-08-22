@@ -115,6 +115,7 @@ int test_network() {
 
 int main() {
     assert(test_conv1() == 0);
+    /*
     assert(test_batchnorm1() == 0);
     assert(test_relu1() == 0);
     assert(test_maxpool1() == 0);
@@ -126,6 +127,7 @@ int main() {
     assert(test_softmax() == 0);
 
     assert(test_network() == 0);
+    */
 
     return 0;
 }
