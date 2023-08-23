@@ -233,10 +233,12 @@ void softmax_core(hls::stream<float> &input, hls::stream<float> &output) {
             float sum = 0;
             float buffer[m];
             for (int j = 0; j < m; j++) {
+                #pragma HLS UNROLL
                 buffer[j] = input.read();
                 sum += std::exp(buffer[j]);
             }
             for (int j = 0; j < m; j++) {
+                #pragma HLS UNROLL
                 output.write(std::exp(buffer[j]) / sum);
             }
         }
