@@ -142,39 +142,51 @@ void relu_core(hls::stream<float> &input, hls::stream<float> &output) {
 
 template <int b, int c, int n, int m, int k>
 void maxpool2d_core(hls::stream<float> &input, hls::stream<float> &output) {
-    const int
+    constexpr int
         out_m = m / k,
         out_n = n / k,
-        buf_size = (k-1)*m*c + k*c;
+        buf_min = (k-1)*m*c + k*c,
+        buf_bits = clog2(buf_min),
+        buf_size = pow2(buf_bits);
+
     float buffer[buf_size]; // Circular buffer with k-1 rows and an additional row that is only k wide
 
     for (int img = 0; img < b; img++) {
-        for (int i = 0; i < buf_size; i++) {
+        for (int i = 0; i < buf_min; i++) {
+            #pragma HLS PIPELINE II=1
             buffer[i] = input.read();
         }
-        int beg = 0;
+        ap_uint<buf_bits> beg = 0, end = buf_min;
         for (int y = 0; y < out_n; y++) {
             for (int x = 0; x < out_m; x++) {
                 for (int ch = 0; ch < c; ch++) {
                     float tmp = 0; // Still ok because of relu
                     for (int ii = 0; ii < k; ii++) {
                         for (int jj = 0; jj < k; jj++) {
-                            int flat = ii*m*c + jj*c + ch;
-                            tmp = std::max(tmp, buffer[(beg + flat) % buf_size]);
+                            #pragma HLS LOOP_FLATTEN
+                            #pragma HLS PIPELINE II=1
+                            ap_uint<buf_bits>
+                                offset = ii*m*c + jj*c + ch,
+                                flat = beg + offset;
+                            tmp = std::max(tmp, buffer[flat]);
                         }
                     }
                     output.write(tmp);
                 }
                 if (x != out_m-1) {
                     for (int i = 0; i < k*c; i++) {
-                        buffer[beg] = input.read();
-                        beg = (beg + 1) % buf_size;
+                        #pragma HLS PIPELINE II=1
+                        buffer[end] = input.read();
+                        beg++;
+                        end++;
                     }
                 } else if (y != out_n-1) {
-                    for (int i = 0; i < buf_size; i++) {
+                    for (int i = 0; i < buf_min; i++) {
+                        #pragma HLS PIPELINE II=1
                         buffer[i] = input.read();
-                        beg = 0;
                     }
+                    beg = 0;
+                    end = buf_min;
                 }
             }
         }

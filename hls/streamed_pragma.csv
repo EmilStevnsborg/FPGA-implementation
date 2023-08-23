@@ -8,3 +8,7 @@ above + partitioned w, 1337, 133664, 2, 6, 2, 8, 0
 above + bind w to rom_np bram, 1337, 133664, 2, 6, 2, 8, 0
 above + bind buffer to ram_1wnr bram, 1337, 133664, 2, 6, 2, 8, 0
 above + fadd latency buffer circumvention, 433, 43268, 2, 7, 3, 9, 0
+maxpool2
+baseline, 54.6, 5465, 5, 0, 23, 37, 0
+make buffer size log 2 exploit overflow (no modulo), 13.6, 1361, 5, 0, 1, 4, 0
+above + pipeline inner loops + flatten compute loops, 15.8, 1586, ~0, ~0, ~0, 2, 0
