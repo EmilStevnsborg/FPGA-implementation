@@ -13,5 +13,6 @@ output/
 a.out
 hls/*.csv
 !hls/naive_pragma.csv
+!hls/streamed_pragma.csv
 csynth_*/
 vitis_hls.log

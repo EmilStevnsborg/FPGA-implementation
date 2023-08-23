@@ -1,0 +1,5 @@
+Name, latency (us), latency ticks, bram, dsp, ff, lut, uram
+conv2
+baseline, 2173, 217256, ~0, 2, 7, 14, 0
+make buffer size log 2 exploit overflow (no modulo), 1618, 161771, ~0, 2, ~0, 3, 0
+above + pipeline all inner loops + flatten compute loops, 1248, 124835, ~0, 3, 1, 4, 0

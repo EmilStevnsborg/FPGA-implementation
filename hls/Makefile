@@ -32,7 +32,7 @@ $(foreach SANITIZER,$(SANITIZERS), \
 )
 
 # Hardware synthesis
-csynth: csynth_naive csynth_naive_pragma csynth_streamed
+csynth: csynth_naive csynth_naive_pragma csynth_streamed csynth_streamed_pragma
 
 csynth_%: src/scripts/%.tcl
 	vitis_hls -f $<

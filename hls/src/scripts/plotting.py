@@ -25,6 +25,7 @@ def plot_it(exp_path, act_path, shape):
         np.hstack(expected), np.hstack(actual)
     ])
     )
+    plt.colorbar()
     plt.show()
 
     plt.imshow(
@@ -33,4 +34,4 @@ def plot_it(exp_path, act_path, shape):
     plt.colorbar()
     plt.show()
 
-plot_it('../CNNSmall/Tests/maxPool1/inputs/input1.json', 'csynth_streamed_0/solution1/csim/build/maxpool1_output.csv', (3,13,13))
+plot_it('../CNNSmall/Tests/conv1/inputs/input1.json', 'csynth_streamed_0/solution1/csim/build/conv1_output.csv', (3,26,26))

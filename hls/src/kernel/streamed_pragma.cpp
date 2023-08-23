@@ -1,9 +1,19 @@
 #include <cmath>
 #include <hls_stream.h>
 #include <hls_vector.h>
+#include <ap_int.h>
 
 #include "cnn_small.hpp"
 #include "cnn_small_constants.hpp"
+
+// Helper functions for constant expressions
+constexpr int clog2(int x) {
+    return x < 1 ? 0 : 1 + clog2(x >> 1);
+}
+
+constexpr int pow2(int y) {
+    return 1 << y;
+}
 
 // Generic memory mapped <> streaming functions
 template <int b, int c, int n, int m>
@@ -35,17 +45,21 @@ void writer(hls::stream<float> &input, float *output) { // TODO coalesce rather 
 // Streaming functions used for synthesis
 template <int b, int c, int n, int m, int f, int k>
 void conv2d_core(hls::stream<float> &input, const float *w, const float *bias, hls::stream<float> &output) {
-    const int
+    constexpr int
         out_n = n - k + 1,
         out_m = m - k + 1,
-        buf_size = (k-1)*m*c + k*c;
+        buf_min = (k-1)*m*c + k*c,
+        buf_bits = clog2(buf_min),
+        buf_size = pow2(buf_bits);
+
     float buffer[buf_size]; // Circular buffer with k-1 rows and an additional row that is only k wide
 
     for (int img = 0; img < b; img++) {
-        for (int i = 0; i < ((k-1)*m*c)+k*c; i++) {
+        for (int i = 0; i < buf_min; i++) {
+            #pragma HLS PIPELINE II=1
             buffer[i] = input.read();
         }
-        int beg = 0;
+        ap_uint<buf_bits> beg = 0, end = buf_min;
         for (int y = 0; y < out_n; y++) {
             for (int x = 0; x < out_m; x++) {
                 for (int filt = 0; filt < f; filt++) {
@@ -53,8 +67,12 @@ void conv2d_core(hls::stream<float> &input, const float *w, const float *bias, h
                     for (int ch = 0; ch < c; ch++) {
                         for (int ii = 0; ii < k; ii++) {
                             for (int jj = 0; jj < k; jj++) {
-                                int flat = ii*m*c + jj*c + ch;
-                                tmp += buffer[(beg + flat) % buf_size] * w[filt*c*k*k + ch*k*k + ii*k + jj];
+                                #pragma HLS LOOP_FLATTEN
+                                #pragma HLS PIPELINE II=1
+                                ap_uint<buf_bits>
+                                    offset = ii*m*c + jj*c + ch,
+                                    flat = beg + offset;
+                                tmp += buffer[flat] * w[filt*c*k*k + ch*k*k + ii*k + jj];
                             }
                         }
                     }
@@ -62,13 +80,17 @@ void conv2d_core(hls::stream<float> &input, const float *w, const float *bias, h
                 }
                 if (x != out_m-1) {
                     for (int i = 0; i < c; i++) {
-                        buffer[beg] = input.read();
-                        beg = (beg + 1) % buf_size;
+                        #pragma HLS PIPELINE II=1
+                        buffer[end] = input.read();
+                        beg++;
+                        end++;
                     }
                 } else if (y != out_n-1) {
                     for (int i = 0; i < k*c; i++) {
-                        buffer[beg] = input.read();
-                        beg = (beg + 1) % buf_size;
+                        #pragma HLS PIPELINE II=1
+                        buffer[end] = input.read();
+                        beg++;
+                        end++;
                     }
                 }
             }
@@ -152,29 +174,13 @@ void linear_core(hls::stream<float> &input, const float *w, const float *bias, h
             for (int j = 0; j < m; j++) {
                 float tmp = bias[j];
                 for (int kk = 0; kk < k; kk++) {
+                    //#pragma HLS PIPELINE II=1
                     tmp += buffer[kk] * w[j*k + kk];
                 }
                 output.write(tmp);
             }
         }
     }
-
-    /* Kept for reference, when the input was not transposed
-    for (int img = 0; img < b; img++) {
-        for (int i = 0; i < n; i++) {
-            float buffer[k];
-            for (int kk = 0; kk < k; kk++) {
-                buffer[kk] = input.read();
-            }
-            for (int j = 0; j < m; j++) {
-                float tmp = bias[j];
-                for (int kk = 0; kk < k; kk++) {
-                    tmp += buffer[kk] * w[j*k + kk];
-                }
-                output.write(tmp);
-            }
-        }
-    }*/
 }
 
 template <int b, int n, int m>
