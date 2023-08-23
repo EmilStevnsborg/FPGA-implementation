@@ -54,6 +54,10 @@ void conv2d_core(hls::stream<float> &input, const float *w, const float *bias, h
 
     float buffer[buf_size]; // Circular buffer with k-1 rows and an additional row that is only k wide
 
+    #pragma HLS ARRAY_PARTITION variable=w block factor=f
+    #pragma HLS BIND_STORAGE variable=w type=rom_np impl=bram
+    #pragma HLS BIND_STORAGE variable=buffer type=ram_1wnr impl=bram
+
     for (int img = 0; img < b; img++) {
         for (int i = 0; i < buf_min; i++) {
             #pragma HLS PIPELINE II=1
@@ -62,21 +66,38 @@ void conv2d_core(hls::stream<float> &input, const float *w, const float *bias, h
         ap_uint<buf_bits> beg = 0, end = buf_min;
         for (int y = 0; y < out_n; y++) {
             for (int x = 0; x < out_m; x++) {
+                float tmps[f];
                 for (int filt = 0; filt < f; filt++) {
-                    float tmp = 0;
+                    #pragma HLS UNROLL
+                    float loc_tmps[4]; // Hide latency of fadd to achieve II=1
+                    for (int i = 0; i < 4; i++) {
+                        #pragma HLS UNROLL
+                        loc_tmps[i] = 0;
+                    }
                     for (int ch = 0; ch < c; ch++) {
                         for (int ii = 0; ii < k; ii++) {
                             for (int jj = 0; jj < k; jj++) {
                                 #pragma HLS LOOP_FLATTEN
                                 #pragma HLS PIPELINE II=1
+                                #pragma HLS dependence variable=loc_tmps inter false
                                 ap_uint<buf_bits>
                                     offset = ii*m*c + jj*c + ch,
                                     flat = beg + offset;
-                                tmp += buffer[flat] * w[filt*c*k*k + ch*k*k + ii*k + jj];
+                                int w_offset = ch*k*k + ii*k + jj;
+                                loc_tmps[w_offset & 0x3] += buffer[flat] * w[filt*c*k*k + w_offset];
                             }
                         }
                     }
-                    output.write(tmp + bias[filt]);
+                    float tmp = 0;
+                    for (int i = 0; i < 4; i++) {
+                        #pragma HLS UNROLL
+                        tmp += loc_tmps[i];
+                    }
+                    tmps[filt] = tmp + bias[filt];
+                }
+                for (int filt = 0; filt < f; filt++) {
+                    #pragma HLS PIPELINE II=1
+                    output.write(tmps[filt]);
                 }
                 if (x != out_m-1) {
                     for (int i = 0; i < c; i++) {

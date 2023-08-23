@@ -3,3 +3,8 @@ conv2
 baseline, 2173, 217256, ~0, 2, 7, 14, 0
 make buffer size log 2 exploit overflow (no modulo), 1618, 161771, ~0, 2, ~0, 3, 0
 above + pipeline all inner loops + flatten compute loops, 1248, 124835, ~0, 3, 1, 4, 0
+above + unrolled filt, 1303, 130262, ~0, 6, 1, 7, 0
+above + partitioned w, 1337, 133664, 2, 6, 2, 8, 0
+above + bind w to rom_np bram, 1337, 133664, 2, 6, 2, 8, 0
+above + bind buffer to ram_1wnr bram, 1337, 133664, 2, 6, 2, 8, 0
+above + fadd latency buffer circumvention, 433, 43268, 2, 7, 3, 9, 0
