@@ -125,6 +125,7 @@ void batchnorm2d_core(hls::stream<float> &input, hls::stream<float> &output, con
         for (int y = 0; y < n; y++) {
             for (int x = 0; x < m; x++) {
                 for (int ch = 0; ch < c; ch++) {
+                    #pragma HLS PIPELINE II=1
                     output.write((input.read() - mean[ch]) * denom[ch] * gamma[ch] + beta[ch]);
                 }
             }
@@ -196,12 +197,17 @@ void maxpool2d_core(hls::stream<float> &input, hls::stream<float> &output) {
 template <int b, int n, int k, int m>
 void linear_core(hls::stream<float> &input, const float *w, const float *bias, hls::stream<float> &output) {
     float buffer[n*k];
-    for (int i = 0; i < n*k; i++) { // transposed n, m, c > c, n, m
-        int ch = i % 5;
-        int y = (i / 5 / 3) % 3;
-        int x = (i / 5) % 3;
-        buffer[ch*3*3 + y*3 + x] = input.read();
+    // transposed n, m, c > c, n, m
+    for (int y = 0; y < 3; y++) {
+        for (int x = 0; x < 3; x++) {
+            for (int ch = 0; ch < 5; ch++) {
+                #pragma HLS LOOP_FLATTEN
+                #pragma HLS PIPELINE II=1
+                buffer[ch*3*3 + y*3 + x] = input.read();
+            }
+        }
     }
+
     for (int img = 0; img < b; img++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
