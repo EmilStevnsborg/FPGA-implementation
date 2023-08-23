@@ -205,10 +205,20 @@ void linear_core(hls::stream<float> &input, const float *w, const float *bias, h
     for (int img = 0; img < b; img++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                float tmp = bias[j];
+                float tmps[4];
+                for (int ii = 0; ii < 4; ii++) {
+                    #pragma HLS UNROLL
+                    tmps[ii] = 0;
+                }
                 for (int kk = 0; kk < k; kk++) {
-                    //#pragma HLS PIPELINE II=1
-                    tmp += buffer[kk] * w[j*k + kk];
+                    #pragma HLS PIPELINE II=1
+                    #pragma HLS dependence variable=tmps inter false
+                    tmps[kk & 0x3] += buffer[kk] * w[j*k + kk];
+                }
+                float tmp = bias[j];
+                for (int ii = 0; ii < 4; ii++) {
+                    #pragma HLS UNROLL
+                    tmp += tmps[ii];
                 }
                 output.write(tmp);
             }
