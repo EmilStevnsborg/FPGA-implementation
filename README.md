@@ -1,15 +1,15 @@
 # FPGA-implementation
 
-This branch is dedicated to VHDL the generation of the CNN_small configuration. Refer to the main branch for a more explicit description of the repository. The CNN library has been slightly altered with regard to the VHDL generation. This is generic and can be used for other configurations as well. Furthermore, certain indexing variables in processes have had their types changed from INT32 to INTS of lower bits size. This is specific to the CNN_small configuration, but the idea can also be used for other configurations as well.
+This branch is dedicated to the VHDL the generation of the CNN_small configuration. Refer to the main branch for a more explicit description of the library for CNN layer implementation versions and correctness tests of the implementations. In this branch, the CNN library has been slightly altered with regards to the VHDL generation. Certain indexing variables in processes have had their types changed from INT32 to INTs of lower bits size using the SME.VHDL.UINTs. For other configurations, one would have to adjust these values to ensure correctness. Refer to the paper for a more elaborated description. Furthermore, a directory named `hlsl` containing a HLS solution for CNN layers has also been added.
 
-Below are the steps for generating the VHDL and synthesizing it in Vivado.
+Below are the steps for generating the VHDL from the SME implementation of CNN_small and synthesizing it in Vivado. We advice anyone to go read all the steps before performing them, as we already performed the steps and moved around in directories to make the layout more visually pleasing.
 
-- Go to the test project of the layer to be generated. Inside the associated `Program.cs`, select the configuration and version of the layer implementation.
+- Go to the test project of the layer to be generated. Inside the associated `Program.cs`, select the configuration and version of the layer implementation. In the terminal, type:
   ```
   dotnet run
   ```
-- See the generated VHDL. We have already created VHDL for all configurations and versions of layer implementations and put them in their separate folders.
-- Verify generated VHDL code is syntactically correct by going into the `output/vhdl` directory and instantiating the `ghdl` through either a local installation:
+- Go to the generated VHDL. When the VHDL has been generated, it will be put in directory `output/vhdl`, however, for each test project we applied multiple configurations on the implementation versions, and decided to put them in a directory named `vhdl/$layer$-$configuration_number$-$implementation-version$/vhdl`.
+- Verify that the generated VHDL code is syntactically correct by going into the directory containing the VHDL and instantiating the `ghdl` through either a local installation:
   ```
   make
   ```
