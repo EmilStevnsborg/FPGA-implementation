@@ -34,9 +34,9 @@ class MainClass
         {
             int tests = 1000;
             // Which layer should be tested
-            string layer = "relu2";
+            string layer = "relu1";
             // What type of implementation
-            string layerType = "11";
+            string layerType = "00";
             string path = @"../../CNNSmall/Tests/" + layer;
             
             string config = File.ReadAllText(@"../../CNNSmall/Configs/" + layer + ".json");
@@ -49,9 +49,9 @@ class MainClass
                 using(var sim = new Simulation())
                 {
                     // depending on layerType
-                    var reluLayer = reluConfig.PushConfig_11();
+                    var reluLayer = reluConfig.PushConfig_00();
 
-                    var tester = new Tester_11(reluConfig.numInChannels, 
+                    var tester = new Tester_00(reluConfig.numInChannels, 
                                                 reluConfig.numOutChannels,
                                                 (reluConfig.channelHeight,reluConfig.channelWidth));
 

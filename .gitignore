@@ -3,3 +3,4 @@
 **/.vscode
 **/__pycache__/*
 **/MNIST_data/*
+output/
