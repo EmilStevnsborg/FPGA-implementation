@@ -72,7 +72,7 @@ namespace CNN
                     { 
                         NumInputs += 1;
                         Stats.Add(Input[c].Value);
-                        // Console.WriteLine("pred: " + Input[c].Value + " " + computed[c][index] + " " + (Input[c].Value - computed[c][index]));
+                        Console.WriteLine("pred: " + Input[c].Value + " " + computed[c][index] + " " + (Input[c].Value - computed[c][index]));
                         if (c == numOutChannels-1) 
                         {
                             index += 1;
