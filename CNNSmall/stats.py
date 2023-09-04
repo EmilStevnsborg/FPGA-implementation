@@ -40,7 +40,7 @@ def analysis_network(layers, types, iso_accum):
 
             true = np.array(true_f["computed"])
             # Depends on whether the output comes in parallel or sequentially
-            if type == "00" or type == "01":
+            if type == "00" or (type == "01" and iso_accum == "iso"):
                 true = true.T.reshape(-1)
             else:
                 true = true.reshape(-1)
@@ -76,10 +76,10 @@ print("Stats for the layers isolated")
 print(layers_df.T.to_latex(header=False))
 print("\n")
 
-print("Accumulated layer loss, and accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
-layers_accum_df = analysis_network(layers, types, "accum")
-# print(layers_accum_df.to_string())
-print(layers_accum_df.T.to_latex(header=False))
+# print("Accumulated layer loss, and accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
+# layers_accum_df = analysis_network(layers, types, "accum")
+# # print(layers_accum_df.to_string())
+# print(layers_accum_df.T.to_latex(header=False))
 
 
 
