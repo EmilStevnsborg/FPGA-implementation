@@ -11,7 +11,7 @@ namespace Config
 {
     public static class LayerTest
     {
-        public static (List<float>, long) LayerTest_00(GeneralConfig config, string inputString)
+        public static (List<(float, float)>, long) LayerTest_00(GeneralConfig config, string inputString)
         {
             using(var sim = new Simulation())
             {
@@ -39,7 +39,7 @@ namespace Config
                 return (tester.Stats, ticks);
             }   
         }
-        public static (List<float>, long) LayerTest_10(GeneralConfig config, string inputString)
+        public static (List<(float, float)>, long) LayerTest_10(GeneralConfig config, string inputString)
         {
             using(var sim = new Simulation())
             {
@@ -67,7 +67,7 @@ namespace Config
                 return (tester.Stats, ticks);
             }   
         }
-        public static (List<float>, long) LayerTest_11(GeneralConfig config, string inputString)
+        public static (List<(float, float)>, long) LayerTest_11(GeneralConfig config, string inputString)
         {
             using(var sim = new Simulation())
             {
@@ -95,7 +95,7 @@ namespace Config
                 return (tester.Stats, ticks);
             }   
         }
-        public static (List<float>, long) LayerTest_01(GeneralConfig config, string inputString)
+        public static (List<(float, float)>, long) LayerTest_01(GeneralConfig config, string inputString)
         {
             using(var sim = new Simulation())
             {
@@ -123,9 +123,10 @@ namespace Config
                 return (tester.Stats, ticks);
             }   
         }
-        public static void LayerStats(List<float> stats, string path)
+        public static void LayerStats(List<(float, float)> stats, string path)
         {
             Stats statsObj = new Stats();
+            statsObj.TrueKeyAdd();
 
             statsObj.AddStats(stats);
 
