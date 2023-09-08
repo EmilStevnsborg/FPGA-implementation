@@ -24,26 +24,35 @@ def analysis_network(layers, types, iso_accum):
         trues = np.array([])
         preds = np.array([])
         losses = np.array([])  
-        for t in range(1,2):
+        for t in range(1,1000):
             
             # isolation or accumulation
             if iso_accum == "iso":
                 pred_path = "Tests/" + layer + "/outputs" + type + "/output" + str(t) + ".json"
+                
+                with open(pred_path, "r") as file:
+                    pred_f = json.load(file)
+                
+                # values stored in same file
+                pred = np.array(pred_f["Pred"])
+                true = np.array(pred_f["True"])
             else:
                 pred_path = "Tests/Network/test" + str(t) + "/" + layer + ".json"
-            
-            # open files according to iso or accum
-            with open(pred_path, "r") as file:
-                pred_f = json.load(file)
-            with open("Tests/" + layer + "/inputs/input" + str(t) + ".json", "r") as file:
-                true_f = json.load(file)
+                
+                with open(pred_path, "r") as file:
+                    pred_f = json.load(file)
+                
+                with open("Tests/" + layer + "/inputs/input" + str(t) + ".json", "r") as file:
+                    true_f = json.load(file)
+                
+                pred = np.array(pred_f["Pred"])
+                true = np.array(true_f["computed"])
+                # Depends on whether the output comes in parallel or sequentially
+                if type == "00":
+                    true = true.T.reshape(-1)
+                else:
+                    true = true.reshape(-1)
 
-            true = np.array(true_f["computed"])
-            # Depends on whether the output comes in parallel or sequentially
-            if type == "00":
-                true = true.T.reshape(-1)
-            else:
-                true = true.reshape(-1)
             pred = np.array(pred_f["Pred"])
             loss = np.absolute(true-pred)
             trues = np.append(trues, true)
@@ -69,21 +78,12 @@ def analysis_network(layers, types, iso_accum):
 
 layers = ["conv1","batchNorm1","relu1","maxPool1","conv2","batchNorm2","relu2","maxPool2","linear","softmax"]
 types = ["00", "00", "00", "00", "01", "11", "11", "11", "10", "00"]
-types_zero = ["00", "00", "00", "00", "00", "00", "00", "00", "00", "00"]
 
 layers_df = analysis_network(layers, types, "iso")
 print("Stats for the layers isolated")
-# print(layers_df.to_string())
 print(layers_df.T.to_latex(header=False))
 print("\n")
 
 print("Accumulated layer loss, and accuracy of class predictions of SME implementation in relation to the PyTorch implementation")
-layers_accum_df = analysis_network(layers, types_zero, "accum")
-# print(layers_accum_df.to_string())
+layers_accum_df = analysis_network(layers, types, "accum")
 print(layers_accum_df.T.to_latex(header=False))
-
-
-
-
-
-

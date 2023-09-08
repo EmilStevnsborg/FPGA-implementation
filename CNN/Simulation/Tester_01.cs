@@ -17,7 +17,6 @@ namespace CNN
         : base(numInChannels, numOutChannels, channelSize)
         {            
             Output = Scope.CreateBus<ValueBus>();
-            Stats = new List<float>();
         }
         public override async Task Run()
         {
@@ -40,7 +39,7 @@ namespace CNN
                             for (int c = 0; c < numOutChannels; c++)
                             {
                                 NumInputs += 1;
-                                Stats.Add(Input[c].Value);
+                                Stats.Add((computed[c][index], Input[c].Value));
                                 // Console.WriteLine("pred: " + Input[c].Value + " " + computed[c][index] + " " + (Input[c].Value - computed[c][index]));
                                 if (c == numOutChannels-1) 
                                 {
@@ -71,7 +70,7 @@ namespace CNN
                     for (int c = 0; c < numOutChannels; c++)
                     { 
                         NumInputs += 1;
-                        Stats.Add(Input[c].Value);
+                        Stats.Add((computed[c][index], Input[c].Value));
                         // Console.WriteLine("pred: " + Input[c].Value + " " + computed[c][index] + " " + (Input[c].Value - computed[c][index]));
                         if (c == numOutChannels-1) 
                         {
