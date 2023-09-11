@@ -5,7 +5,7 @@ import numpy as np
 import torch
 
 # Benchmarking parameters
-cpu = True
+cpu = False
 dev = 'cpu' if cpu else 'cuda:0'
 device = torch.device(dev)
 n_samples = 10000
@@ -47,11 +47,14 @@ for batch_size in batch_sizes:
     if progress:
         print(f'Benchmarking batch size {batch_size}...')
 
+    # Scale the input, so the small batch sizes doesn't run forever
+    n = min(n_samples, int(10**(np.floor(np.log10(batch_size))+2)))
+
     # Benchmark
     with torch.no_grad():
         model.to(device)
         for i in range(warmup): # Also verify the results
-            for j in range(n_samples // batch_size):
+            for j in range(n // batch_size):
                 input_tensor = torch.Tensor(test_data[j*batch_size:(j+1)*batch_size]).to(device)
                 res = model(input_tensor)
                 if not np.allclose(res.cpu().numpy(), preds[j*batch_size:(j+1)*batch_size]):
@@ -64,9 +67,9 @@ for batch_size in batch_sizes:
         to_device = []
         compute = []
         from_device = []
-        
+
         for i in range(runs):
-            for j in range(n_samples // batch_size):
+            for j in range(n // batch_size):
                 input_tensor = torch.Tensor(test_data[j*batch_size:(j+1)*batch_size])
                 start = datetime.datetime.now()
                 input_tensor = input_tensor.to(device)
@@ -79,16 +82,14 @@ for batch_size in batch_sizes:
                 to_device.append((transferred - start).total_seconds() * 1e6)
                 compute.append((computed - transferred).total_seconds() * 1e6)
                 from_device.append((end - computed).total_seconds() * 1e6)
-            
+
         # Save the results
         data[batch_size] = {
             'to_device': to_device,
             'compute': compute,
             'from_device': from_device
         }
-        with open(f'Tests/benchmark/{"cpu" if cpu else "gpu"}.json', 'w') as f:
-            json.dump(data, f)
-        
+
         if verbose:
             to_device = np.array(to_device)
             compute = np.array(compute)
@@ -109,3 +110,7 @@ for batch_size in batch_sizes:
             print(f'From device:         {mean_from_device:11.02f} us (+/- {std_from_device:11.02f})')
             print(f'Combined:            {mean_total:11.02f} us (+/- {std_total:11.02f})')
             print(f'Combined per sample: {(mean_total / batch_size):11.02f} us (+/- {(std_total / batch_size):11.02f})')
+
+# Write the results to disk.
+with open(f'Tests/benchmark/{"cpu" if cpu else "gpu"}.json', 'w') as f:
+    json.dump(data, f)
