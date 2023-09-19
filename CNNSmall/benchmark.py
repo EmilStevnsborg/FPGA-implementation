@@ -5,15 +5,16 @@ import numpy as np
 import torch
 
 # Benchmarking parameters
-cpu = False
+cpu = True
 dev = 'cpu' if cpu else 'cuda:0'
 device = torch.device(dev)
 n_samples = 10000
 batch_sizes = [i for i in range(1, 10)] + [10 * i for i in range(1, 10)] + [100 * i for i in range(1, 10)] + [1000 * i for i in range(1, 6)]
 warmup = 10
-runs = 1000
+runs = 10
 verbose = True
 progress = True
+output_folder = 'Tests/benchmark'
 
 # Load the model
 model = arch.CNNSmall()
@@ -112,5 +113,5 @@ for batch_size in batch_sizes:
             print(f'Combined per sample: {(mean_total / batch_size):11.02f} us (+/- {(std_total / batch_size):11.02f})')
 
 # Write the results to disk.
-with open(f'Tests/benchmark/{"cpu" if cpu else "gpu"}.json', 'w') as f:
+with open(f'{output_folder}/{"cpu" if cpu else "gpu"}.json', 'w') as f:
     json.dump(data, f)
