@@ -1,4 +1,6 @@
-import CNN_small_architecture as arch
+import sys
+sys.path.append('..')
+import CNNSmall.CNN_small_architecture as arch
 import json
 import numpy as np
 import onnx
@@ -8,18 +10,21 @@ import torch.onnx
 
 # Constants
 n_samples = 10000
-output_folder = 'Tests/benchmark'
+cnnsmall = '../CNNSmall'
+inputs_folder = f'{cnnsmall}/Tests/conv1/inputs'
+preds_folder = f'{cnnsmall}/Tests/Network'
+output_folder = 'obj'
 
 # Load the model
 model = arch.CNNSmall()
 model.eval()
-model.load_state_dict(torch.load('CNN_small'))
+model.load_state_dict(torch.load(f'{cnnsmall}/CNN_small'))
 model.eval()
 
 # Load the test data
 test_data = []
 for i in range(1000):
-    with open(f'Tests/conv1/inputs/input{i+1}.json') as f:
+    with open(f'{inputs_folder}/input{i+1}.json') as f:
         test_data.append(json.load(f)['buffer'])
 lens = set([len(t) for t in test_data])
 assert len(lens) == 1
@@ -29,7 +34,7 @@ test_data = np.array(test_data, dtype=np.float32).reshape((n_samples, 1, 28, 28)
 # Load the predictions
 preds = []
 for i in range(1000):
-    with open(f'Tests/Network/test{i+1}/softmax.json') as f:
+    with open(f'{preds_folder}/test{i+1}/softmax.json') as f:
         preds.append(json.load(f)['Pred'])
 lens = set([len(p) for p in preds])
 assert len(lens) == 1

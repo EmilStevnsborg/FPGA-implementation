@@ -2,6 +2,11 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Folder constants
+results_folder = 'results'
+plots_folder = 'plots'
+interactive = True
+
 # Platform constants
 cpu_tdp = 45 # Watts
 gpu_tdp = 23 # Watts
@@ -41,10 +46,10 @@ def load_data(filename, include_transfers=True):
         ]
     return batch_sizes, combined
 
-cpu_batch_sizes, cpu_combined = load_data('Tests/benchmark/cpu.json')
-gpu_batch_sizes, gpu_combined = load_data('Tests/benchmark/gpu.json')
-arm_batch_sizes, arm_combined = load_data('Tests/benchmark/arm.json', include_transfers=False)
-
+cpu_batch_sizes, cpu_combined = load_data(f'{results_folder}/cpu.json')
+gpu_batch_sizes, gpu_combined = load_data(f'{results_folder}/gpu.json')
+arm_batch_sizes, arm_combined = load_data(f'{results_folder}/arm.json', include_transfers=False)
+{}
 # Plot the runtime results
 plt.figure(figsize=(8, 6))
 plt.title('Average time per sample')
@@ -59,8 +64,10 @@ plt.yscale('log')
 plt.legend()
 plt.xticks(rotation=50)
 plt.tight_layout()
-plt.savefig('Tests/benchmark/runtime.pdf')
-plt.show()
+plt.savefig(f'{plots_folder}/runtime.pdf')
+if interactive:
+    plt.show()
+plt.clf()
 
 # Plot the energy results
 cpu_energy = ((np.array(cpu_combined) / us_per_s) * cpu_tdp) * 1000
@@ -81,23 +88,26 @@ plt.yscale('log')
 plt.legend()
 plt.xticks(rotation=50)
 plt.tight_layout()
-plt.savefig('Tests/benchmark/energy.pdf')
-plt.show()
+plt.savefig(f'{plots_folder}/energy.pdf')
+if interactive:
+    plt.show()
+plt.clf()
 
-# Print the min and max's
-print('CPU min:', np.min(cpu_combined), 'us')
-print('CPU max:', np.max(cpu_combined), 'us')
-print('GPU min:', np.min(gpu_combined), 'us')
-print('GPU max:', np.max(gpu_combined), 'us')
-print('ARM min:', np.min(arm_combined), 'us')
-print('ARM max:', np.max(arm_combined), 'us')
-print('SME:', sme_us, 'us')
-print('HLS:', hls_us, 'us')
-print('CPU energy min:', np.min(cpu_energy), 'mJ')
-print('CPU energy max:', np.max(cpu_energy), 'mJ')
-print('GPU energy min:', np.min(gpu_energy), 'mJ')
-print('GPU energy max:', np.max(gpu_energy), 'mJ')
-print('ARM energy min:', np.min(arm_energy), 'mJ')
-print('ARM energy max:', np.max(arm_energy), 'mJ')
-print('SME energy:', sme_energy, 'mJ')
-print('HLS energy:', hls_energy, 'mJ')
+if interactive:
+    # Print the min and max's
+    print('CPU min:', np.min(cpu_combined), 'us')
+    print('CPU max:', np.max(cpu_combined), 'us')
+    print('GPU min:', np.min(gpu_combined), 'us')
+    print('GPU max:', np.max(gpu_combined), 'us')
+    print('ARM min:', np.min(arm_combined), 'us')
+    print('ARM max:', np.max(arm_combined), 'us')
+    print('SME:', sme_us, 'us')
+    print('HLS:', hls_us, 'us')
+    print('CPU energy min:', np.min(cpu_energy), 'mJ')
+    print('CPU energy max:', np.max(cpu_energy), 'mJ')
+    print('GPU energy min:', np.min(gpu_energy), 'mJ')
+    print('GPU energy max:', np.max(gpu_energy), 'mJ')
+    print('ARM energy min:', np.min(arm_energy), 'mJ')
+    print('ARM energy max:', np.max(arm_energy), 'mJ')
+    print('SME energy:', sme_energy, 'mJ')
+    print('HLS energy:', hls_energy, 'mJ')

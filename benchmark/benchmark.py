@@ -1,8 +1,15 @@
-import CNN_small_architecture as arch
+import sys
+sys.path.append('..')
+import CNNSmall.CNN_small_architecture as arch
 import datetime
 import json
 import numpy as np
 import torch
+
+# Folder constants
+cnnsmall = '../CNNSmall'
+data_folder = 'obj'
+output_folder = 'results'
 
 # Benchmarking parameters
 cpu = True
@@ -14,33 +21,16 @@ warmup = 10
 runs = 10
 verbose = True
 progress = True
-output_folder = 'Tests/benchmark'
 
 # Load the model
 model = arch.CNNSmall()
 model.eval()
-model.load_state_dict(torch.load('CNN_small'))
+model.load_state_dict(torch.load(f'{cnnsmall}/CNN_small'))
 model.eval()
 
-# Load the test data
-test_data = []
-for i in range(1000):
-    with open(f'Tests/conv1/inputs/input{i+1}.json') as f:
-        test_data.append(json.load(f)['buffer'])
-lens = set([len(t) for t in test_data])
-assert len(lens) == 1
-test_data *= n_samples // len(test_data)
-test_data = np.array(test_data, dtype=np.float32).reshape((n_samples, 1, 28, 28))
-
-# Load the predictions
-preds = []
-for i in range(1000):
-    with open(f'Tests/Network/test{i+1}/softmax.json') as f:
-        preds.append(json.load(f)['Pred'])
-lens = set([len(p) for p in preds])
-assert len(lens) == 1
-preds *= n_samples // len(preds)
-preds = np.array(preds, dtype=np.float32).reshape((n_samples, 2))
+# Load the test data and predictions
+test_data = np.load(f'{data_folder}/test_data.npy')
+preds = np.load(f'{data_folder}/preds.npy')
 
 # Benchmark
 data = dict()
