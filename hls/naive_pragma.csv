@@ -1,0 +1,84 @@
+"Methood", "Estimated clock (ns)", "Latency max (us)", "BRAM", "DSP", "FF", "LUT", "URAM"
+-
+"conv1"
+-
+"Baseline", 7.256, 22.030, 0, 21, 4, 13, 0
+"Unroll filter (UF)", 7.256, 21.960, 0, 21, 5, 15, 0
+"UF + flatten & pipeline xy", 7.256, 21.960, 0, 21, 5, 15, 0
+"flatten & pipeline filter and xy", 7.256, 20.850, 0, 21, 4, 13, 0
+"init loop + perfectly nested compute loop", 8.844, 750.000, 0, 2, ~0, 2, 0
+"above + unroll at filt", 8.844, 751.000, 0, 2, 1, 4, 0
+"above with a clockrate of 30 MHz (to reach II=1)", 24.166, 677.000, 0, 2, 1, 4, 0
+"vectorised", 7.256, 20.850, 0, 21, 4, 13, 0
+"above with unrolled vector read", 7.256, 20.850, 0, 21, 4, 13, 0
+"above with unrolled filt", 7.256, 21.960, 0, 21, 5, 15, 0
+"above+1 with templated constants", 7.256, 20.850, 0, 21, 4, 13, 0
+"vectorised on inner 3 loops", 7.256, 20.800, 0, 20, 4, 13, 0
+"above, outer loop merge, inner pipeline", 7.256, 21.890, 0, 20, 4, 12, 0
+-
+"batchnorm1"
+-
+"baseline", 7.256, 20.480, 0, 4, 1, 3, 0
+"baseline 200", 3.356, 10.330, 0, 4, 1, 3, 0
+"baseline 300", 3.384, 13.881, 0, 2, 2, 4, 0
+"flatten + pipeline", 7.256, 20.470, 0, 4, 1, 3, 0
+"above + unroll ch", 7.256, 20.870, 0, 4, 1, 3, 0
+"vectorised", 7.256, 100.000-122.000, 0, 2, 1, 4, 0
+"above + flatten & pipeline xy", 7.256, 59.3-409.000, 0, 2, ~0, 3, 0
+"above + unroll ch", 7.256, 37.480-59.320, 0, 2, ~0, 6, 0
+"above + manual flatten yx", 4.149, 7.69-25.540, 0, 0, ~0, 6, 0
+"ultra flat", 7.256, 58.44-94.000, 0, 18, 3, 19, 0
+-
+"relu1"
+-
+"baseline", 6.409, 20.310, 0, 0, ~0, ~0, 0
+"above + pipeline", 6.409, 20.300, 0, 0, ~0, ~0, 0
+-
+"maxpool1"
+-
+"baseline", 6.897, 5.120, 0, 0, ~0, 3, 0
+"flatten + pipeline yx", 6.897, 5.120, 0, 0, ~0, 3, 0
+"above + unroll ch", 6.897, 5.210, 0, 0, ~0, 3, 0
+-
+"conv2"
+-
+"baseline", 7.256, 1600, ~0, 2, ~0, 2, 0
+"vectorised + pipelined yx", 7.256, 7.880, 27, 170, 32, 102, 0
+"vectorised + unroll vector creation", 9.734, 1620, 2, 103, 193, 1049, 0
+"init loop + perfect nested loop", 8.844, 1219, ~0, 2, ~0, 3, 0
+"above + unrolled filt", 8.844, 1220, ~0, 4, 2, 8, 0
+-
+"batchnorm2"
+-
+"flatten + pipeline", 7.256, 5.050, 0, 4, 1, 4, 0
+-
+"relu2"
+-
+"baseline + pipeline", 6.409, 4.070, 0, 0, ~0, ~0, 0
+-
+"maxpool2"
+-
+"baseline", 6.897, 0.550, 0, 0, ~0, 6, 0
+-
+"linear"
+-
+"baseline", 7.256, 2.380, 16, 103, 19, 62, 0
+"init loop + perfect nest", 8.844, 3.690, ~0, 2, ~0, 1, 0
+-
+"softmax1"
+-
+"baseline", 7.256, 0.440, 0, 4, ~0, 3, 0
+"pipeline i + j", 8.844, 0.410, 0, 4, ~0, 2, 0
+-
+"entire network"
+-
+"baseline (naive)", 7.288, 1691, 31, 111, 27, 83, 0
+"smallest solution 100 mhz", 11.677, 2350, 15, 16, 7, 27, 0
+"above 75 mhz", 11.677, 2035, 15, 15, 7, 27, 0
+"above 50 mhz", 15.637, 3051, 15, 16, 6, 26, 0
+"above 25 mhz (all constraints satisfied)", 27.588, 2212, 15, 16, 5, 26, 0
+"above 200 mhz", 8.008, 3564, 9, 17, 9, 25, 0
+"above 300 mhz", 6.363, 3765, 7, 16, 11, 26, 0
+"above 35 mhz (II > 1)", 20.691, 2970, 15, 16, 6, 26, 0
+"above 30 mhz (II = 1)", 24.166, 1844, 15, 16, 6, 26, 0, (1336 us for estimated clockrate)
+"above, but with correct init ( ͡° ͜ʖ ͡°)", 24.166, 1879, 15, 14, 6, 25, 0
