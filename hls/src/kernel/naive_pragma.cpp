@@ -1,5 +1,5 @@
 #include <cmath>
-#include <hls_vector.h>
+//#include <hls_vector.h>
 
 #include "cnn_small.hpp"
 #include "cnn_small_constants.hpp"
